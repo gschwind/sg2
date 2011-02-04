@@ -56,6 +56,20 @@ typedef struct s_gcoord {
 	double *delta; /* Geocentric declination (radian) */
 } S_SG2_GCOORD, *PS_SG2_GCOORD;
 
+typedef struct s_ellps {
+	double a;
+	double f;
+} S_SG2_ELLPS, *PS_SG2_ELLPS;
+
+typedef enum {
+	SG2_ELLPSTYPE_WGS84 = 0,
+	SG2_ELLPSTYPE_RGF83 = 1,
+	SG2_ELLPSTYPE_NTF = 2,
+	SG2_ELLPSTYPE_AA = 3,
+	SG2_ELLPSTYPE_SPA = 4,
+	SG2_ELLPSTYPE_NGP = 5,
+	SG2_ELLPSTYPE_SPHERE = 6,
+} SG2_ELLPSTYPE;
 
 #ifdef	__cplusplus
 }
