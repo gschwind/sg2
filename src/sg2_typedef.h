@@ -75,8 +75,8 @@ typedef enum {
 typedef struct s_geopoint {
 	S_SG2_ELLPS *p_ellps;
 	unsigned long p;
-	double *lat;
-	double *lon;
+	double *phi; /* Latitude (rad) */
+	double *lambda; /* Longitude (rad) */
 	double *h; /* Altitude Above the Reference Ellipsoid */
 } S_SG2_GEOPOINT, *PS_SG2_GEOPOINT;
 
@@ -87,7 +87,12 @@ typedef struct s_tcoord {
 	S_SG2_GCOORD *p_gcoord;
 	S_SG2_GEOPOINT *p_gp;
 
-	double
+	double *u,*x,*y; /* Reda et Andreas (2004) */
+	double *omega; /* Local hour angle (rad) */
+	double *r_alpha; /* Topocentric right ascension (rad) */
+	double *delta; /* Topocentric sun declination (rad) */
+
+
 
 } S_SG2_TCOORD, *PS_SG2_TCOORD;
 
