@@ -49,6 +49,7 @@ typedef struct s_hcoord {
 /* Geocentric coordinates */
 typedef struct s_gcoord {
 	S_SG2_DATE_JD *p_jd;
+	double *R; /* Radius Sun-Earth (ua) */
 	double *epsilon; /* Earth true obliquity (radian) */
 	double *Theta_a; /* Geocentric Earth true longitude (radian) */
 	double *r_alpha; /* Geocentric right ascension (radian) */

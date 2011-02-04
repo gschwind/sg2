@@ -17,6 +17,8 @@ S_SG2_GCOORD *SG2_geocentric_coordinates_create_gcoord(unsigned long n,
 		int *p_err);
 void SG2_geocentric_coordinates_delete_gcoord(S_SG2_GCOORD *p_gcoord,
 		int *p_err);
+void SG2_geocentric_coordinates_set_gcoord(S_SG2_DATE_JD *p_jd,
+		S_SG2_GCOORD *p_gcoord, int *p_err);
 
 #ifdef	__cplusplus
 }

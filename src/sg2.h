@@ -31,6 +31,7 @@ extern "C"
 #include "SG2_typedef.h"
 #include "SG2_date.h"
 #include "sg2_heliocentric_coordinates.h"
+#include "sg2_geocentric_coordinates.h"
 
 #ifdef	__cplusplus
 }
