@@ -57,8 +57,8 @@ typedef struct s_gcoord {
 } S_SG2_GCOORD, *PS_SG2_GCOORD;
 
 typedef struct s_ellps {
-	double a;
-	double f;
+	double a; /* Axis a (m) */
+	double f; /* Flatness (-)*/
 } S_SG2_ELLPS, *PS_SG2_ELLPS;
 
 typedef enum {
@@ -69,7 +69,27 @@ typedef enum {
 	SG2_ELLPSTYPE_SPA = 4,
 	SG2_ELLPSTYPE_NGP = 5,
 	SG2_ELLPSTYPE_SPHERE = 6,
+	SG2_ELLPSTYPE_USER = 7,
 } SG2_ELLPSTYPE;
+
+typedef struct s_geopoint {
+	S_SG2_ELLPS *p_ellps;
+	unsigned long p;
+	double *lat;
+	double *lon;
+	double *h; /* Altitude Above the Reference Ellipsoid */
+} S_SG2_GEOPOINT, *PS_SG2_GEOPOINT;
+
+typedef struct s_tcoord {
+
+	unsigned long n; /* Number of dates */
+	unsigned long p; /* Number of geopoints */
+	S_SG2_GCOORD *p_gcoord;
+	S_SG2_GEOPOINT *p_gp;
+
+	double
+
+} S_SG2_TCOORD, *PS_SG2_TCOORD;
 
 #ifdef	__cplusplus
 }
