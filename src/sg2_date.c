@@ -8,7 +8,7 @@
 #define SG2_DATE_C_
 
 #include "sg2.h"
-#include "SG2_precomputed_delta_tt.h"
+#include "sg2_precomputed_delta_tt.h"
 
 #include <math.h>
 #include <stdlib.h>
