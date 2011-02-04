@@ -8,8 +8,8 @@
 #define SG2_HELIOCENTRIC_COORDINATES_C_
 
 #include "sg2.h"
-#include "SG2_precomputed_heliocentric_coordinates.h"
-#include "SG2_precomputed_geocentric_coordinates.h"
+#include "sg2_precomputed_heliocentric_coordinates.h"
+#include "sg2_precomputed_geocentric_coordinates.h"
 
 #include <math.h>
 #include <stdlib.h>
