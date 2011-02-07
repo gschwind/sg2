@@ -88,11 +88,11 @@ typedef struct s_tcoord {
 	S_SG2_GEOPOINT *p_gp;
 
 	double *u,*x,*y; /* Reda et Andreas (2004) */
-	double *omega; /* Local hour angle (rad) */
-	double *r_alpha; /* Topocentric right ascension (rad) */
-	double *delta; /* Topocentric sun declination (rad) */
-
-
+	double **r_alpha; /* Topocentric right ascension (rad) */
+	double **delta; /* Topocentric sun declination (rad) */
+	double **omega; /* Topocentric local hour angle (rad) */
+	double **gamma_S; /* Topocentric sun elevation angle (rad)*/
+	double **alpha_S; /* Topocentric sun azimuth (rad) */
 
 } S_SG2_TCOORD, *PS_SG2_TCOORD;
 
