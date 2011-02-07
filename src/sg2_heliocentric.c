@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 
-S_SG2_HELIOC *SG2_heliocentric_create_heliocentric(unsigned long n,
+S_SG2_HELIOC *SG2_heliocentric_create_helioc(unsigned long n,
 		int *p_err) {
 	S_SG2_HELIOC *p_helioc;
 
