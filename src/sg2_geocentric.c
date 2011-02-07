@@ -22,26 +22,26 @@ S_SG2_GCOORD *SG2_geocentric_create_gcoord(unsigned long n,
 
 	p_gcoord = (S_SG2_GCOORD *) malloc(sizeof(S_SG2_GCOORD));
 	if (p_gcoord == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_1;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_1;
 		return NULL;
 	}
 
 	p_gcoord->epsilon = (double *) malloc(n * sizeof(double));
 	if (p_gcoord->epsilon == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_2;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_2;
 		free(p_gcoord);
 		return NULL;
 	}
 	p_gcoord->Theta_a = (double *) malloc(n * sizeof(double));
 	if (p_gcoord->Theta_a == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_3;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_3;
 		free(p_gcoord->epsilon);
 		free(p_gcoord);
 		return NULL;
 	}
 	p_gcoord->r_alpha = (double *) malloc(n * sizeof(double));
 	if (p_gcoord->r_alpha == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_4;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_4;
 		free(p_gcoord->epsilon);
 		free(p_gcoord->Theta_a);
 		free(p_gcoord);
@@ -49,7 +49,7 @@ S_SG2_GCOORD *SG2_geocentric_create_gcoord(unsigned long n,
 	}
 	p_gcoord->delta = (double *) malloc(n * sizeof(double));
 	if (p_gcoord->delta == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_5;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_5;
 		free(p_gcoord->epsilon);
 		free(p_gcoord->Theta_a);
 		free(p_gcoord->r_alpha);
@@ -59,7 +59,7 @@ S_SG2_GCOORD *SG2_geocentric_create_gcoord(unsigned long n,
 
 	p_gcoord->R = (double *) malloc(n * sizeof(double));
 	if (p_gcoord->R == NULL) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_CREATE_GCOORD_MALLOC_6;
+		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GCOORD_MALLOC_6;
 		free(p_gcoord->epsilon);
 		free(p_gcoord->Theta_a);
 		free(p_gcoord->r_alpha);
@@ -88,7 +88,7 @@ void SG2_geocentric_set_gcoord(S_SG2_DATE_JD *p_jd,
 	double sin_Theta_a,cos_epsilon;
 
 	if (p_jd->jd_tt_set != 1) {
-		*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_SET_GCOORD_JDTTNOTSET;
+		*p_err = SG2_ERR_GEOCENTRIC_SET_GCOORD_JDTTNOTSET;
 		return;
 	}
 
@@ -100,7 +100,7 @@ void SG2_geocentric_set_gcoord(S_SG2_DATE_JD *p_jd,
 				/ SG2_precomputed_heliocentric_R_dj);
 		if ((idx0 < 0)
 				|| (idx0 > SG2_precomputed_heliocentric_R_nj)) {
-			*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_SET_GCOORD_OUTOFPERIOD;
+			*p_err = SG2_ERR_GEOCENTRIC_SET_GCOORD_OUTOFPERIOD;
 			return;
 		}
 		p_gcoord->R[k] = SG2_precomputed_heliocentric_R[idx0];
@@ -113,7 +113,7 @@ void SG2_geocentric_set_gcoord(S_SG2_DATE_JD *p_jd,
 		idx0 = (short) x0;
 		if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Theta_a_nj
 				- 1)) {
-			*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_SET_GCOORD_OUTOFPERIOD;
+			*p_err = SG2_ERR_GEOCENTRIC_SET_GCOORD_OUTOFPERIOD;
 			return;
 		}
 		p_gcoord->Theta_a[k] = (1.0 - dx)
@@ -124,7 +124,7 @@ void SG2_geocentric_set_gcoord(S_SG2_DATE_JD *p_jd,
 				/ SG2_precomputed_geocentric_epsilon_dj);
 		if ((idx0 < 0)
 				|| (idx0 > SG2_precomputed_heliocentric_R_nj)) {
-			*p_err = SG2_ERR_GEOCENTRIC_COORDINATES_SET_GCOORD_OUTOFPERIOD;
+			*p_err = SG2_ERR_GEOCENTRIC_SET_GCOORD_OUTOFPERIOD;
 			return;
 		}
 		p_gcoord->epsilon[k] = SG2_precomputed_geocentric_epsilon[idx0];
