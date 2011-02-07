@@ -5,7 +5,7 @@
  *      Author: pblanc
  */
 
-#define SG2_GEOCENTRIC_C_
+#define SG2_TOPOCENTRIC_C_
 
 #include "sg2.h"
 
@@ -80,3 +80,166 @@ void SG2_topocentric_delete_geopoint(S_SG2_GEOPOINT *p_gp, int *p_err)
 	free(p_gp);
 }
 
+S_SG2_TCOORD *SG2_topocentric_create_tcoord(unsigned long n, unsigned long p, int *p_err)
+{
+	S_SG2_TCOORD *p_tcoord;
+	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5;
+	unsigned long kp;
+
+	p_tcoord = (S_SG2_TCOORD *) malloc(sizeof(S_SG2_TCOORD));
+	if (p_tcoord == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_1;
+		return NULL;
+	}
+	p_tcoord->n = n;
+	p_tcoord->p = p;
+
+	/*
+	double **r_alpha;
+	double **delta;
+	double **omega;
+	double **gamma_S;
+	double **alpha_S;
+	*/
+
+	p_tmp1 = (double *) malloc(n*p*sizeof(double));
+	if (p_tmp1 == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_1;
+		free(p_tcoord);
+		return NULL;
+	}
+	p_tcoord->r_alpha = (double **) malloc(p*sizeof(double *));
+	if (p_tcoord->r_alpha == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_2;
+		free(p_tmp1);
+		free(p_tcoord);
+		return NULL;
+	}
+	for (kp = 0; kp < p ; kp++) {
+		p_tcoord->r_alpha[kp] = &p_tmp1[n*kp];
+	}
+
+	p_tmp2 = (double *) malloc(n*p*sizeof(double));
+	if (p_tmp2 == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_3;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord);
+		return NULL;
+	}
+	p_tcoord->delta = (double **) malloc(p*sizeof(double *));
+	if (p_tcoord->delta == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_4;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tmp2);
+		free(p_tcoord);
+		return NULL;
+	}
+	for (kp = 0; kp < p ; kp++) {
+		p_tcoord->delta[kp] = &p_tmp2[n*kp];
+	}
+
+	p_tmp3 = (double *) malloc(n*p*sizeof(double));
+	if (p_tmp3 == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_5;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tcoord);
+		return NULL;
+	}
+	p_tcoord->omega = (double **) malloc(p*sizeof(double *));
+	if (p_tcoord->omega == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_6;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tmp3);
+		free(p_tcoord);
+		return NULL;
+	}
+	for (kp = 0; kp < p ; kp++) {
+		p_tcoord->omega[kp] = &p_tmp3[n*kp];
+	}
+
+	p_tmp4 = (double *) malloc(n*p*sizeof(double));
+	if (p_tmp4 == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_7;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tcoord->omega);
+		free(p_tmp3);
+		free(p_tcoord);
+		return NULL;
+	}
+	p_tcoord->gamma_S = (double **) malloc(p*sizeof(double *));
+	if (p_tcoord->gamma_S == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_8;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tcoord->omega);
+		free(p_tmp3);
+		free(p_tmp4);
+		free(p_tcoord);
+		return NULL;
+	}
+	for (kp = 0; kp < p ; kp++) {
+		p_tcoord->gamma_S[kp] = &p_tmp4[n*kp];
+	}
+
+	p_tmp5 = (double *) malloc(n*p*sizeof(double));
+	if (p_tmp5 == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_9;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tcoord->omega);
+		free(p_tmp3);
+		free(p_tcoord->gamma_S);
+		free(p_tmp4);
+		free(p_tcoord);
+		return NULL;
+	}
+	p_tcoord->alpha_S = (double **) malloc(p*sizeof(double *));
+	if (p_tcoord->alpha_S == NULL) {
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TCOORD_MALLOC_10;
+		free(p_tcoord->r_alpha);
+		free(p_tmp1);
+		free(p_tcoord->delta);
+		free(p_tmp2);
+		free(p_tcoord->omega);
+		free(p_tmp3);
+		free(p_tcoord->gamma_S);
+		free(p_tmp4);
+		free(p_tmp5);
+		free(p_tcoord);
+		return NULL;
+	}
+	for (kp = 0; kp < p ; kp++) {
+		p_tcoord->alpha_S[kp] = &p_tmp5[n*kp];
+	}
+
+	return p_tcoord;
+
+}
+
+void SG2_topocentric_delete_tcoord(S_SG2_TCOORD *p_tcoord, int *p_err)
+{
+	free(p_tcoord->r_alpha[0]);
+	free(p_tcoord->r_alpha);
+	free(p_tcoord->delta[0]);
+	free(p_tcoord->delta);
+	free(p_tcoord->gamma_S[0]);
+	free(p_tcoord->gamma_S);
+	free(p_tcoord->alpha_S[0]);
+	free(p_tcoord->alpha_S);
+	free(p_tcoord);
+}

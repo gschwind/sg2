@@ -9,6 +9,12 @@
 #define SG2_TYPEDEF_H_
 
 #define SG2_PI 3.141592653589793
+#define SG2_DEG2RAD 1.745329251994330e-002
+#define SG2_RAD2DEG 5.729577951308232e+001
+/* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
+#define SG2_SOLAR_CONSTANT 1367
+/* Astronomical unit : annual average of the Sun-Earth distance (m) */
+#define SG2_AU 149597870691.0 /* +/- 6 m (McCarthy et Petit, 2003) */
 
 /* Date YMD + H en heure décimale UT */
 typedef struct s_date_ymd_h {
@@ -87,7 +93,6 @@ typedef struct s_tcoord {
 	S_SG2_GCOORD *p_gcoord;
 	S_SG2_GEOPOINT *p_gp;
 
-	double *u,*x,*y; /* Reda et Andreas (2004) */
 	double **r_alpha; /* Topocentric right ascension (rad) */
 	double **delta; /* Topocentric sun declination (rad) */
 	double **omega; /* Topocentric local hour angle (rad) */
