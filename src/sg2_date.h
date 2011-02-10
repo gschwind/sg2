@@ -8,31 +8,45 @@
 #ifndef SG2_DATE_H_
 #define SG2_DATE_H_
 
+#ifdef _MINGW_
+#include <windows.h>
+#endif
+
+#ifdef _VISUAL_
+#define EXPORT _declspec (dllexport)
+#else
+#define EXPORT
+#endif
+
 #ifdef  __cplusplus
 extern "C"
 {
 #endif
 
-S_SG2_DATE_JD *SG2_date_create_jd(unsigned long nd, int *p_err);
-void SG2_date_delete_jd(S_SG2_DATE_JD *p_jd, int *p_err);
+EXPORT S_SG2_DATE_TABJD *SG2_date_create_tabjd(unsigned long nd, int *p_err);
+EXPORT void SG2_date_delete_tabjd(S_SG2_DATE_TABJD *p_jd, int *p_err);
 
-S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long nd, int *p_err);
+EXPORT S_SG2_DATE_TABYMDH *SG2_date_create_tabymdh(unsigned long nd, int *p_err);
 
-void SG2_date_delete_ymd_h(S_SG2_DATE_YMD_H *p_ymdh, int *p_err);
-S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long nd, int *p_err);
+EXPORT void SG2_date_delete_tabymdh(S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
 
-void SG2_date_delete_ydoy_h(S_SG2_DATE_YDOY_H *p_ydoyh, int *p_err);
+EXPORT S_SG2_DATE_TABYDOYH *SG2_date_create_tabydoy(unsigned long nd, int *p_err);
 
-void SG2_date_jd_to_ymdh(S_SG2_DATE_JD *p_jd, S_SG2_DATE_YMD_H *p_ymdh,
+EXPORT void SG2_date_delete_tabydoy(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
+
+EXPORT void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymdh,
 		int *p_err);
-void SG2_date_ymdh_to_jd(S_SG2_DATE_YMD_H *p_ymdh, S_SG2_DATE_JD *p_jd,
-		int *p_err);
-void SG2_date_ymdh_to_ydoy(S_SG2_DATE_YMD_H *p_ymdh,
-		S_SG2_DATE_YDOY_H *p_ydoyh, int *p_err);
-void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
-		S_SG2_DATE_YMD_H *p_ymdh, int *p_err);
 
-void SG2_date_jd_set_jd_tt(S_SG2_DATE_JD *p_jd, double *p_delta_tt, int *p_err);
+EXPORT void SG2_date_tabymdh_to_tabjd(S_SG2_DATE_TABYMDH *p_ymdh, S_SG2_DATE_TABJD *p_jd,
+		int *p_err);
+
+EXPORT void SG2_date_tabymdh_to_tabydoyh(S_SG2_DATE_TABYMDH *p_ymdh,
+		S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
+
+EXPORT void SG2_date_tabydoyh_to_tabymdh(S_SG2_DATE_TABYDOYH *p_ydoyh,
+		S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
+
+EXPORT void SG2_date_set_tabjd_tt(S_SG2_DATE_TABJD *p_jd, double *p_delta_tt, int *p_err);
 
 #ifdef	__cplusplus
 }

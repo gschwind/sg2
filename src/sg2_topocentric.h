@@ -8,25 +8,39 @@
 #ifndef SG2_TOPOCENTRIC_H_
 #define SG2_TOPOCENTRIC_H_
 
+#ifdef _MINGW_
+#include <windows.h>
+#endif
+
+#ifdef _VISUAL_
+#define EXPORT _declspec (dllexport)
+#else
+#define EXPORT
+#endif
+
 #ifdef  __cplusplus
 extern "C"
 {
 #endif
 
-S_SG2_GEOPT *SG2_topocentric_create_geopt(unsigned long np,
-		SG2_ELLPSTYPE ellpstype, int *p_err);
+EXPORT S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
+		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, int *p_err);
 
-void SG2_topocentric_delete_geopt(S_SG2_GEOPT *p_gp, int *p_err);
-S_SG2_TOPOC *SG2_topocentric_create_topoc(unsigned long n, unsigned long p,
-		int *p_err);
+EXPORT void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp, int *p_err);
 
-S_SG2_TOPOC *SG2_topocentric_create_topoc(unsigned long nd, unsigned long np,
-		int *p_err);
+EXPORT void SG2_topocecentric_set_tabgeopoint(double *lon, double *lat, double *h,
+		S_SG2_TABGEOPOINT *p_gp, int *p_err);
 
-void SG2_topocentric_delete_topoc(S_SG2_TOPOC *p_topoc, int *p_err);
+EXPORT S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long nd,
+		unsigned long np, int *p_err);
 
-void SG2_topocentric_set_topoc(S_SG2_GEOC *p_geoc, S_SG2_GEOPT *p_gp,
-		S_SG2_TOPOC *p_topoc, int *p_err);
+EXPORT void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc, int *p_err);
+
+EXPORT void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc, S_SG2_TABGEOPOINT *p_gp,
+		S_SG2_TOPOC_DATA *p_topoc, int *p_err);
+
+EXPORT double SG2_topocentric_correction_refraction(double gamma_S0, double P,
+		double T, SG2_CORRECTION_REFRACTION method, int *p_err);
 
 #ifdef	__cplusplus
 }

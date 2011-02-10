@@ -16,10 +16,10 @@
 #include <stdio.h>
 #include <string.h>
 
-S_SG2_GEOC *SG2_geocentric_create_geoc(unsigned long n, int *p_err) {
-	S_SG2_GEOC *p_geoc;
+S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
+	S_SG2_GEOC_DATA *p_geoc;
 
-	p_geoc = (S_SG2_GEOC *) malloc(sizeof(S_SG2_GEOC));
+	p_geoc = (S_SG2_GEOC_DATA *) malloc(sizeof(S_SG2_GEOC_DATA));
 	if (p_geoc == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_1;
 		return NULL;
@@ -95,7 +95,7 @@ S_SG2_GEOC *SG2_geocentric_create_geoc(unsigned long n, int *p_err) {
 	return p_geoc;
 }
 
-void SG2_geocentric_delete_geoc(S_SG2_GEOC *p_geoc, int *p_err) {
+void SG2_geocentric_delete_geoc_data(S_SG2_GEOC_DATA *p_geoc, int *p_err) {
 	free(p_geoc->epsilon);
 	free(p_geoc->Theta_a);
 	free(p_geoc->r_alpha);
@@ -106,8 +106,8 @@ void SG2_geocentric_delete_geoc(S_SG2_GEOC *p_geoc, int *p_err) {
 	free(p_geoc);
 }
 
-void SG2_geocentric_set_geoc(S_SG2_DATE_JD *p_jd, S_SG2_HELIOC *p_helioc,
-		S_SG2_GEOC *p_geoc, int *p_err) {
+void SG2_geocentric_set_geoc_data(S_SG2_DATE_TABJD *p_jd, S_SG2_HELIOC_DATA *p_helioc,
+		S_SG2_GEOC_DATA *p_geoc, int *p_err) {
 	short idx0;
 	double x, x0, dx;
 	int kd;

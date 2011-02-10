@@ -19,10 +19,10 @@ static int SG2_date_leapyear(short year) {
 	return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
-S_SG2_DATE_JD *SG2_date_create_jd(unsigned long nd, int *p_err) {
-	S_SG2_DATE_JD *p_jd = NULL;
+S_SG2_DATE_TABJD *SG2_date_create_tabjd(unsigned long nd, int *p_err) {
+	S_SG2_DATE_TABJD *p_jd = NULL;
 
-	p_jd = (S_SG2_DATE_JD *) malloc(sizeof(S_SG2_DATE_JD));
+	p_jd = (S_SG2_DATE_TABJD *) malloc(sizeof(S_SG2_DATE_TABJD));
 	if (p_jd == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_1;
 		return NULL;
@@ -46,16 +46,16 @@ S_SG2_DATE_JD *SG2_date_create_jd(unsigned long nd, int *p_err) {
 	return p_jd;
 }
 
-void SG2_date_delete_jd(S_SG2_DATE_JD *p_jd, int *p_err) {
+void SG2_date_delete_tabjd(S_SG2_DATE_TABJD *p_jd, int *p_err) {
 	free(p_jd->jd_ut);
 	free(p_jd->jd_tt);
 	free(p_jd);
 }
 
-S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long nd, int *p_err) {
-	S_SG2_DATE_YMD_H *p_ymdh = NULL;
+S_SG2_DATE_TABYMDH *SG2_date_create_tabymd(unsigned long nd, int *p_err) {
+	S_SG2_DATE_TABYMDH *p_ymdh = NULL;
 
-	p_ymdh = (S_SG2_DATE_YMD_H *) malloc(sizeof(S_SG2_DATE_YMD_H));
+	p_ymdh = (S_SG2_DATE_TABYMDH *) malloc(sizeof(S_SG2_DATE_TABYMDH));
 	if (p_ymdh == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_1;
 		return NULL;
@@ -96,7 +96,7 @@ S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long nd, int *p_err) {
 	return p_ymdh;
 }
 
-void SG2_date_delete_ymd_h(S_SG2_DATE_YMD_H *p_ymdh, int *p_err) {
+void SG2_date_delete_tabymdh(S_SG2_DATE_TABYMDH *p_ymdh, int *p_err) {
 	free(p_ymdh->y);
 	free(p_ymdh->m);
 	free(p_ymdh->d);
@@ -104,10 +104,10 @@ void SG2_date_delete_ymd_h(S_SG2_DATE_YMD_H *p_ymdh, int *p_err) {
 	free(p_ymdh);
 }
 
-S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long nd, int *p_err) {
-	S_SG2_DATE_YDOY_H *p_ydoyh = NULL;
+S_SG2_DATE_TABYDOYH *SG2_date_create_tabydoyh(unsigned long nd, int *p_err) {
+	S_SG2_DATE_TABYDOYH *p_ydoyh = NULL;
 
-	p_ydoyh = (S_SG2_DATE_YDOY_H *) malloc(sizeof(S_SG2_DATE_YDOY_H));
+	p_ydoyh = (S_SG2_DATE_TABYDOYH *) malloc(sizeof(S_SG2_DATE_TABYDOYH));
 	if (p_ydoyh == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YDOY_H_MALLOC_1;
 		return NULL;
@@ -139,14 +139,14 @@ S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long nd, int *p_err) {
 	return p_ydoyh;
 }
 
-void SG2_date_delete_ydoy_h(S_SG2_DATE_YDOY_H *p_ydoyh, int *p_err) {
+void SG2_date_delete_tabydoyh(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err) {
 	free(p_ydoyh->y);
 	free(p_ydoyh->doy);
 	free(p_ydoyh->h);
 	free(p_ydoyh);
 }
 
-void SG2_date_jd_to_ymdh(S_SG2_DATE_JD *p_jd, S_SG2_DATE_YMD_H *p_ymdh,
+void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymdh,
 		int *p_err) {
 	int k;
 	double H, L, N, I, J, K, jd;
@@ -177,7 +177,7 @@ void SG2_date_jd_to_ymdh(S_SG2_DATE_JD *p_jd, S_SG2_DATE_YMD_H *p_ymdh,
 
 }
 
-void SG2_date_ymdh_to_jd(S_SG2_DATE_YMD_H *p_ymdh, S_SG2_DATE_JD *p_jd,
+void SG2_date_tabymdh_to_tabjd(S_SG2_DATE_TABYMDH *p_ymdh, S_SG2_DATE_TABJD *p_jd,
 		int *p_err) {
 
 	int k;
@@ -204,8 +204,8 @@ void SG2_date_ymdh_to_jd(S_SG2_DATE_YMD_H *p_ymdh, S_SG2_DATE_JD *p_jd,
 
 }
 
-void SG2_date_ymdh_to_ydoy(S_SG2_DATE_YMD_H *p_ymdh,
-		S_SG2_DATE_YDOY_H *p_ydoyh, int *p_err) {
+void SG2_date_tabymdh_to_tabydoyh(S_SG2_DATE_TABYMDH *p_ymdh,
+		S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err) {
 	int k;
 	double K;
 
@@ -220,8 +220,8 @@ void SG2_date_ymdh_to_ydoy(S_SG2_DATE_YMD_H *p_ymdh,
 
 }
 
-void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
-		S_SG2_DATE_YMD_H *p_ymdh, int *p_err) {
+void SG2_date_tabydoyh_to_tabymdh(S_SG2_DATE_TABYDOYH *p_ydoyh,
+		S_SG2_DATE_TABYMDH *p_ymdh, int *p_err) {
 	int k;
 	double B;
 
@@ -248,7 +248,7 @@ void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
 
 }
 
-void SG2_date_jd_set_jd_tt(S_SG2_DATE_JD *p_jd, double *p_delta_tt, int *p_err) {
+void SG2_date_set_tabjd_tt(S_SG2_DATE_TABJD *p_jd, double *p_delta_tt, int *p_err) {
 
 	int k;
 	long idx;
