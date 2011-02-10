@@ -135,18 +135,20 @@ typedef struct s_topoc_data {
 } S_SG2_TOPOC_DATA;
 
 typedef enum {
-	SG2_CORRECTION_REFRACTION_SAE = 0,
-	SG2_CORRECTION_REFRACTION_ZIM = 1,
+	SG2_CORRECTION_REFRACTION_NONE = 0,
+	SG2_CORRECTION_REFRACTION_SAE = 1,
+	SG2_CORRECTION_REFRACTION_ZIM = 2,
 } SG2_CORRECTION_REFRACTION;
 
-typedef struct s_data {
+typedef struct s_sunpos {
 
 	unsigned long np;
-	unsigned long nday;
-	unsigned long nt;
-	S_SG2_DATE_TABJD *p_jd_0;
+	unsigned long nd;
+	double **alpha_S;
+	double **gamma_S0;
+	double **gamma_S;
 
-} S_SG2_DATA;
+} S_SG2_SUNPOS;
 
 #ifdef	__cplusplus
 }

@@ -41,9 +41,8 @@ EXPORT void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc,
 EXPORT void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 		S_SG2_TABGEOPOINT *p_gp, S_SG2_TOPOC_DATA *p_topoc, int *p_err);
 
-EXPORT void SG2_topocentric_correction_refraction(double *p_gamma_S0,
-		unsigned long n, double P, double T, SG2_CORRECTION_REFRACTION method,
-		double *p_gamma_S, int *p_err);
+EXPORT void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
+		SG2_CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S, int *p_err);
 
 #ifdef	__cplusplus
 }

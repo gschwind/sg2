@@ -418,9 +418,9 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 
 }
 
-void SG2_topocentric_correction_refraction(double *p_gamma_S0,
-		unsigned long n, double P, double T,
-		SG2_CORRECTION_REFRACTION method, double *p_gamma_S, int *p_err) {
+void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
+		SG2_CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S, int *p_err) {
+
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
@@ -429,9 +429,15 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0,
 	double tan_gamma_S0;
 	double gamma_S0, gamma_S0_2, gamma_S0_3, gamma_S0_4;
 	unsigned long k;
+	double P, T;
 
 	switch (method) {
+
 	case SG2_CORRECTION_REFRACTION_SAE:
+
+		P = p_data_corr[0];
+		T = p_data_corr[1];
+
 		K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
 		for (k = 0; k < n; k++) {
 			gamma_S0 = p_gamma_S0[k];
@@ -445,6 +451,9 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0,
 		}
 		break;
 	case SG2_CORRECTION_REFRACTION_ZIM:
+
+		P = p_data_corr[0];
+		T = p_data_corr[1];
 
 		K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
 		for (k = 0; k < n; k++) {
@@ -466,10 +475,10 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0,
 		}
 		break;
 	default:
-		*p_err = SG2_ERR_TOPOCENTRIC_CORRECTION_REFRACTION_METHOD;
+		memcpy(p_gamma_S, p_gamma_S0, n*sizeof(double));
 		return;
 	}
 
-	return gamma_S0 + Dgamma_S;
+
 }
 
