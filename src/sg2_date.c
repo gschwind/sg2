@@ -52,7 +52,7 @@ void SG2_date_delete_tabjd(S_SG2_DATE_TABJD *p_jd, int *p_err) {
 	free(p_jd);
 }
 
-S_SG2_DATE_TABYMDH *SG2_date_create_tabymd(unsigned long nd, int *p_err) {
+S_SG2_DATE_TABYMDH *SG2_date_create_tabymdh(unsigned long nd, int *p_err) {
 	S_SG2_DATE_TABYMDH *p_ymdh = NULL;
 
 	p_ymdh = (S_SG2_DATE_TABYMDH *) malloc(sizeof(S_SG2_DATE_TABYMDH));

@@ -109,7 +109,6 @@ void SG2_geocentric_delete_geoc_data(S_SG2_GEOC_DATA *p_geoc, int *p_err) {
 void SG2_geocentric_set_geoc_data(S_SG2_DATE_TABJD *p_jd, S_SG2_HELIOC_DATA *p_helioc,
 		S_SG2_GEOC_DATA *p_geoc, int *p_err) {
 	short idx0;
-	double x, x0, dx;
 	int kd;
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;

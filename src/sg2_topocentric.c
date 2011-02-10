@@ -45,8 +45,7 @@ S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
 	if (ellpstype != SG2_ELLPSTYPE_USER) {
 		p_gp->p_ellps->a = tab_ellps_ref[ellpstype].a;
 		p_gp->p_ellps->f = tab_ellps_ref[ellpstype].f;
-	}
-	else {
+	} else {
 		p_gp->p_ellps->a = p_data_ellps[0];
 		p_gp->p_ellps->f = p_data_ellps[1];
 	}
@@ -189,8 +188,8 @@ void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp, int *p_err) {
 	free(p_gp);
 }
 
-S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long nd, unsigned long np,
-		int *p_err) {
+S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long nd,
+		unsigned long np, int *p_err) {
 	S_SG2_TOPOC_DATA *p_topoc;
 	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5;
 	unsigned long kp;
@@ -352,8 +351,8 @@ void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc, int *p_err) {
 	free(p_topoc);
 }
 
-void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc, S_SG2_TABGEOPOINT *p_gp,
-		S_SG2_TOPOC_DATA *p_topoc, int *p_err) {
+void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
+		S_SG2_TABGEOPOINT *p_gp, S_SG2_TOPOC_DATA *p_topoc, int *p_err) {
 
 	unsigned long np, kp, nd, kd;
 	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
@@ -385,11 +384,6 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc, S_SG2_TABGEOPOINT *
 		geoc_nu = p_geoc->nu;
 		geoc_r_alpha = p_geoc->r_alpha;
 		geoc_delta = p_geoc->delta;
-
-		fprintf(stderr, "\nGP : %.5f %.5f %.2f (ELLPS[%d]::%.2f, %.8f)\n",
-				p_gp->lambda[kp] * SG2_RAD2DEG, p_gp->phi[kp] * SG2_RAD2DEG,
-				p_gp->h[kp], (int) p_gp->p_ellps->ellpstype, p_gp->p_ellps->a,
-				p_gp->p_ellps->f);
 
 		for (kd = 0; kd < nd; kd++) {
 
@@ -424,50 +418,58 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc, S_SG2_TABGEOPOINT *
 
 }
 
-double SG2_topocentric_correction_refraction(double gamma_S0, double P,
-		double T, SG2_CORRECTION_REFRACTION method, int *p_err) {
+void SG2_topocentric_correction_refraction(double *p_gamma_S0,
+		unsigned long n, double P, double T,
+		SG2_CORRECTION_REFRACTION method, double *p_gamma_S, int *p_err) {
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
 	double Dgamma_S = 0.0;
 	double tan_gamma_S0;
-	double gamma_S0_2, gamma_S0_3, gamma_S0_4;
+	double gamma_S0, gamma_S0_2, gamma_S0_3, gamma_S0_4;
+	unsigned long k;
 
 	switch (method) {
 	case SG2_CORRECTION_REFRACTION_SAE:
 		K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
-		if (gamma_S0 > gamma_S0_seuil) {
-			Dgamma_S = K / (tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
-		} else {
-			Dgamma_S = (K / R) * tan(gamma_S0_seuil) / tan(gamma_S0);
+		for (k = 0; k < n; k++) {
+			gamma_S0 = p_gamma_S0[k];
+			if (gamma_S0 > gamma_S0_seuil) {
+				p_gamma_S[k] = gamma_S0 + K / (tan(gamma_S0 + 0.0031376
+						/ (gamma_S0 + 0.089186)));
+			} else {
+				p_gamma_S[k] = gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(
+						gamma_S0);
+			}
 		}
 		break;
 	case SG2_CORRECTION_REFRACTION_ZIM:
 
 		K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
-		if (gamma_S0 <= -0.010036) {
-			Dgamma_S = (-20.774 / tan_gamma_S0) * K;
-		} else if (gamma_S0 <= 0.087266) {
-			gamma_S0_2 = gamma_S0 * gamma_S0;
-			gamma_S0_3 = gamma_S0_2 * gamma_S0;
-			gamma_S0_4 = gamma_S0_4 * gamma_S0;
-			Dgamma_S = (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * gamma_S0_2
-					+ -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4) * K;
-		} else if (gamma_S0 <= 1.483529864195180) {
-			Dgamma_S = K * (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0)
-					+ 0.000086 / pow(tan_gamma_S0, 5.0));
+		for (k = 0; k < n; k++) {
+			gamma_S0 = p_gamma_S0[k];
+			if (gamma_S0 <= -0.010036) {
+				p_gamma_S[k] = gamma_S0 + (-20.774 / tan_gamma_S0) * K;
+			} else if (gamma_S0 <= 0.087266) {
+				gamma_S0_2 = gamma_S0 * gamma_S0;
+				gamma_S0_3 = gamma_S0_2 * gamma_S0;
+				gamma_S0_4 = gamma_S0_4 * gamma_S0;
+				p_gamma_S[k] = gamma_S0 + (1735 - 2.969067e4 * gamma_S0
+						+ 3.394422e5 * gamma_S0_2 + -2.405683e6 * gamma_S0_3
+						+ 7.66231727e6 * gamma_S0_4) * K;
+			} else if (gamma_S0 <= 1.483529864195180) {
+				p_gamma_S[k] = gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07
+						/ pow(tan_gamma_S0, 3.0) + 0.000086 / pow(tan_gamma_S0,
+						5.0));
+			}
 		}
 		break;
 	default:
 		*p_err = SG2_ERR_TOPOCENTRIC_CORRECTION_REFRACTION_METHOD;
-		return 0.0;
+		return;
 	}
 
 	return gamma_S0 + Dgamma_S;
 }
 
-void SG2_topocentric_sunrise_sunset_suntransit()
-{
-
-}

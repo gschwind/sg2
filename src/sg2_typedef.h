@@ -49,13 +49,6 @@ typedef struct s_date_ydoy_h {
 
 } S_SG2_DATE_TABYDOYH;
 
-/* Table of integer julian date at 12UT */
-typedef struct s_tabday {
-	unsigned long nd;
-
-
-} S_SG2_DATE_TABDAY;
-
 /* Julian date */
 typedef struct s_date_tabjd {
 	unsigned long nd;
@@ -149,12 +142,9 @@ typedef enum {
 typedef struct s_data {
 
 	unsigned long np;
-	unsigned long nd;
-	double Ts; /* sampling time */
-	double Ti; /* integration time */
-	double alpha;
-
-	S_SG2_DATE_TABJD *p_jd_0TU;
+	unsigned long nday;
+	unsigned long nt;
+	S_SG2_DATE_TABJD *p_jd_0;
 
 } S_SG2_DATA;
 

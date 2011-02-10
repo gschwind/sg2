@@ -30,9 +30,9 @@ EXPORT S_SG2_DATE_TABYMDH *SG2_date_create_tabymdh(unsigned long nd, int *p_err)
 
 EXPORT void SG2_date_delete_tabymdh(S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
 
-EXPORT S_SG2_DATE_TABYDOYH *SG2_date_create_tabydoy(unsigned long nd, int *p_err);
+EXPORT S_SG2_DATE_TABYDOYH *SG2_date_create_tabydoyh(unsigned long nd, int *p_err);
 
-EXPORT void SG2_date_delete_tabydoy(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
+EXPORT void SG2_date_delete_tabydoyh(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
 
 EXPORT void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymdh,
 		int *p_err);
