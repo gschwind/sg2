@@ -219,6 +219,8 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	sz_data = np * nd * sizeof(double);
 	memcpy(p_sunpos->alpha_S[0], p_topoc->alpha_S[0], sz_data);
 	memcpy(p_sunpos->gamma_S0[0], p_topoc->gamma_S0[0], sz_data);
+	memcpy(p_sunpos->omega[0], p_topoc->omega[0], sz_data);
+	memcpy(p_sunpos->delta[0], p_topoc->delta[0], sz_data);
 	SG2_topocentric_correction_refraction(p_sunpos->gamma_S0[0], np * nd,
 			method, p_data_corr, p_sunpos->gamma_S[0], p_err);
 
