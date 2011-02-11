@@ -15,7 +15,7 @@
 #define SG2_DEG2RAD 1.745329251994330e-002
 #define SG2_RAD2DEG 5.729577951308232e+001
 /* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
-#define SG2_SOLAR_CONSTANT 1367
+#define SG2_SOLAR_CONSTANT 1367.0
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
 #define SG2_AU 149597870691.0 /* +/- 6 m (McCarthy et Petit, 2003) */
 
@@ -146,6 +146,8 @@ typedef struct s_sunpos {
 	unsigned long np;
 	unsigned long nd;
 
+	S_SG2_DATE_TABJD *p_jd;
+
 	double **omega;
 	double **delta;
 	double **alpha_S;
@@ -153,6 +155,28 @@ typedef struct s_sunpos {
 	double **gamma_S;
 
 } S_SG2_SUNPOS;
+
+typedef struct s_tabtilt {
+	unsigned long na;
+	double *alpha; /* azimuth of the plane, from North, eastward (rad) */
+	double *beta; /* slope of the plane from horizontal (rad) */
+} S_SG2_TABTILT;
+
+typedef struct s_toa_irrad {
+
+	unsigned long np;
+	unsigned long nd;
+	unsigned long na;
+
+	double dt;
+	double eta; /* 0 : left, 0.5 : middle, 1 : right */
+
+	S_SG2_DATE_TABJD *p_jd;
+	S_SG2_TABTILT *p_tilt;
+
+	double ***toa_dt; /* toa_dt[0..na-1][0..np-1][0..nd-1] */
+
+} S_SG2_TOA_IRRAD;
 
 #ifdef	__cplusplus
 }

@@ -344,6 +344,8 @@ void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc, int *p_err) {
 	free(p_topoc->r_alpha);
 	free(p_topoc->delta[0]);
 	free(p_topoc->delta);
+	free(p_topoc->omega[0]);
+	free(p_topoc->omega);
 	free(p_topoc->gamma_S0[0]);
 	free(p_topoc->gamma_S0);
 	free(p_topoc->alpha_S[0]);
@@ -362,6 +364,7 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 	double Delta_r_alpha_kp_kd, cos_omega_kp_kd;
 	double cos_delta_kp_kd, sin_delta_kp_kd, tan_delta_kp_kd;
 	double xi;
+
 
 	p_topoc->p_gp = p_gp;
 	p_topoc->p_geoc = p_geoc;
@@ -419,7 +422,8 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 }
 
 void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
-		SG2_CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S, int *p_err) {
+		SG2_CORRECTION_REFRACTION method, double *p_data_corr,
+		double *p_gamma_S, int *p_err) {
 
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
@@ -475,10 +479,9 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 		}
 		break;
 	default:
-		memcpy(p_gamma_S, p_gamma_S0, n*sizeof(double));
+		memcpy(p_gamma_S, p_gamma_S0, n * sizeof(double));
 		return;
 	}
-
 
 }
 
