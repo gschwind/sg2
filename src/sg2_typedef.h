@@ -22,6 +22,7 @@
 #define SG2_MACRO_0_2PI(x) ((x)-floor((x)/(SG2_2PI))*(SG2_2PI))
 #define SG2_MACRO_PI_PI(x) ((x)-round((x)/(SG2_2PI))*(SG2_2PI))
 
+
 #ifdef	__cplusplus
 extern "C"
   {
@@ -144,6 +145,9 @@ typedef struct s_sunpos {
 
 	unsigned long np;
 	unsigned long nd;
+
+	double **omega;
+	double **delta;
 	double **alpha_S;
 	double **gamma_S0;
 	double **gamma_S;

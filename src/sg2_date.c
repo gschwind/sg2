@@ -146,8 +146,8 @@ void SG2_date_delete_tabydoyh(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err) {
 	free(p_ydoyh);
 }
 
-void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymdh,
-		int *p_err) {
+void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd,
+		S_SG2_DATE_TABYMDH *p_ymdh, int *p_err) {
 	int k;
 	double H, L, N, I, J, K, jd;
 
@@ -177,8 +177,8 @@ void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymd
 
 }
 
-void SG2_date_tabymdh_to_tabjd(S_SG2_DATE_TABYMDH *p_ymdh, S_SG2_DATE_TABJD *p_jd,
-		int *p_err) {
+void SG2_date_tabymdh_to_tabjd(S_SG2_DATE_TABYMDH *p_ymdh,
+		S_SG2_DATE_TABJD *p_jd, int *p_err) {
 
 	int k;
 	double Y, M, D, H;
@@ -248,25 +248,29 @@ void SG2_date_tabydoyh_to_tabymdh(S_SG2_DATE_TABYDOYH *p_ydoyh,
 
 }
 
-void SG2_date_set_tabjd_tt(S_SG2_DATE_TABJD *p_jd, double *p_delta_tt, int *p_err) {
+void SG2_date_set_tabjd_tt(double *p_delta_tt, S_SG2_DATE_TABJD *p_jd,
+		int *p_err) {
 
-	int k;
+	int kd;
 	long idx;
 
 	if (p_delta_tt == NULL) {
-		for (k = 0; k < p_jd->nd; k++) {
-			idx = (short) round((p_jd->jd_ut[k] - SG2_precomputed_delta_tt_j0)
+		for (kd = 0; kd < p_jd->nd; kd++) {
+
+			idx = (short) round((p_jd->jd_ut[kd] - SG2_precomputed_delta_tt_j0)
 					/ SG2_precomputed_delta_tt_dj);
+
 			if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
 				*p_err = SG2_ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
 				return;
 			}
-			p_jd->jd_tt[k] = p_jd->jd_ut[k] + SG2_precomputed_delta_tt[idx]
+			p_jd->jd_tt[kd] = p_jd->jd_ut[kd] + SG2_precomputed_delta_tt[idx]
 					/ 86400.0;
+
 		}
 	} else {
-		for (k = 0; k < p_jd->nd; k++) {
-			p_jd->jd_tt[k] = p_jd->jd_tt[k] + p_delta_tt[k] / 86400.0;
+		for (kd = 0; kd < p_jd->nd; kd++) {
+			p_jd->jd_tt[kd] = p_jd->jd_tt[kd] + p_delta_tt[kd] / 86400.0;
 		}
 	}
 	p_jd->jd_tt_set = 1;

@@ -32,8 +32,8 @@ EXPORT void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp,
 EXPORT void SG2_topocecentric_set_tabgeopoint(double *lon, double *lat,
 		double *h, S_SG2_TABGEOPOINT *p_gp, int *p_err);
 
-EXPORT S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long nd,
-		unsigned long np, int *p_err);
+EXPORT S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
+		unsigned long nd, int *p_err);
 
 EXPORT void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc,
 		int *p_err);

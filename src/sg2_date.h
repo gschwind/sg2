@@ -46,7 +46,7 @@ EXPORT void SG2_date_tabymdh_to_tabydoyh(S_SG2_DATE_TABYMDH *p_ymdh,
 EXPORT void SG2_date_tabydoyh_to_tabymdh(S_SG2_DATE_TABYDOYH *p_ydoyh,
 		S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
 
-EXPORT void SG2_date_set_tabjd_tt(S_SG2_DATE_TABJD *p_jd, double *p_delta_tt, int *p_err);
+EXPORT void SG2_date_set_tabjd_tt(double *p_delta_tt, S_SG2_DATE_TABJD *p_jd, int *p_err);
 
 #ifdef	__cplusplus
 }

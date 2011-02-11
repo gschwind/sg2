@@ -188,8 +188,8 @@ void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp, int *p_err) {
 	free(p_gp);
 }
 
-S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long nd,
-		unsigned long np, int *p_err) {
+S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
+		unsigned long nd, int *p_err) {
 	S_SG2_TOPOC_DATA *p_topoc;
 	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5;
 	unsigned long kp;
