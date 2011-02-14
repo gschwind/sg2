@@ -22,19 +22,23 @@ static int SG2_date_leapyear(short year) {
 S_SG2_DATE_TABJD *SG2_date_create_tabjd(unsigned long nd, int *p_err) {
 	S_SG2_DATE_TABJD *p_jd = NULL;
 
+
 	p_jd = (S_SG2_DATE_TABJD *) malloc(sizeof(S_SG2_DATE_TABJD));
 	if (p_jd == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_1;
 		return NULL;
 	}
 	p_jd->nd = nd;
+	p_jd->jd_tt_set = 0;
+	p_jd->jd_ut = NULL;
+	p_jd->jd_tt = NULL;
+
 	p_jd->jd_ut = (double *) malloc(p_jd->nd * sizeof(double));
 	if (p_jd->jd_ut == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_2;
 		free(p_jd);
 		return NULL;
 	}
-	p_jd->jd_tt_set = 0;
 	p_jd->jd_tt = (double *) malloc(p_jd->nd * sizeof(double));
 	if (p_jd->jd_tt == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_3;

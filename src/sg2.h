@@ -35,6 +35,8 @@ extern "C"
 #include "sg2_topocentric.h"
 #include <stdio.h>
 
+FILE *fp_log;
+
 EXPORT S_SG2_SUNPOS *sg2_create_sunpos(unsigned long np, unsigned long nd,
 		int *p_err);
 

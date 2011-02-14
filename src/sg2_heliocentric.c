@@ -15,8 +15,9 @@
 #include <stdio.h>
 #include <string.h>
 
-S_SG2_HELIOC_DATA *SG2_heliocentric_create_helioc_data(unsigned long n, int *p_err) {
+S_SG2_HELIOC_DATA *SG2_heliocentric_create_helioc_data(unsigned long nd, int *p_err) {
 	S_SG2_HELIOC_DATA *p_helioc;
+
 
 	p_helioc = (S_SG2_HELIOC_DATA *) malloc(sizeof(S_SG2_HELIOC_DATA));
 	if (p_helioc == NULL) {
@@ -24,13 +25,18 @@ S_SG2_HELIOC_DATA *SG2_heliocentric_create_helioc_data(unsigned long n, int *p_e
 		return NULL;
 	}
 
-	p_helioc->R = (double *) malloc(n * sizeof(double));
+	p_helioc->nd = nd;
+	p_helioc->L = NULL;
+	p_helioc->R = NULL;
+	p_helioc->p_jd = NULL;
+
+	p_helioc->R = (double *) malloc(nd * sizeof(double));
 	if (p_helioc->R == NULL) {
 		*p_err = SG2_ERR_HELIOCENTRIC_CREATE_HELIOC_MALLOC_2;
 		free(p_helioc);
 		return NULL;
 	}
-	p_helioc->L = (double *) malloc(n * sizeof(double));
+	p_helioc->L = (double *) malloc(nd * sizeof(double));
 	if (p_helioc->L == NULL) {
 		*p_err = SG2_ERR_HELIOCENTRIC_CREATE_HELIOC_MALLOC_3;
 		free(p_helioc->R);

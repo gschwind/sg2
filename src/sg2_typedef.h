@@ -173,7 +173,7 @@ typedef struct s_toa_irrad {
 
 	S_SG2_DATE_TABJD *p_jd;
 	S_SG2_TABTILT *p_tilt;
-
+	S_SG2_SUNPOS *p_sunpos;
 	double ***toa_dt; /* toa_dt[0..na-1][0..np-1][0..nd-1] */
 
 } S_SG2_TOA_IRRAD;

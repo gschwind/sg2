@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 
-S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
+S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long nd, int *p_err) {
 	S_SG2_GEOC_DATA *p_geoc;
 
 	p_geoc = (S_SG2_GEOC_DATA *) malloc(sizeof(S_SG2_GEOC_DATA));
@@ -25,20 +25,30 @@ S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_geoc->epsilon = (double *) malloc(n * sizeof(double));
+	p_geoc->nd = nd;
+	p_geoc->Delta_psi = NULL;
+	p_geoc->EOT = NULL;
+	p_geoc->Theta_a = NULL;
+	p_geoc->delta = NULL;
+	p_geoc->epsilon = NULL;
+	p_geoc->nu = NULL;
+	p_geoc->p_helioc = NULL;
+	p_geoc->p_jd = NULL;
+
+	p_geoc->epsilon = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->epsilon == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_2;
 		free(p_geoc);
 		return NULL;
 	}
-	p_geoc->Theta_a = (double *) malloc(n * sizeof(double));
+	p_geoc->Theta_a = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->Theta_a == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_3;
 		free(p_geoc->epsilon);
 		free(p_geoc);
 		return NULL;
 	}
-	p_geoc->r_alpha = (double *) malloc(n * sizeof(double));
+	p_geoc->r_alpha = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->r_alpha == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_4;
 		free(p_geoc->epsilon);
@@ -46,7 +56,7 @@ S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
 		free(p_geoc);
 		return NULL;
 	}
-	p_geoc->delta = (double *) malloc(n * sizeof(double));
+	p_geoc->delta = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->delta == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_5;
 		free(p_geoc->epsilon);
@@ -56,7 +66,7 @@ S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_geoc->Delta_psi = (double *) malloc(n * sizeof(double));
+	p_geoc->Delta_psi = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->Delta_psi == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_6;
 		free(p_geoc->epsilon);
@@ -67,7 +77,7 @@ S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_geoc->nu = (double *) malloc(n * sizeof(double));
+	p_geoc->nu = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->nu == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_7;
 		free(p_geoc->epsilon);
@@ -79,7 +89,7 @@ S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_geoc->EOT = (double *) malloc(n * sizeof(double));
+	p_geoc->EOT = (double *) malloc(nd * sizeof(double));
 	if (p_geoc->EOT == NULL) {
 		*p_err = SG2_ERR_GEOCENTRIC_CREATE_GEOC_MALLOC_8;
 		free(p_geoc->epsilon);
