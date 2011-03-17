@@ -486,9 +486,8 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
-	double Dgamma_S = 0.0;
-	double tan_gamma_S0;
-	double gamma_S0, gamma_S0_2, gamma_S0_3, gamma_S0_4;
+	double tan_gamma_S0 = 0.0;
+	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
 	unsigned long k;
 	double P, T;
 

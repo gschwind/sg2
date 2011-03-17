@@ -289,8 +289,9 @@ S_SG2_TOA_IRRAD *sg2_create_toa_irrad(unsigned long na, unsigned long np,
 		}
 	}
 
-	p_toa_irrad->p_sunpos = sg2_create_sunpos(np,nd,p_err);
-	if (p_toa_irrad->p_sunpos == NULL) {
+	p_toa_irrad->p_sunpos = sg2_create_sunpos(np, nd, p_err);
+	if (p_toa_irrad->p_sunpos == NULL)
+	{
 		*p_err = SG2_ERR_CREATE_TOA_IRRAD_MALLOC_5;
 		free(p_toa_irrad->toa_dt[0][0]);
 		free(p_toa_irrad->toa_dt[0]);
@@ -307,6 +308,7 @@ void sg2_delete_toa_irrad(S_SG2_TOA_IRRAD *p_toa_irrad, int *p_err)
 	free(p_toa_irrad->toa_dt[0][0]);
 	free(p_toa_irrad->toa_dt[0]);
 	free(p_toa_irrad->toa_dt);
+	sg2_delete_sunpos(p_toa_irrad->p_sunpos, p_err);
 	free(p_toa_irrad);
 }
 
@@ -321,12 +323,14 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	S_SG2_GEOC_DATA *p_geoc;
 	S_SG2_TABGEOPOINT *p_gp;
 	S_SG2_TOPOC_DATA *p_topoc;
-	int kd;
 	int nd;
 	int np;
 	int sz_data;
 
-	fp_log = fopen("c:\\temp\\sg2_log.txt", "w");
+	/*
+	 FILE *fp_log;
+
+	 fp_log = fopen("c:\\temp\\sg2_log_sunpos.txt", "w");*/
 
 	np = p_sunpos->np;
 	nd = p_sunpos->nd;
@@ -353,8 +357,10 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 
 	SG2_topocentric_set_topoc_data(p_geoc, p_gp, p_topoc, p_err);
 
-	fprintf(fp_log, "sg2_set_sunpos :: %d, %d : set ok\n", np, nd);
-	fflush(fp_log);
+	/*
+	 fprintf(fp_log, "sg2_set_sunpos :: %d, %d : set ok\n", np, nd);
+	 fflush(fp_log);
+	 */
 
 	sz_data = np * nd * sizeof(double);
 	memcpy(p_sunpos->alpha_S[0], p_topoc->alpha_S[0], sz_data);
@@ -362,8 +368,10 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	memcpy(p_sunpos->omega[0], p_topoc->omega[0], sz_data);
 	memcpy(p_sunpos->delta[0], p_topoc->delta[0], sz_data);
 
-	fprintf(fp_log, "sg2_set_sunpos :: %d, %d : memcpy ok\n", np, nd);
-	fflush(fp_log);
+	/*
+	 fprintf(fp_log, "sg2_set_sunpos :: %d, %d : memcpy ok\n", np, nd);
+	 fflush(fp_log);
+	 */
 
 	SG2_topocentric_correction_refraction(p_sunpos->gamma_S0[0], np * nd,
 			method, p_data_corr, p_sunpos->gamma_S[0], p_err);
@@ -375,7 +383,9 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	SG2_topocentric_delete_tabgeopoint(p_gp, p_err);
 	SG2_topocentric_delete_topoc_data(p_topoc, p_err);
 
-	fclose(fp_log);
+	/*
+	 fclose(fp_log);
+	 */
 
 }
 
@@ -403,8 +413,12 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 	double dts;
 	double sum_sin_gamma_S0_kp;
 	double sum_cos_gamma_S0_kp;
+	double *p_jd_ut_dec;
 
-	fp_log = fopen("c:\\temp\\sg2_log.txt", "w");
+	/*FILE *fp_log;
+
+	 fp_log = fopen("c:\\temp\\sg2_log_toa_irrad.txt", "w");
+	 */
 
 	na = p_toa_irrad->na;
 	np = p_toa_irrad->np;
@@ -424,6 +438,15 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 	p_gp = SG2_topocentric_create_tabgeopoint(np, ellpstype, p_data_ellps,
 			p_err);
 	SG2_topocecentric_set_tabgeopoint(p_lon, p_lat, p_elevation, p_gp, p_err);
+
+	p_jd_ut_dec = (double *) malloc(nd * sizeof(double));
+	for (kd = 0; kd < nd; kd++)
+	{
+		p_jd_ut_dec[kd] = p_jd_ut[kd] - eta * dt / 2.0;
+	}
+	sg2_set_sunpos(p_lon, p_lat, NULL, ellpstype, p_data_ellps, p_jd_ut_dec,
+			p_delta_tt, 0, NULL, p_toa_irrad->p_sunpos, p_err);
+	free(p_jd_ut_dec);
 
 	switch (nts)
 	{
@@ -445,15 +468,12 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 
 		for (kd = 0; kd < nd; kd++)
 		{
-
-			p_jd_nts->jd_tt_set = 1;
 			p_jd_nts->jd_ut[0] = p_jd->jd_ut[kd] - eta * dt;
-			p_jd_nts->jd_tt[0] = p_jd->jd_tt[kd] - eta * dt;
 			for (kts = 1; kts < nts; kts++)
 			{
 				p_jd_nts->jd_ut[kts] = p_jd_nts->jd_ut[kts - 1] + dts;
-				p_jd_nts->jd_tt[kts] = p_jd_nts->jd_tt[kts - 1] + dts;
 			}
+			SG2_date_set_tabjd_tt(NULL, p_jd_nts, p_err);
 
 			SG2_heliocentric_set_helioc_data(p_jd_nts, p_helioc_nts, p_err);
 			SG2_geocentric_set_geoc_data(p_jd_nts, p_helioc_nts, p_geoc_nts,
@@ -466,20 +486,30 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 				sum_cos_gamma_S0_kp = 0.0;
 				for (kts = 0; kts < nts; kts++)
 				{
-					sum_sin_gamma_S0_kp += sin(p_topoc_nts->gamma_S0[kp][kts]);
-					sum_cos_gamma_S0_kp += cos(p_topoc_nts->gamma_S0[kp][kts]);
+					/*
+					 fprintf(fp_log,
+					 "sg2_set_toa_irrad (%d) :: [%d/%d, %d/%d] :: %f %f\n",
+					 nts, kp, p_topoc_nts->np, kts, p_topoc_nts->nd,
+					 p_topoc_nts->p_jd->jd_ut[kts],
+					 sin(p_topoc_nts->gamma_S0[kp][kts]));
+					 fprintf(fp_log, "%f %f\n", p_topoc_nts->p_jd->jd_ut[kts],
+					 p_topoc_nts->gamma_S0[kp][kts]);
+					 fflush(fp_log);
+					 */
+
+					if (p_topoc_nts->gamma_S0[kp][kts] > 0)
+					{
+						sum_sin_gamma_S0_kp += sin(
+								p_topoc_nts->gamma_S0[kp][kts]);
+						sum_cos_gamma_S0_kp += cos(
+								p_topoc_nts->gamma_S0[kp][kts]);
+					}
 				}
 				for (ka = 0; ka < na; ka++)
 				{
-					fprintf(fp_log,
-							"sg2_set_toa_irrad :: [%d, %d, %d] :: %f\n", ka,
-							kp, kd, p_topoc_nts->gamma_S0[0][0]);
-					fflush(fp_log);
 					p_toa_irrad->toa_dt[ka][kp][kd] = SG2_SOLAR_CONSTANT * pow(
 							p_helioc_nts->R[0], -2.0) * sum_sin_gamma_S0_kp
 							* dts;
-					p_toa_irrad->toa_dt[ka][kp][kd]
-							= p_topoc_nts->gamma_S0[0][0];
 				}
 			}
 
@@ -495,8 +525,9 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 
 	SG2_topocentric_delete_tabgeopoint(p_gp, p_err);
 
-	fprintf(fp_log, "sg2_set_toa_irrad :: %d, %d, %d : END\n", na, np, nd);
-
-	fclose(fp_log);
+	/*
+	 fprintf(fp_log, "sg2_set_toa_irrad :: %d, %d, %d : END\n", na, np, nd);
+	 fclose(fp_log);
+	 */
 
 }
