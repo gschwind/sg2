@@ -9,6 +9,11 @@
 
 #include "sg2.h"
 #include "sg2_precomputed_delta_tt.h"
+#include "sg2_err.h"
+#include "sg2_date.h"
+#include "sg2_heliocentric.h"
+#include "sg2_geocentric.h"
+#include "sg2_topocentric.h"
 
 #include <math.h>
 #include <stdlib.h>

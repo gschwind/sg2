@@ -1,7 +1,7 @@
 /*
  * sg2_geocentric.c
  *
- *  Created on: 4 févr. 2011
+ *  Created on: 4 fï¿½vr. 2011
  *      Author: pblanc
  */
 
@@ -10,6 +10,11 @@
 #include "sg2.h"
 #include "sg2_precomputed_heliocentric.h"
 #include "sg2_precomputed_geocentric.h"
+#include "sg2_err.h"
+#include "sg2_date.h"
+#include "sg2_heliocentric.h"
+#include "sg2_geocentric.h"
+#include "sg2_topocentric.h"
 
 #include <math.h>
 #include <stdlib.h>

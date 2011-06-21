@@ -1,13 +1,18 @@
 /*
  * sg2_topocentric.c
  *
- *  Created on: 4 févr. 2011
+ *  Created on: 4 fï¿½vr. 2011
  *      Author: pblanc
  */
 
 #define SG2_TOPOCENTRIC_C_
 
 #include "sg2.h"
+#include "sg2_err.h"
+#include "sg2_date.h"
+#include "sg2_heliocentric.h"
+#include "sg2_geocentric.h"
+#include "sg2_topocentric.h"
 
 #include <math.h>
 #include <stdlib.h>

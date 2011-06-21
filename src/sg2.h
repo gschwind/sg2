@@ -1,7 +1,7 @@
 /*
  * sg2.h
  *
- *  Created on: 2 févr. 2011
+ *  Created on: 2 fï¿½vr. 2011
  *      Author: pblanc
  */
 
@@ -27,12 +27,13 @@ extern "C"
 {
 #endif
 
-#include "SG2_err.h"
-#include "SG2_typedef.h"
-#include "SG2_date.h"
+#include "sg2_typedef.h"
+#include "sg2_err.h"
+#include "sg2_date.h"
 #include "sg2_heliocentric.h"
 #include "sg2_geocentric.h"
 #include "sg2_topocentric.h"
+
 #include <stdio.h>
 
 

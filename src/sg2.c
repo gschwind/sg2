@@ -1,7 +1,7 @@
 /*
  * sg2.c
  *
- *  Created on: 10 févr. 2011
+ *  Created on: 10 fï¿½vr. 2011
  *      Author: pblanc
  */
 

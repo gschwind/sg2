@@ -1,14 +1,19 @@
 /*
  * sg2_heliocentric.c
  *
- *  Created on: 4 févr. 2011
+ *  Created on: 4 fï¿½vr. 2011
  *      Author: pblanc
  */
 
 #define SG2_HELIOCENTRIC_C_
 
 #include "sg2.h"
-#include "SG2_precomputed_heliocentric.h"
+#include "sg2_precomputed_heliocentric.h"
+#include "sg2_err.h"
+#include "sg2_date.h"
+#include "sg2_heliocentric.h"
+#include "sg2_geocentric.h"
+#include "sg2_topocentric.h"
 
 #include <math.h>
 #include <stdlib.h>
