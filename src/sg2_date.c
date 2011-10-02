@@ -279,8 +279,8 @@ void SG2_date_set_tabjd_tt(double *p_delta_tt, S_SG2_DATE_TABJD *p_jd,
 	if (p_delta_tt == NULL) {
 		for (kd = 0; kd < p_jd->nd; kd++) {
 
-			idx = (short) round((p_jd->jd_ut[kd] - SG2_precomputed_delta_tt_j0)
-					/ SG2_precomputed_delta_tt_dj);
+			idx = (short) floor((p_jd->jd_ut[kd] - SG2_precomputed_delta_tt_j0)
+					/ SG2_precomputed_delta_tt_dj + 0.5);
 
 			if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
 				*p_err = SG2_ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;

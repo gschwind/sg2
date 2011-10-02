@@ -88,7 +88,7 @@ void SG2_heliocentric_set_helioc_data(S_SG2_DATE_TABJD *p_jd, S_SG2_HELIOC_DATA 
 
 		x = (p_jd->jd_tt[k] - SG2_precomputed_heliocentric_R_j0)
 				/ SG2_precomputed_heliocentric_R_dj;
-		idx0 = (short) round(x);
+		idx0 = (short) floor(x + 0.5);
 		if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj)) {
 			*p_err = SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 			return;

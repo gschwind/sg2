@@ -151,9 +151,9 @@ void SG2_geocentric_set_geoc_data(S_SG2_DATE_TABJD *p_jd, S_SG2_HELIOC_DATA *p_h
 
 	for (kd = 0; kd < p_jd->nd; kd++) {
 
-		idx0 = (short) round((p_jd->jd_tt[kd]
+		idx0 = (short) floor((p_jd->jd_tt[kd]
 				- SG2_precomputed_geocentric_Delta_psi_j0)
-				/ SG2_precomputed_geocentric_Delta_psi_dj);
+				/ SG2_precomputed_geocentric_Delta_psi_dj + 0.5);
 		if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
 			*p_err = SG2_ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
 			return;
