@@ -166,6 +166,7 @@ typedef struct s_sunpos {
 	double **alpha_S;
 	double **gamma_S0;
 	double **gamma_S;
+	double **E0;
 
 } S_SG2_SUNPOS;
 

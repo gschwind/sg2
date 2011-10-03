@@ -31,7 +31,7 @@ S_SG2_SUNPOS *sg2_create_sunpos(unsigned long np, unsigned long nd, int *p_err)
 {
 
 	S_SG2_SUNPOS *p_sunpos;
-	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5;
+	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5, *p_tmp6;
 	int kp;
 
 	p_sunpos = (S_SG2_SUNPOS *) malloc(sizeof(S_SG2_SUNPOS));
@@ -179,6 +179,43 @@ S_SG2_SUNPOS *sg2_create_sunpos(unsigned long np, unsigned long nd, int *p_err)
 		p_sunpos->delta[kp] = &p_tmp5[kp * nd];
 	}
 
+	p_tmp6 = (double *) malloc(np * nd * sizeof(double));
+	if (p_tmp6 == NULL)
+	{
+		*p_err = SG2_ERR_CREATE_SUNPOS_MALLOC_12;
+		free(p_tmp1);
+		free(p_sunpos->alpha_S);
+		free(p_tmp2);
+		free(p_sunpos->gamma_S0);
+		free(p_tmp4);
+		free(p_sunpos->omega);
+		free(p_tmp5);
+		free(p_sunpos->delta);
+		free(p_sunpos);
+		return NULL;
+	}
+	p_sunpos->E0 = (double **) malloc(np * sizeof(double *));
+	if (p_sunpos->E0 == NULL)
+	{
+		*p_err = SG2_ERR_CREATE_SUNPOS_MALLOC_13;
+		free(p_tmp1);
+		free(p_sunpos->alpha_S);
+		free(p_tmp2);
+		free(p_sunpos->gamma_S0);
+		free(p_tmp3);
+		free(p_sunpos->gamma_S);
+		free(p_tmp4);
+		free(p_sunpos->omega);
+		free(p_tmp5);
+		free(p_sunpos->delta);
+		free(p_tmp6);
+		free(p_sunpos);
+		return NULL;
+	}
+	for (kp = 0; kp < np; kp++)
+	{
+		p_sunpos->E0[kp] = &p_tmp6[kp * nd];
+	}
 	return p_sunpos;
 }
 
@@ -194,6 +231,8 @@ void sg2_delete_sunpos(S_SG2_SUNPOS *p_sunpos, int *p_err)
 	free(p_sunpos->omega);
 	free(p_sunpos->delta[0]);
 	free(p_sunpos->delta);
+	free(p_sunpos->E0[0]);
+	free(p_sunpos->E0);
 	free(p_sunpos);
 }
 
@@ -336,8 +375,8 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	S_SG2_GEOC_DATA *p_geoc;
 	S_SG2_TABGEOPOINT *p_gp;
 	S_SG2_TOPOC_DATA *p_topoc;
-	int nd;
-	int np;
+	int nd,kd;
+	int np,kp;
 	int sz_data;
 
 	/*
@@ -380,6 +419,13 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 	memcpy(p_sunpos->gamma_S0[0], p_topoc->gamma_S0[0], sz_data);
 	memcpy(p_sunpos->omega[0], p_topoc->omega[0], sz_data);
 	memcpy(p_sunpos->delta[0], p_topoc->delta[0], sz_data);
+	
+	for (kd = 0; kd < nd; kd++) {
+		p_sunpos->E0[0][kd] = SG2_SOLAR_CONSTANT * pow(p_helioc->R[kd], -2.0);			
+		for (kp = 1; kp < np; kp++) {
+			p_sunpos->E0[kp][kd] = p_sunpos->E0[0][kd];			
+		}
+	}
 
 	/*
 	 fprintf(fp_log, "sg2_set_sunpos :: %d, %d : memcpy ok\n", np, nd);
