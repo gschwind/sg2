@@ -504,7 +504,7 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 		p_jd_ut_dec[kd] = p_jd_ut[kd] - eta * dt / 2.0;
 	}
 	sg2_set_sunpos(p_lon, p_lat, NULL, ellpstype, p_data_ellps, p_jd_ut_dec,
-			p_delta_tt, 0, NULL, p_toa_irrad->p_sunpos, p_err);
+			p_delta_tt, SG2_CORRECTION_REFRACTION_NONE, NULL, p_toa_irrad->p_sunpos, p_err);
 	free(p_jd_ut_dec);
 
 	switch (nts)
