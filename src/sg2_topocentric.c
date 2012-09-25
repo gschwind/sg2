@@ -441,6 +441,7 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 	p_topoc->p_gp = p_gp;
 	p_topoc->p_geoc = p_geoc;
 	p_topoc->p_jd = p_geoc->p_jd;
+	p_topoc->p_helioc = p_geoc->p_helioc;
 
 	np = p_topoc->np;
 	nd = p_topoc->nd;
