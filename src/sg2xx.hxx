@@ -113,6 +113,10 @@ public:
 	~geocentric_sun_position();
 
 	/** S_SG2_DATE_TABJD **/
+	double const * get_universal_time() const {
+		return _jd->jd_ut;
+	}
+
 	double const * get_terrestrial_time() const {
 		return _jd->jd_tt;
 	}
@@ -172,11 +176,25 @@ public:
 
 	~topocentric_sun_position();
 
-	double const * get_right_sun_ascension();
-	double const * get_sun_declination();
-	double const * get_omega();
-	double const * get_geometric_sun_elevation();
-	double const * get_geometric_azimuth();
+	double const * get_right_sun_ascension() const {
+		return _topoc->r_alpha[0];
+	}
+
+	double const * get_sun_declination() {
+		return _topoc->delta[0];
+	}
+
+	double const * get_omega() {
+		return _topoc->omega[0];
+	}
+
+	double const * get_geometric_sun_elevation() {
+		return _topoc->gamma_S0[0];
+	}
+
+	double const * get_geometric_azimuth() {
+		return _topoc->alpha_S[0];
+	}
 
 };
 
