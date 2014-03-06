@@ -26,8 +26,10 @@ extern "C"
 {
 #endif
 
+S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f);
+
 S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
-		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, int *p_err);
+		S_SG2_ELLPS const *p_data_ellps, int *p_err);
 
 void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp,
 		int *p_err);

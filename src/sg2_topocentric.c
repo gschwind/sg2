@@ -34,18 +34,34 @@
 
 static const S_SG2_ELLPS tab_ellps_ref[8] =
 {
-{ (SG2_ELLPSTYPE) 0, 6378137.0, 3.352810664747481e-003 }, /* WGS84 */
-{ (SG2_ELLPSTYPE) 1, 6378137.0, 3.352810681182319e-003 }, /* RFG83 */
-{ (SG2_ELLPSTYPE) 2, 6378249.2, 3.407549520015651e-003 }, /* NTF / CLARKE1880 */
-{ (SG2_ELLPSTYPE) 3, 6378136.6, 3.352819697896193e-003 }, /* AA */
-{ (SG2_ELLPSTYPE) 4, 6378140.0, 3.352810000000000e-003 }, /* SPA */
-{ (SG2_ELLPSTYPE) 5, 6378169.0, 3.384231430681783e-003 }, /* NGP*/
-{ (SG2_ELLPSTYPE) 6, 6378130.0, 0.0 }, /* SPHERE */
-{ (SG2_ELLPSTYPE) 7, 0.0, 0.0 }, /* USER-DEFINED */
+{ 6378137.0, 3.352810664747481e-003 }, /* WGS84 */
+{ 6378137.0, 3.352810681182319e-003 }, /* RFG83 */
+{ 6378249.2, 3.407549520015651e-003 }, /* NTF / CLARKE1880 */
+{ 6378136.6, 3.352819697896193e-003 }, /* AA */
+{ 6378140.0, 3.352810000000000e-003 }, /* SPA */
+{ 6378169.0, 3.384231430681783e-003 }, /* NGP*/
+{ 6378130.0, 0.0 }, /* SPHERE */
+{ 0.0, 0.0 }, /* USER-DEFINED */
 };
 
+
+S_SG2_ELLPS const * SG2_ELLPSTYPE_WGS84 = &tab_ellps_ref[0];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_RGF83 = &tab_ellps_ref[1];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_NTF = &tab_ellps_ref[2];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_AA = &tab_ellps_ref[3];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_SPA = &tab_ellps_ref[4];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_NGP = &tab_ellps_ref[5];
+S_SG2_ELLPS const * SG2_ELLPSTYPE_SPHERE = &tab_ellps_ref[6];
+
+S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f) {
+	S_SG2_ELLPS * p_ret = (S_SG2_ELLPS *) malloc(sizeof(S_SG2_ELLPS));
+	p_ret->a = a;
+	p_ret->f = f;
+	return p_ret;
+}
+
 S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
-		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, int *p_err)
+		S_SG2_ELLPS const *p_data_ellps, int *p_err)
 {
 	S_SG2_TABGEOPOINT *p_gp;
 
@@ -73,17 +89,13 @@ S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
 		free(p_gp);
 		return NULL;
 	}
-	p_gp->p_ellps->ellpstype = ellpstype;
-	if (ellpstype != SG2_ELLPSTYPE_USER)
-	{
-		p_gp->p_ellps->a = tab_ellps_ref[ellpstype].a;
-		p_gp->p_ellps->f = tab_ellps_ref[ellpstype].f;
+
+	if(p_data_ellps == NULL) {
+		p_data_ellps = SG2_ELLPSTYPE_WGS84;
 	}
-	else
-	{
-		p_gp->p_ellps->a = p_data_ellps[0];
-		p_gp->p_ellps->f = p_data_ellps[1];
-	}
+
+	p_gp->p_ellps->a = p_data_ellps->a;
+	p_gp->p_ellps->f = p_data_ellps->f;
 
 	p_gp->phi = (double *) malloc(sizeof(double) * np);
 	if (p_gp->phi == NULL)

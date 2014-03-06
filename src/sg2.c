@@ -365,7 +365,7 @@ void sg2_delete_toa_irrad(S_SG2_TOA_IRRAD *p_toa_irrad, int *p_err)
 }
 
 void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
-		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, double *p_jd_ut,
+		S_SG2_ELLPS *p_data_ellps, double *p_jd_ut,
 		double *p_delta_tt, SG2_CORRECTION_REFRACTION method,
 		double *p_data_corr, S_SG2_SUNPOS *p_sunpos, int *p_err)
 {
@@ -392,7 +392,7 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 
 	SG2_date_set_tabjd_tt(NULL, p_jd, p_err);
 
-	p_gp = SG2_topocentric_create_tabgeopoint(np, ellpstype, p_data_ellps,
+	p_gp = SG2_topocentric_create_tabgeopoint(np, p_data_ellps,
 			p_err);
 
 	SG2_topocecentric_set_tabgeopoint(p_lon, p_lat, p_elevation, p_gp, p_err);
@@ -449,7 +449,7 @@ void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 }
 
 void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
-		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, double *p_jd_ut,
+		S_SG2_ELLPS *p_data_ellps, double *p_jd_ut,
 		double *p_delta_tt, double dt, double eta, unsigned long nts,
 		double *p_azimuth, double *p_slope, S_SG2_TOA_IRRAD *p_toa_irrad,
 		int *p_err)
@@ -494,7 +494,7 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 	sg2_set_tabtilt(p_azimuth, p_slope, p_tilt, p_err);
 	p_toa_irrad->p_tilt = p_tilt;
 
-	p_gp = SG2_topocentric_create_tabgeopoint(np, ellpstype, p_data_ellps,
+	p_gp = SG2_topocentric_create_tabgeopoint(np, p_data_ellps,
 			p_err);
 	SG2_topocecentric_set_tabgeopoint(p_lon, p_lat, p_elevation, p_gp, p_err);
 
@@ -503,7 +503,7 @@ void sg2_set_toa_irrad(double *p_lon, double *p_lat, double *p_elevation,
 	{
 		p_jd_ut_dec[kd] = p_jd_ut[kd] - eta * dt / 2.0;
 	}
-	sg2_set_sunpos(p_lon, p_lat, NULL, ellpstype, p_data_ellps, p_jd_ut_dec,
+	sg2_set_sunpos(p_lon, p_lat, NULL, p_data_ellps, p_jd_ut_dec,
 			p_delta_tt, SG2_CORRECTION_REFRACTION_NONE, NULL, p_toa_irrad->p_sunpos, p_err);
 	free(p_jd_ut_dec);
 

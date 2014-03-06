@@ -53,12 +53,17 @@ S_SG2_TOA_IRRAD *sg2_create_toa_irrad(unsigned long na,
 void sg2_delete_toa_irrad(S_SG2_TOA_IRRAD *p_toa_irrad, int *p_err);
 
 void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
-		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, double *p_jd_ut,
+		S_SG2_ELLPS *p_data_ellps, double *p_jd_ut,
 		double *p_delta_tt, SG2_CORRECTION_REFRACTION method,
 		double *data_corr, S_SG2_SUNPOS *p_sunpos, int *p_err);
 
 #ifdef	__cplusplus
 }
+#endif
+
+
+#ifdef  __cplusplus
+#include "sg2xx.hxx"
 #endif
 
 #endif /* SG2_H_ */

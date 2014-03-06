@@ -96,22 +96,30 @@ typedef struct s_geoc_data {
 
 } S_SG2_GEOC_DATA;
 
-typedef enum {
-	SG2_ELLPSTYPE_WGS84 = 0,
-	SG2_ELLPSTYPE_RGF83 = 1,
-	SG2_ELLPSTYPE_NTF = 2,
-	SG2_ELLPSTYPE_AA = 3,
-	SG2_ELLPSTYPE_SPA = 4,
-	SG2_ELLPSTYPE_NGP = 5,
-	SG2_ELLPSTYPE_SPHERE = 6,
-	SG2_ELLPSTYPE_USER = 7,
-} SG2_ELLPSTYPE;
+//typedef enum {
+//	SG2_ELLPSTYPE_WGS84 = 0,
+//	SG2_ELLPSTYPE_RGF83 = 1,
+//	SG2_ELLPSTYPE_NTF = 2,
+//	SG2_ELLPSTYPE_AA = 3,
+//	SG2_ELLPSTYPE_SPA = 4,
+//	SG2_ELLPSTYPE_NGP = 5,
+//	SG2_ELLPSTYPE_SPHERE = 6,
+//	SG2_ELLPSTYPE_USER = 7,
+//} SG2_ELLPSTYPE;
 
 typedef struct s_ellps {
-	SG2_ELLPSTYPE ellpstype;
+	//SG2_ELLPSTYPE ellpstype;
 	double a; /* Axis a (m) */
 	double f; /* Flatness (-)*/
 } S_SG2_ELLPS, *PS_SG2_ELLPS;
+
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_WGS84;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_RGF83;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_NTF;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_AA;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_SPA;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_NGP;
+extern S_SG2_ELLPS const * SG2_ELLPSTYPE_SPHERE;
 
 
 typedef struct s_tabgeopt {
