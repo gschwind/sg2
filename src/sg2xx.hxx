@@ -23,11 +23,12 @@
 #define SG2_HXX_
 
 #include "sg2.h"
-#include <vector>
 
+#include <vector>
 using namespace std;
 
 namespace sg2 {
+
 
 class ellipse {
 	struct s_ellps e;
@@ -92,7 +93,6 @@ public:
 	}
 
 	friend class topocentric_sun_position;
-
 };
 
 
@@ -161,7 +161,6 @@ public:
 	}
 
 	friend class topocentric_sun_position;
-
 };
 
 
@@ -196,9 +195,17 @@ public:
 		return _topoc->alpha_S[0];
 	}
 
+	double const * get_top_of_atmosphere_normal_incidence() {
+		return _topoc->toa_ni[0];
+	}
+
+	double const * get_top_of_atmosphere_horizontal_incidence() {
+		return _topoc->toa_hi[0];
+	}
+
 };
 
 
-}
+} // namespace
 
 #endif /* SG2_HXX_ */

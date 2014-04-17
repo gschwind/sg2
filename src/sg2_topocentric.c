@@ -253,14 +253,15 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 		unsigned long nd, int *p_err)
 {
 	S_SG2_TOPOC_DATA *p_topoc;
-	double *p_tmp1, *p_tmp2, *p_tmp3, *p_tmp4, *p_tmp5;
+	double *p_tmp1 = NULL, *p_tmp2 = NULL, *p_tmp3 = NULL, *p_tmp4 = NULL,
+			*p_tmp5 = NULL, *p_tmp6 = NULL, *p_tmp7 = NULL;
 	unsigned long kp;
 
 	p_topoc = (S_SG2_TOPOC_DATA *) malloc(sizeof(S_SG2_TOPOC_DATA));
 	if (p_topoc == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_1;
-		return NULL;
+		goto error;
 	}
 	p_topoc->nd = nd;
 	p_topoc->np = np;
@@ -269,6 +270,8 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	p_topoc->omega = NULL;
 	p_topoc->gamma_S0 = NULL;
 	p_topoc->alpha_S = NULL;
+	p_topoc->toa_ni = NULL;
+	p_topoc->toa_hi = NULL;
 
 	/*
 	 double **r_alpha;
@@ -276,22 +279,22 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	 double **omega;
 	 double **gamma_S;
 	 double **alpha_S;
+	 double **toa_ni;
+	 double **toa_hi;
+
 	 */
 
 	p_tmp1 = (double *) malloc(nd * np * sizeof(double));
 	if (p_tmp1 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_1;
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	p_topoc->r_alpha = (double **) malloc(np * sizeof(double *));
 	if (p_topoc->r_alpha == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_2;
-		free(p_tmp1);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	for (kp = 0; kp < np; kp++)
 	{
@@ -302,20 +305,13 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	if (p_tmp2 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_3;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	p_topoc->delta = (double **) malloc(np * sizeof(double *));
 	if (p_topoc->delta == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_4;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_tmp2);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	for (kp = 0; kp < np; kp++)
 	{
@@ -326,24 +322,13 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	if (p_tmp3 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_5;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	p_topoc->omega = (double **) malloc(np * sizeof(double *));
 	if (p_topoc->omega == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_6;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_tmp3);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	for (kp = 0; kp < np; kp++)
 	{
@@ -354,28 +339,13 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	if (p_tmp4 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_7;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_topoc->omega);
-		free(p_tmp3);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	p_topoc->gamma_S0 = (double **) malloc(np * sizeof(double *));
 	if (p_topoc->gamma_S0 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_8;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_topoc->omega);
-		free(p_tmp3);
-		free(p_tmp4);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	for (kp = 0; kp < np; kp++)
 	{
@@ -386,39 +356,93 @@ S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
 	if (p_tmp5 == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_9;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_topoc->omega);
-		free(p_tmp3);
-		free(p_topoc->gamma_S0);
-		free(p_tmp4);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	p_topoc->alpha_S = (double **) malloc(np * sizeof(double *));
 	if (p_topoc->alpha_S == NULL)
 	{
 		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_10;
-		free(p_topoc->r_alpha);
-		free(p_tmp1);
-		free(p_topoc->delta);
-		free(p_tmp2);
-		free(p_topoc->omega);
-		free(p_tmp3);
-		free(p_topoc->gamma_S0);
-		free(p_tmp4);
-		free(p_tmp5);
-		free(p_topoc);
-		return NULL;
+		goto error;
 	}
 	for (kp = 0; kp < np; kp++)
 	{
 		p_topoc->alpha_S[kp] = &p_tmp5[nd * kp];
 	}
 
+	p_tmp6 = (double *) malloc(nd * np * sizeof(double));
+	if (p_tmp6 == NULL)
+	{
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_11;
+		goto error;
+	}
+	p_topoc->toa_ni = (double **) malloc(np * sizeof(double *));
+	if (p_topoc->toa_ni == NULL)
+	{
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_12;
+		goto error;
+	}
+	for (kp = 0; kp < np; kp++)
+	{
+		p_topoc->toa_ni[kp] = &p_tmp6[nd * kp];
+	}
+
+	p_tmp7 = (double *) malloc(nd * np * sizeof(double));
+	if (p_tmp7 == NULL)
+	{
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_11;
+		goto error;
+	}
+	p_topoc->toa_hi = (double **) malloc(np * sizeof(double *));
+	if (p_topoc->toa_hi == NULL)
+	{
+		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_12;
+		goto error;
+	}
+	for (kp = 0; kp < np; kp++)
+	{
+		p_topoc->toa_hi[kp] = &p_tmp7[nd * kp];
+	}
+
 	return p_topoc;
+
+error:
+	/* cleanup */
+
+	if (p_topoc != NULL) {
+
+		if(p_topoc->r_alpha != NULL)
+			free(p_topoc->r_alpha);
+		if(p_tmp1 != NULL)
+			free(p_tmp1);
+		if(p_topoc->delta != NULL)
+			free(p_topoc->delta);
+		if(p_tmp2 != NULL)
+			free(p_tmp2);
+		if(p_topoc->omega != NULL)
+			free(p_topoc->omega);
+		if(p_tmp3 != NULL)
+			free(p_tmp3);
+		if(p_topoc->gamma_S0 != NULL)
+			free(p_topoc->gamma_S0);
+		if(p_tmp4 != NULL)
+			free(p_tmp4);
+		if(p_topoc->alpha_S != NULL)
+			free(p_topoc->alpha_S);
+		if(p_tmp5 != NULL)
+			free(p_tmp5);
+		if(p_topoc->toa_ni != NULL)
+			free(p_topoc->toa_ni);
+		if(p_tmp6 != NULL)
+			free(p_tmp6);
+		if(p_topoc->toa_hi != NULL)
+			free(p_topoc->toa_hi);
+		if(p_tmp7 != NULL)
+			free(p_tmp7);
+
+		free(p_topoc);
+	}
+
+	return NULL;
 
 }
 
@@ -434,6 +458,10 @@ void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc, int *p_err)
 	free(p_topoc->gamma_S0);
 	free(p_topoc->alpha_S[0]);
 	free(p_topoc->alpha_S);
+	free(p_topoc->toa_ni[0]);
+	free(p_topoc->toa_ni);
+	free(p_topoc->toa_hi[0]);
+	free(p_topoc->toa_hi);
 	free(p_topoc);
 }
 
@@ -502,6 +530,16 @@ void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
 					= atan2(sin(p_topoc->omega[kp][kd]), cos_omega_kp_kd
 							* sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
 							+ SG2_PI;
+
+			if (p_topoc->gamma_S0[kp][kd] > 0.0) {
+				p_topoc->toa_ni[kp][kd] = (1367.0)
+						/ (p_topoc->p_helioc->R[kd] * p_topoc->p_helioc->R[kd]);
+				p_topoc->toa_hi[kp][kd] = (p_topoc->toa_ni[kp][kd]
+						* sin(p_topoc->gamma_S0[kp][kd]));
+			} else {
+				p_topoc->toa_ni[kp][kd] = 0.0;
+				p_topoc->toa_hi[kp][kd] = 0.0;
+			}
 
 		}
 	}

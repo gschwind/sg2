@@ -153,6 +153,8 @@ typedef struct s_topoc_data {
 	double **omega; /* Topocentric local hour angle (rad) */
 	double **gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
 	double **alpha_S; /* Topocentric sun azimuth (rad) */
+	double **toa_ni; /* irradiation at top of atmosphere normal incidence (W/m2) */
+	double **toa_hi; /* irradiation at top of atmosphere horizontal incidence (W/m2) */
 
 } S_SG2_TOPOC_DATA;
 
