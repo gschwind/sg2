@@ -24,6 +24,7 @@
 
 #include "sg2.h"
 
+#include <limits>
 #include <vector>
 using namespace std;
 
@@ -57,39 +58,40 @@ extern ellipse const NGP;
 extern ellipse const SPHERE;
 
 class geopoint {
-	struct s_tabgeopt * _p;
+	sg2_geopoint_t _p;
 
 public:
+	geopoint();
 	geopoint(double lon, double lat, double h = 0.0, ellipse const & e = WGS84);
-
+	void set(double lon, double lat, double h = 0.0, ellipse const & e = WGS84);
 	~geopoint();
 
 	double get_phi() {
-		return _p->phi[0];
+		return _p.phi;
 	}
 
 	double get_lambda() {
-		return _p->lambda[0];
+		return _p.lambda;
 	}
 
 	double get_cos_phi() {
-		return _p->cos_phi[0];
+		return _p.cos_phi;
 	}
 
 	double get_sin_phi() {
-		return _p->sin_phi[0];
+		return _p.sin_phi;
 	}
 
 	double get_u() {
-		return _p->u[0];
+		return _p.u;
 	}
 
 	double get_x() {
-		return _p->x[0];
+		return _p.x;
 	}
 
 	double get_y() {
-		return _p->y[0];
+		return _p.y;
 	}
 
 	friend class topocentric_sun_position;
@@ -97,67 +99,56 @@ public:
 
 
 class geocentric_sun_position {
-
-	struct s_date_tabjd * _jd;
-	struct s_helioc_data * _helioc;
-	struct s_geoc_data * _geoc;
-
-	void _initialize();
+	sg2_geocentric_sun_position_t _sun_position;
 
 public:
-	geocentric_sun_position(double jd, double delta = 0.0, int n = 1, double * delta_tt = NULL);
-	geocentric_sun_position(vector<double> & vjd, double * delta_tt = NULL);
-	/** append jd from [first,last[ **/
-	geocentric_sun_position(double * first, double * last, double * delta_tt = NULL);
-
+	void set(double jd, double delta_tt = std::numeric_limits<double>::quiet_NaN());
+	geocentric_sun_position();
+	geocentric_sun_position(double jd, double delta_tt = std::numeric_limits<double>::quiet_NaN());
 	~geocentric_sun_position();
 
-	/** S_SG2_DATE_TABJD **/
-	double const * get_universal_time() const {
-		return _jd->jd_ut;
+	double get_universal_time() const {
+		return _sun_position.jd.jd_ut;
 	}
 
-	double const * get_terrestrial_time() const {
-		return _jd->jd_tt;
+	double get_terrestrial_time() const {
+		return _sun_position.jd.jd_tt;
 	}
 
-	/** S_SG2_HELIOC_DATA **/
-	double const * get_sun_earth_radius() const {
-		return _helioc->R;
+	double get_sun_earth_radius() const {
+		return _sun_position.helioc.R;
 	}
 
-	double const * get_heliocentric_true_longitude() const {
-		return _helioc->L;
+	double get_heliocentric_true_longitude() const {
+		return _sun_position.helioc.L;
 	}
 
-	/** S_SG2_GEOC_DATA **/
-	double const * get_delta_psi() const {
-		return _geoc->Delta_psi;
+	double get_delta_psi() const {
+		return _sun_position.geoc.Delta_psi;
 	}
 
-	double const * get_earth_true_obliquity() const {
-		return _geoc->epsilon;
+	double get_earth_true_obliquity() const {
+		return _sun_position.geoc.epsilon;
 	}
 
-
-	double const * get_geocentric_true_longitude() const {
-		return _geoc->Theta_a;
+	double get_geocentric_true_longitude() const {
+		return _sun_position.geoc.Theta_a;
 	}
 
-	double const * get_geocentric_right_ascension() const {
-		return _geoc->r_alpha;
+	double get_geocentric_right_ascension() const {
+		return _sun_position.geoc.r_alpha;
 	}
 
-	double const * get_geocentric_declination() const {
-		return _geoc->delta;
+	double get_geocentric_declination() const {
+		return _sun_position.geoc.delta;
 	}
 
-	double const * get_apparent_sideral_time() const {
-		return _geoc->nu;
+	double get_apparent_sideral_time() const {
+		return _sun_position.geoc.nu;
 	}
 
-	double const * get_mst_solar_time_difference() const {
-		return _geoc->EOT;
+	double get_mst_solar_time_difference() const {
+		return _sun_position.geoc.EOT;
 	}
 
 	friend class topocentric_sun_position;
@@ -165,42 +156,41 @@ public:
 
 
 class topocentric_sun_position {
-	struct s_topoc_data * _topoc;
-
-	void _initialize(geopoint const & p, geocentric_sun_position const & t);
+	sg2_topocentric_data_t _topoc;
 
 public:
+	topocentric_sun_position();
 	topocentric_sun_position(geopoint const & p, geocentric_sun_position const & t);
-	topocentric_sun_position(double lon, double lat, double h, double jd, double delta = 0.0, int n = 1);
+	void set(geopoint const & p, geocentric_sun_position const & t);
 
 	~topocentric_sun_position();
 
-	double const * get_right_sun_ascension() const {
-		return _topoc->r_alpha[0];
+	double get_right_sun_ascension() const {
+		return _topoc.r_alpha;
 	}
 
-	double const * get_sun_declination() {
-		return _topoc->delta[0];
+	double get_sun_declination() {
+		return _topoc.delta;
 	}
 
-	double const * get_omega() {
-		return _topoc->omega[0];
+	double get_omega() {
+		return _topoc.omega;
 	}
 
-	double const * get_geometric_sun_elevation() {
-		return _topoc->gamma_S0[0];
+	double get_geometric_sun_elevation() {
+		return _topoc.gamma_S0;
 	}
 
-	double const * get_geometric_azimuth() {
-		return _topoc->alpha_S[0];
+	double get_geometric_azimuth() {
+		return _topoc.alpha_S;
 	}
 
-	double const * get_top_of_atmosphere_normal_incidence() {
-		return _topoc->toa_ni[0];
+	double get_top_of_atmosphere_normal_incidence() {
+		return _topoc.toa_ni;
 	}
 
-	double const * get_top_of_atmosphere_horizontal_incidence() {
-		return _topoc->toa_hi[0];
+	double get_top_of_atmosphere_horizontal_incidence() {
+		return _topoc.toa_hi;
 	}
 
 };

@@ -28,26 +28,18 @@ extern "C"
 
 S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f);
 
-S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
-		S_SG2_ELLPS const *p_data_ellps, int *p_err);
-
-void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp,
-		int *p_err);
-
-void SG2_topocecentric_set_tabgeopoint(double *lon, double *lat,
-		double *h, S_SG2_TABGEOPOINT *p_gp, int *p_err);
-
-S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
-		unsigned long nd, int *p_err);
-
-void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc,
-		int *p_err);
-
-void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
-		S_SG2_TABGEOPOINT *p_gp, S_SG2_TOPOC_DATA *p_topoc, int *p_err);
-
 void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 		SG2_CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S, int *p_err);
+
+void
+sg2_topocecentric_set_tabgeopoint(sg2_geopoint_t * ths, double lon, double lat, double h, S_SG2_ELLPS const *p_data_ellps, int *p_err);
+
+void
+sg2_topocentric_set_topoc_data(sg2_topocentric_data_t * ths, sg2_geocentric_sun_position_t const * sun_position,
+		sg2_geopoint_t const * geopoint, int * err);
+
+
+
 
 #ifdef	__cplusplus
 }

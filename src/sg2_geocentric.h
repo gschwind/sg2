@@ -26,12 +26,18 @@ extern "C"
 {
 #endif
 
-S_SG2_GEOC_DATA *SG2_geocentric_create_geoc_data(unsigned long n, int *p_err);
+void sg2_geocentric_set_geoc_data(sg2_geocentric_data_t * ths, time_data_t * jd,
+		sg2_heliocentric_data_t * p_helioc, int * err);
 
-void SG2_geocentric_delete_geoc_data(S_SG2_GEOC_DATA *p_geoc, int *p_err);
-
-void SG2_geocentric_set_geoc_data(S_SG2_DATE_TABJD *p_jd, S_SG2_HELIOC_DATA *p_helioc,
-		S_SG2_GEOC_DATA *p_geoc, int *p_err);
+/**
+ * Setup geocentric sun position
+ *
+ * @output ths: a geocentric_sun_position to be set
+ * @input jd: julian day
+ * @input delta_tt: delta for terrestrial time or NAN (i.e. computed)
+ * @output err: first error encountered
+ **/
+void sg2_geocentric_set_geocentric_sun_position(sg2_geocentric_sun_position_t * ths, double jd, double delta_tt, int * err);
 
 #ifdef	__cplusplus
 }

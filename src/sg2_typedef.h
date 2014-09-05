@@ -1,4 +1,5 @@
-/*
+/* -*- coding: utf-8 -*-
+ *
  * Copyright 2011 Philippe Blanc <philippe.blanc@mines-paristech.fr>
  *
  * This file is part of libsg2.
@@ -21,7 +22,10 @@
 #ifndef SG2_TYPEDEF_H_
 #define SG2_TYPEDEF_H_
 
-
+#ifdef	__cplusplus
+extern "C"
+  {
+#endif
 
 #define SG2_PI  3.1415926535897931
 #define SG2_2PI 6.2831853071795862
@@ -35,14 +39,7 @@
 #define SG2_MACRO_0_2PI(x) ((x)-floor((x)/(SG2_2PI))*(SG2_2PI))
 #define SG2_MACRO_PI_PI(x) ((x)-round((x)/(SG2_2PI))*(SG2_2PI))
 
-
-#ifdef	__cplusplus
-extern "C"
-  {
-#endif
-
-
-/* Date YMD + H en heure d�cimale UT */
+/* Date YMD + H en heure décimale UT */
 typedef struct s_date_ymd_h {
 
 	unsigned long nd;
@@ -53,7 +50,15 @@ typedef struct s_date_ymd_h {
 
 } S_SG2_DATE_TABYMDH;
 
-/* Date YDOY + H en heure d�cimale UT */
+/* Date YMD + H en heure décimale UT */
+typedef struct _date_ymdh_t {
+	short year;
+	char month;
+	char day_of_month;
+	double hour;
+} date_ymdh_t;
+
+/* Date YDOY + H en heure décimale UT */
 typedef struct s_date_ydoy_h {
 
 	unsigned long nd;
@@ -63,52 +68,42 @@ typedef struct s_date_ydoy_h {
 
 } S_SG2_DATE_TABYDOYH;
 
-/* Julian date */
-typedef struct s_date_tabjd {
-	unsigned long nd;
-	double *jd_ut; /* julian date UT (decimal day) */
-	unsigned char jd_tt_set;
-	double *jd_tt; /* TT : terrestrial time */
-} S_SG2_DATE_TABJD;
+typedef struct _date_ydoyh_t {
+	short year;
+	short day_of_year;
+	double hour;
+} date_ydoyh_t;
+
+typedef struct {
+	double jd_ut;            /* julian date UT (decimal day) */
+	double jd_tt;            /* TT : terrestrial time */
+} time_data_t;
 
 /* Heliocentric coordinates */
-typedef struct s_helioc_data {
-	S_SG2_DATE_TABJD *p_jd;
-	unsigned long nd;
-	double *R; /* Radius Sun-Earth (ua) */
-	double *L; /* Heliocentric Earth true longitude (rad) */
-} S_SG2_HELIOC_DATA;
+typedef struct {
+	double R; /* Radius Sun-Earth (ua) */
+	double L; /* Heliocentric Earth true longitude (rad) */
+} sg2_heliocentric_data_t;
 
 /* Geocentric coordinates */
-typedef struct s_geoc_data {
-	S_SG2_DATE_TABJD *p_jd;
-	S_SG2_HELIOC_DATA *p_helioc;
-	unsigned long nd;
+typedef struct {
+	double Delta_psi;  /* Nutation in Geocentric Sun longitude (rad) */
+	double epsilon;    /* Earth true obliquity (rad) */
+	double Theta_a;    /* Geocentric Earth true longitude (rad) */
+	double r_alpha;    /* Geocentric right ascension (rad) */
+	double delta;      /* Geocentric declination (rad) */
+	double nu;         /* Apparent sideral time (rad) */
+	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
+} sg2_geocentric_data_t;
 
-	double *Delta_psi; /* Nutation in Geocentric Sun longitude (rad) */
-	double *epsilon; /* Earth true obliquity (rad) */
-	double *Theta_a; /* Geocentric Earth true longitude (rad) */
-	double *r_alpha; /* Geocentric right ascension (rad) */
-	double *delta; /* Geocentric declination (rad) */
-
-	double *nu; /* Apparent sideral time (rad) */
-	double *EOT; /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
-
-} S_SG2_GEOC_DATA;
-
-//typedef enum {
-//	SG2_ELLPSTYPE_WGS84 = 0,
-//	SG2_ELLPSTYPE_RGF83 = 1,
-//	SG2_ELLPSTYPE_NTF = 2,
-//	SG2_ELLPSTYPE_AA = 3,
-//	SG2_ELLPSTYPE_SPA = 4,
-//	SG2_ELLPSTYPE_NGP = 5,
-//	SG2_ELLPSTYPE_SPHERE = 6,
-//	SG2_ELLPSTYPE_USER = 7,
-//} SG2_ELLPSTYPE;
+/** handle time related geocentric sun position **/
+typedef struct {
+	time_data_t jd;
+	sg2_heliocentric_data_t helioc;
+	sg2_geocentric_data_t geoc;
+} sg2_geocentric_sun_position_t;
 
 typedef struct s_ellps {
-	//SG2_ELLPSTYPE ellpstype;
 	double a; /* Axis a (m) */
 	double f; /* Flatness (-)*/
 } S_SG2_ELLPS, *PS_SG2_ELLPS;
@@ -121,42 +116,29 @@ extern S_SG2_ELLPS const * SG2_ELLPSTYPE_SPA;
 extern S_SG2_ELLPS const * SG2_ELLPSTYPE_NGP;
 extern S_SG2_ELLPS const * SG2_ELLPSTYPE_SPHERE;
 
+typedef struct {
+	S_SG2_ELLPS const * ellps;
+	double phi;        /* Latitude (rad) */
+	double lambda;     /* Longitude (rad) */
+	double h;          /* Altitude Above the Reference Ellipsoid */
+	double cos_phi;
+	double sin_phi;
+	double u;
+	double x;
+	double y;
+} sg2_geopoint_t;
 
-typedef struct s_tabgeopt {
-	S_SG2_ELLPS *p_ellps;
-	unsigned long np;
-
-	double *phi; /* Latitude (rad) */
-	double *lambda; /* Longitude (rad) */
-	double *h; /* Altitude Above the Reference Ellipsoid */
-
-	double *cos_phi;
-	double *sin_phi;
-	double *u;
-	double *x;
-	double *y;
-
-} S_SG2_TABGEOPOINT;
-
-typedef struct s_topoc_data {
-
-	unsigned long nd; /* Number of dates */
-	unsigned long np; /* Number of geopoints */
-
-	S_SG2_DATE_TABJD *p_jd;
-	S_SG2_HELIOC_DATA *p_helioc;
-	S_SG2_GEOC_DATA *p_geoc;
-	S_SG2_TABGEOPOINT *p_gp;
-
-	double **r_alpha; /* Topocentric right sun ascension (rad) */
-	double **delta; /* Topocentric sun declination (rad) */
-	double **omega; /* Topocentric local hour angle (rad) */
-	double **gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
-	double **alpha_S; /* Topocentric sun azimuth (rad) */
-	double **toa_ni; /* irradiation at top of atmosphere normal incidence (W/m2) */
-	double **toa_hi; /* irradiation at top of atmosphere horizontal incidence (W/m2) */
-
-} S_SG2_TOPOC_DATA;
+typedef struct {
+	sg2_geocentric_sun_position_t const * sun_position;
+	sg2_geopoint_t const * geopoint;
+	double r_alpha;  /* Topocentric right sun ascension (rad) */
+	double delta;    /* Topocentric sun declination (rad) */
+	double omega;    /* Topocentric local hour angle (rad) */
+	double gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
+	double alpha_S;  /* Topocentric sun azimuth (rad) */
+	double toa_ni;   /* irradiation at top of atmosphere normal incidence (W/m2) */
+	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
+} sg2_topocentric_data_t;
 
 typedef enum {
 	SG2_CORRECTION_REFRACTION_NONE = 0,
@@ -164,43 +146,60 @@ typedef enum {
 	SG2_CORRECTION_REFRACTION_ZIM = 2,
 } SG2_CORRECTION_REFRACTION;
 
-typedef struct s_sunpos {
+//typedef struct s_sunpos {
+//
+//	unsigned long np;
+//	unsigned long nd;
+//
+//	time_data_t *p_jd;
+//
+//	double **omega;
+//	double **delta;
+//	double **alpha_S;
+//	double **gamma_S0;
+//	double **gamma_S;
+//	double **E0;
+//
+//} S_SG2_SUNPOS;
 
-	unsigned long np;
-	unsigned long nd;
+//typedef struct {
+//	double omega;
+//	double delta;
+//	double alpha_S;
+//	double gamma_S0;
+//	double gamma_S;
+//	double E0;
+//} sunpos_t;
 
-	S_SG2_DATE_TABJD *p_jd;
+//typedef struct s_tabtilt {
+//	unsigned long na;
+//	double *alpha; /* azimuth of the plane, from North, eastward (rad) */
+//	double *beta; /* slope of the plane from horizontal (rad) */
+//} S_SG2_TABTILT;
 
-	double **omega;
-	double **delta;
-	double **alpha_S;
-	double **gamma_S0;
-	double **gamma_S;
-	double **E0;
+//typedef struct {
+//	double alpha;  /* azimuth of the plane, from North, eastward (rad) */
+//	double beta;   /* slope of the plane from horizontal (rad) */
+//} tabtilt_t;
 
-} S_SG2_SUNPOS;
 
-typedef struct s_tabtilt {
-	unsigned long na;
-	double *alpha; /* azimuth of the plane, from North, eastward (rad) */
-	double *beta; /* slope of the plane from horizontal (rad) */
-} S_SG2_TABTILT;
+//typedef struct s_toa_irrad {
+//
+//	unsigned long np;
+//	unsigned long nd;
+//	unsigned long na;
+//
+//	double dt;
+//	double eta; /* 0 : left, 0.5 : middle, 1 : right */
+//
+//	S_SG2_DATE_TABJD *p_jd;
+//	S_SG2_TABTILT *p_tilt;
+//	S_SG2_SUNPOS *p_sunpos;
+//	double ***toa_dt; /* toa_dt[0..na-1][0..np-1][0..nd-1] */
+//
+//} S_SG2_TOA_IRRAD;
 
-typedef struct s_toa_irrad {
 
-	unsigned long np;
-	unsigned long nd;
-	unsigned long na;
-
-	double dt;
-	double eta; /* 0 : left, 0.5 : middle, 1 : right */
-
-	S_SG2_DATE_TABJD *p_jd;
-	S_SG2_TABTILT *p_tilt;
-	S_SG2_SUNPOS *p_sunpos;
-	double ***toa_dt; /* toa_dt[0..na-1][0..np-1][0..nd-1] */
-
-} S_SG2_TOA_IRRAD;
 
 #ifdef	__cplusplus
 }

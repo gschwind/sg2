@@ -26,30 +26,20 @@ extern "C"
 {
 #endif
 
-S_SG2_DATE_TABJD *SG2_date_create_tabjd(unsigned long nd, int *p_err);
-void SG2_date_delete_tabjd(S_SG2_DATE_TABJD *p_jd, int *p_err);
-
-S_SG2_DATE_TABYMDH *SG2_date_create_tabymdh(unsigned long nd, int *p_err);
-
-void SG2_date_delete_tabymdh(S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
-
-S_SG2_DATE_TABYDOYH *SG2_date_create_tabydoyh(unsigned long nd, int *p_err);
-
-void SG2_date_delete_tabydoyh(S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
-
-void SG2_date_tabjd_to_tabymdh(S_SG2_DATE_TABJD *p_jd, S_SG2_DATE_TABYMDH *p_ymdh,
+void sg2_date_tabjd_to_tabymdh(time_data_t const * p_jd, date_ymdh_t * p_ymdh,
 		int *p_err);
 
-void SG2_date_tabymdh_to_tabjd(S_SG2_DATE_TABYMDH *p_ymdh, S_SG2_DATE_TABJD *p_jd,
+void sg2_date_tabymdh_to_tabjd(date_ymdh_t const * p_ymdh, time_data_t *p_jd,
 		int *p_err);
 
-void SG2_date_tabymdh_to_tabydoyh(S_SG2_DATE_TABYMDH *p_ymdh,
-		S_SG2_DATE_TABYDOYH *p_ydoyh, int *p_err);
+void sg2_date_tabymdh_to_tabydoyh(date_ymdh_t const * p_ymdh,
+		date_ydoyh_t * p_ydoyh, int *p_err);
 
-void SG2_date_tabydoyh_to_tabymdh(S_SG2_DATE_TABYDOYH *p_ydoyh,
-		S_SG2_DATE_TABYMDH *p_ymdh, int *p_err);
+void sg2_date_tabydoyh_to_tabymdh(date_ydoyh_t const * p_ydoyh,
+		date_ymdh_t * p_ymdh, int *p_err);
 
-void SG2_date_set_tabjd_tt(double *p_delta_tt, S_SG2_DATE_TABJD *p_jd, int *p_err);
+void sg2_date_set_time_data_tt(time_data_t * ths, double *p_delta_tt, int *err);
+
 
 #ifdef	__cplusplus
 }

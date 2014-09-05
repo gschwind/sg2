@@ -19,11 +19,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-
 #include "sg2xx.hxx"
 
 #include <stdexcept>
-
 #include <cstdlib>
 
 namespace sg2 {
@@ -60,155 +58,52 @@ ellipse::~ellipse() {
 }
 
 geopoint::geopoint(double lon, double lat, double h, ellipse const & e) {
-	_p = 0;
+	set(lon, lat, h, e);
+}
 
+void geopoint::set(double lon, double lat, double h, ellipse const & e) {
 	int err = 0;
-	_p = SG2_topocentric_create_tabgeopoint(1, &e.e, &err);
+	sg2_topocecentric_set_tabgeopoint(&_p, lon, lat, h, &e.e, &err);
 	if(err < 0)
 		throw std::runtime_error("Fail to create point_handler");
-	SG2_topocecentric_set_tabgeopoint(&lon, &lat, &h, _p, &err);
-	if(err < 0)
-		throw std::runtime_error("Fail to create point_handler");
-
 }
 
 geopoint::~geopoint() {
-	int err = 0;
-	if (_p != 0) {
-		SG2_topocentric_delete_tabgeopoint(_p, &err);
-		if (err < 0)
-			throw std::runtime_error("Fail to destroy geopoint");
-	}
-}
-
-void geocentric_sun_position::_initialize() {
-	int err = 0;
-	_helioc = SG2_heliocentric_create_helioc_data(_jd->nd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-
-	SG2_heliocentric_set_helioc_data(_jd, _helioc, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-
-	_geoc = SG2_geocentric_create_geoc_data(_jd->nd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-
-	SG2_geocentric_set_geoc_data(_jd, _helioc, _geoc, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-}
-
-geocentric_sun_position::geocentric_sun_position(double jd, double delta, int n, double * delta_tt) {
-	int err = 0;
-
-	_jd = SG2_date_create_tabjd(n, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-
-	_jd->jd_ut[0] = jd;
-	for (int kd = 1; kd < n; kd++) {
-		_jd->jd_ut[kd] = _jd->jd_ut[kd - 1] + delta;
-	}
-
-	SG2_date_set_tabjd_tt(delta_tt, _jd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create geocentric_sun_position");
-
-	_initialize();
 
 }
 
-geocentric_sun_position::geocentric_sun_position(vector<double> & vjd, double * delta_tt) {
+void geocentric_sun_position::set(double jd, double delta_tt) {
 	int err = 0;
-
-	_jd = SG2_date_create_tabjd(vjd.size(), &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create earth_position_handler");
-	for (int kd = 0; kd < vjd.size(); kd++) {
-		_jd->jd_ut[kd] = vjd[kd];
+	sg2_geocentric_set_geocentric_sun_position(&_sun_position, jd, delta_tt, &err);
+	if (err < 0) {
+		throw std::runtime_error("Fail to set sun_position");
 	}
-
-	SG2_date_set_tabjd_tt(delta_tt, _jd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create earth_position_handler");
-
-	_initialize();
 }
 
-/** append jd from [first,last[ **/
-geocentric_sun_position::geocentric_sun_position(double * first, double * last, double * delta_tt) {
-	int err = 0;
-	unsigned int n = last - first;
-
-	_jd = SG2_date_create_tabjd(n, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create earth_position_handler");
-
-	for (int kd = 0; kd < n; kd++) {
-		_jd->jd_ut[kd] = first[kd];
-	}
-
-	SG2_date_set_tabjd_tt(delta_tt, _jd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create earth_position_handler");
-
-	_initialize();
+geocentric_sun_position::geocentric_sun_position(double jd, double delta_tt) {
+	set(jd, delta_tt);
 }
 
 geocentric_sun_position::~geocentric_sun_position() {
-	int err = 0;
-	if(_jd != 0) {
-		SG2_date_delete_tabjd(_jd, &err);
-		if(err < 0)
-			throw std::runtime_error("Fail to destroy geocentric_sun_position");
-	}
 
-	if(this->_helioc != 0) {
-		SG2_heliocentric_delete_helioc_data(_helioc, &err);
-		if(err < 0)
-			throw std::runtime_error("Fail to destroy geocentric_sun_position");
-	}
-
-	if(this->_geoc != 0) {
-		SG2_geocentric_delete_geoc_data(_geoc, &err);
-		if(err < 0)
-			throw std::runtime_error("Fail to destroy geocentric_sun_position");
-	}
 }
 
-void topocentric_sun_position::_initialize(geopoint const & p, geocentric_sun_position const & t) {
+void topocentric_sun_position::set(geopoint const & geopoint, geocentric_sun_position const & sun_position) {
 	int err = 0;
-	_topoc = SG2_topocentric_create_topoc_data(1, t._jd->nd, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create local_sun_position_handler");
-	SG2_topocentric_set_topoc_data(t._geoc, p._p, _topoc, &err);
-	if (err < 0)
-		throw std::runtime_error("Fail to create local_sun_position_handler");
+	sg2_topocentric_set_topoc_data(&_topoc, &sun_position._sun_position, &geopoint._p, &err);
+	if(err < 0) {
+		throw std::runtime_error("error while cumputing topocentric data\n");
+	}
 }
 
 topocentric_sun_position::topocentric_sun_position(geopoint const & p, geocentric_sun_position const & t) {
-	_initialize(p, t);
-}
-
-topocentric_sun_position::topocentric_sun_position(double lon, double lat, double h, double jd, double delta, int n) {
-	geopoint p(lon, lat, h);
-	geocentric_sun_position t(jd, delta, n);
-	_initialize(p, t);
+	set(p, t);
 }
 
 topocentric_sun_position::~topocentric_sun_position() {
-	int err = 0;
-	if(this->_topoc != 0) {
-		SG2_topocentric_delete_topoc_data(_topoc, &err);
-		if(err < 0)
-			throw std::runtime_error("Fail to destroy topocentric_sun_position");
-	}
-}
-
-
 
 }
+
+} // namespace
 
 

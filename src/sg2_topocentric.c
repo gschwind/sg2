@@ -44,7 +44,6 @@ static const S_SG2_ELLPS tab_ellps_ref[8] =
 { 0.0, 0.0 }, /* USER-DEFINED */
 };
 
-
 S_SG2_ELLPS const * SG2_ELLPSTYPE_WGS84 = &tab_ellps_ref[0];
 S_SG2_ELLPS const * SG2_ELLPSTYPE_RGF83 = &tab_ellps_ref[1];
 S_SG2_ELLPS const * SG2_ELLPSTYPE_NTF = &tab_ellps_ref[2];
@@ -60,488 +59,95 @@ S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f) {
 	return p_ret;
 }
 
-S_SG2_TABGEOPOINT *SG2_topocentric_create_tabgeopoint(unsigned long np,
-		S_SG2_ELLPS const *p_data_ellps, int *p_err)
-{
-	S_SG2_TABGEOPOINT *p_gp;
-
-	p_gp = (S_SG2_TABGEOPOINT*) malloc(sizeof(S_SG2_TABGEOPOINT));
-	if (p_gp == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_1;
-		return NULL;
-	}
-	p_gp->np = np;
-	p_gp->cos_phi = NULL;
-	p_gp->sin_phi = NULL;
-	p_gp->h = NULL;
-	p_gp->lambda = NULL;
-	p_gp->p_ellps = NULL;
-	p_gp->phi = NULL;
-	p_gp->u = NULL;
-	p_gp->x = NULL;
-	p_gp->y = NULL;
-
-	p_gp->p_ellps = (S_SG2_ELLPS *) malloc(sizeof(S_SG2_ELLPS));
-	if (p_gp->p_ellps == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_2;
-		free(p_gp);
-		return NULL;
-	}
-
-	if(p_data_ellps == NULL) {
-		p_data_ellps = SG2_ELLPSTYPE_WGS84;
-	}
-
-	p_gp->p_ellps->a = p_data_ellps->a;
-	p_gp->p_ellps->f = p_data_ellps->f;
-
-	p_gp->phi = (double *) malloc(sizeof(double) * np);
-	if (p_gp->phi == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_3;
-		free(p_gp->p_ellps);
-		free(p_gp);
-		return NULL;
-	}
-	p_gp->lambda = (double *) malloc(sizeof(double) * np);
-	if (p_gp->lambda == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_4;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp);
-		return NULL;
-	}
-	p_gp->h = (double *) malloc(sizeof(double) * np);
-	if (p_gp->h == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_5;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp);
-		return NULL;
-	}
-	p_gp->u = (double *) malloc(sizeof(double) * np);
-	if (p_gp->u == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_6;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp->h);
-		free(p_gp);
-		return NULL;
-	}
-	p_gp->x = (double *) malloc(sizeof(double) * np);
-	if (p_gp->x == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_7;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp->h);
-		free(p_gp->u);
-		free(p_gp);
-		return NULL;
-	}
-	p_gp->y = (double *) malloc(sizeof(double) * np);
-	if (p_gp->y == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_8;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp->h);
-		free(p_gp->u);
-		free(p_gp->x);
-		free(p_gp);
-		return NULL;
-	}
-
-	p_gp->cos_phi = (double *) malloc(sizeof(double) * np);
-	if (p_gp->cos_phi == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_9;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp->h);
-		free(p_gp->u);
-		free(p_gp->x);
-		free(p_gp->y);
-		free(p_gp);
-		return NULL;
-	}
-
-	p_gp->sin_phi = (double *) malloc(sizeof(double) * np);
-	if (p_gp->sin_phi == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_GEOPT_MALLOC_10;
-		free(p_gp->p_ellps);
-		free(p_gp->phi);
-		free(p_gp->lambda);
-		free(p_gp->h);
-		free(p_gp->u);
-		free(p_gp->x);
-		free(p_gp->y);
-		free(p_gp->cos_phi);
-		free(p_gp);
-		return NULL;
-	}
-
-	return p_gp;
-}
-
-void SG2_topocecentric_set_tabgeopoint(double *lon, double *lat, double *h,
-		S_SG2_TABGEOPOINT *p_gp, int *p_err)
-{
+void sg2_topocecentric_set_tabgeopoint(sg2_geopoint_t * ths, double lon,
+		double lat, double h, S_SG2_ELLPS const *p_data_ellps, int *p_err) {
 	int kp;
 	double a, app;
 	double u_kp, cos_phi_kp, sin_phi_kp, tan_phi_kp, h_a_kp;
 
-	a = p_gp->p_ellps->a;
-	app = 1.0 - p_gp->p_ellps->f;
+	ths->ellps = p_data_ellps;
 
-	for (kp = 0; kp < p_gp->np; kp++)
-	{
+	a = p_data_ellps->a;
+	app = 1.0 - p_data_ellps->f;
 
-		p_gp->lambda[kp] = lon[kp] * SG2_DEG2RAD;
-		p_gp->phi[kp] = lat[kp] * SG2_DEG2RAD;
-		if (h == NULL)
-		{
-			p_gp->h[kp] = 0.0;
-		}
-		else
-		{
-			p_gp->h[kp] = h[kp];
-		}
+	ths->lambda = lon * SG2_DEG2RAD;
+	ths->phi = lat * SG2_DEG2RAD;
+	ths->h = h;
 
-		cos_phi_kp = cos(p_gp->phi[kp]);
-		sin_phi_kp = sin(p_gp->phi[kp]);
-		tan_phi_kp = sin_phi_kp / cos_phi_kp;
+	cos_phi_kp = cos(ths->phi);
+	sin_phi_kp = sin(ths->phi);
+	tan_phi_kp = sin_phi_kp / cos_phi_kp;
 
-		h_a_kp = p_gp->h[kp] / a;
-		u_kp = atan(app * tan_phi_kp);
-		p_gp->x[kp] = cos(u_kp) + h_a_kp * cos_phi_kp;
-		p_gp->y[kp] = app * sin(u_kp) + h_a_kp * sin_phi_kp;
-		p_gp->u[kp] = u_kp;
-		p_gp->cos_phi[kp] = cos_phi_kp;
-		p_gp->sin_phi[kp] = sin_phi_kp;
+	h_a_kp = ths->h / a;
+	u_kp = atan(app * tan_phi_kp);
+	ths->x = cos(u_kp) + h_a_kp * cos_phi_kp;
+	ths->y = app * sin(u_kp) + h_a_kp * sin_phi_kp;
+	ths->u = u_kp;
+	ths->cos_phi = cos_phi_kp;
+	ths->sin_phi = sin_phi_kp;
 
+}
+
+inline static void sg2_topocentric_correction_refraction_SAE(double *p_gamma_S0, double *p_data_corr,
+		double *p_gamma_S, int *p_err) {
+
+	static const double gamma_S0_seuil = -0.010035643198967;
+	static const double R = 0.029614018235657;
+	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
+	double K;
+	double tan_gamma_S0 = 0.0;
+	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
+	unsigned long k;
+	double P, T;
+
+	P = p_data_corr[0];
+	T = p_data_corr[1];
+
+	K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
+
+	gamma_S0 = *p_gamma_S0;
+	if (gamma_S0 > gamma_S0_seuil) {
+		*p_gamma_S = gamma_S0
+				+ K / (tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
+	} else {
+		*p_gamma_S = gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(gamma_S0);
 	}
 
 }
 
-void SG2_topocentric_delete_tabgeopoint(S_SG2_TABGEOPOINT *p_gp, int *p_err)
-{
-	free(p_gp->p_ellps);
-	free(p_gp->phi);
-	free(p_gp->lambda);
-	free(p_gp->h);
-	free(p_gp->u);
-	free(p_gp->x);
-	free(p_gp->y);
-	free(p_gp->cos_phi);
-	free(p_gp->sin_phi);
-	free(p_gp);
-}
+inline static void sg2_topocentric_correction_refraction_ZIM(double *p_gamma_S0,
+		double *p_data_corr, double *p_gamma_S, int *p_err) {
 
-S_SG2_TOPOC_DATA *SG2_topocentric_create_topoc_data(unsigned long np,
-		unsigned long nd, int *p_err)
-{
-	S_SG2_TOPOC_DATA *p_topoc;
-	double *p_tmp1 = NULL, *p_tmp2 = NULL, *p_tmp3 = NULL, *p_tmp4 = NULL,
-			*p_tmp5 = NULL, *p_tmp6 = NULL, *p_tmp7 = NULL;
-	unsigned long kp;
+	static const double gamma_S0_seuil = -0.010035643198967;
+	static const double R = 0.029614018235657;
+	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
+	double K;
+	double tan_gamma_S0 = 0.0;
+	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
+	unsigned long k;
+	double P, T;
 
-	p_topoc = (S_SG2_TOPOC_DATA *) malloc(sizeof(S_SG2_TOPOC_DATA));
-	if (p_topoc == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_1;
-		goto error;
-	}
-	p_topoc->nd = nd;
-	p_topoc->np = np;
-	p_topoc->r_alpha = NULL;
-	p_topoc->delta = NULL;
-	p_topoc->omega = NULL;
-	p_topoc->gamma_S0 = NULL;
-	p_topoc->alpha_S = NULL;
-	p_topoc->toa_ni = NULL;
-	p_topoc->toa_hi = NULL;
+	P = p_data_corr[0];
+	T = p_data_corr[1];
 
-	/*
-	 double **r_alpha;
-	 double **delta;
-	 double **omega;
-	 double **gamma_S;
-	 double **alpha_S;
-	 double **toa_ni;
-	 double **toa_hi;
+	K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
 
-	 */
-
-	p_tmp1 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp1 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_1;
-		goto error;
-	}
-	p_topoc->r_alpha = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->r_alpha == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_2;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->r_alpha[kp] = &p_tmp1[nd * kp];
-	}
-
-	p_tmp2 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp2 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_3;
-		goto error;
-	}
-	p_topoc->delta = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->delta == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_4;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->delta[kp] = &p_tmp2[nd * kp];
-	}
-
-	p_tmp3 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp3 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_5;
-		goto error;
-	}
-	p_topoc->omega = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->omega == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_6;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->omega[kp] = &p_tmp3[nd * kp];
-	}
-
-	p_tmp4 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp4 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_7;
-		goto error;
-	}
-	p_topoc->gamma_S0 = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->gamma_S0 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_8;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->gamma_S0[kp] = &p_tmp4[nd * kp];
-	}
-
-	p_tmp5 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp5 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_9;
-		goto error;
-	}
-	p_topoc->alpha_S = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->alpha_S == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_10;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->alpha_S[kp] = &p_tmp5[nd * kp];
-	}
-
-	p_tmp6 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp6 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_11;
-		goto error;
-	}
-	p_topoc->toa_ni = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->toa_ni == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_12;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->toa_ni[kp] = &p_tmp6[nd * kp];
-	}
-
-	p_tmp7 = (double *) malloc(nd * np * sizeof(double));
-	if (p_tmp7 == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_11;
-		goto error;
-	}
-	p_topoc->toa_hi = (double **) malloc(np * sizeof(double *));
-	if (p_topoc->toa_hi == NULL)
-	{
-		*p_err = SG2_ERR_TOPOCENTRIC_CREATE_TOPOC_MALLOC_12;
-		goto error;
-	}
-	for (kp = 0; kp < np; kp++)
-	{
-		p_topoc->toa_hi[kp] = &p_tmp7[nd * kp];
-	}
-
-	return p_topoc;
-
-error:
-	/* cleanup */
-
-	if (p_topoc != NULL) {
-
-		if(p_topoc->r_alpha != NULL)
-			free(p_topoc->r_alpha);
-		if(p_tmp1 != NULL)
-			free(p_tmp1);
-		if(p_topoc->delta != NULL)
-			free(p_topoc->delta);
-		if(p_tmp2 != NULL)
-			free(p_tmp2);
-		if(p_topoc->omega != NULL)
-			free(p_topoc->omega);
-		if(p_tmp3 != NULL)
-			free(p_tmp3);
-		if(p_topoc->gamma_S0 != NULL)
-			free(p_topoc->gamma_S0);
-		if(p_tmp4 != NULL)
-			free(p_tmp4);
-		if(p_topoc->alpha_S != NULL)
-			free(p_topoc->alpha_S);
-		if(p_tmp5 != NULL)
-			free(p_tmp5);
-		if(p_topoc->toa_ni != NULL)
-			free(p_topoc->toa_ni);
-		if(p_tmp6 != NULL)
-			free(p_tmp6);
-		if(p_topoc->toa_hi != NULL)
-			free(p_topoc->toa_hi);
-		if(p_tmp7 != NULL)
-			free(p_tmp7);
-
-		free(p_topoc);
-	}
-
-	return NULL;
-
-}
-
-void SG2_topocentric_delete_topoc_data(S_SG2_TOPOC_DATA *p_topoc, int *p_err)
-{
-	free(p_topoc->r_alpha[0]);
-	free(p_topoc->r_alpha);
-	free(p_topoc->delta[0]);
-	free(p_topoc->delta);
-	free(p_topoc->omega[0]);
-	free(p_topoc->omega);
-	free(p_topoc->gamma_S0[0]);
-	free(p_topoc->gamma_S0);
-	free(p_topoc->alpha_S[0]);
-	free(p_topoc->alpha_S);
-	free(p_topoc->toa_ni[0]);
-	free(p_topoc->toa_ni);
-	free(p_topoc->toa_hi[0]);
-	free(p_topoc->toa_hi);
-	free(p_topoc);
-}
-
-void SG2_topocentric_set_topoc_data(S_SG2_GEOC_DATA *p_geoc,
-		S_SG2_TABGEOPOINT *p_gp, S_SG2_TOPOC_DATA *p_topoc, int *p_err)
-{
-
-	unsigned long np, kp, nd, kd;
-	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
-	double omega_g_kp_kd;
-	double *geoc_r_alpha, *geoc_delta, *geoc_nu;
-	double cos_geoc_delta_kd;
-	double Delta_r_alpha_kp_kd, cos_omega_kp_kd;
-	double cos_delta_kp_kd, sin_delta_kp_kd, tan_delta_kp_kd;
-	double xi;
-
-	p_topoc->p_gp = p_gp;
-	p_topoc->p_geoc = p_geoc;
-	p_topoc->p_jd = p_geoc->p_jd;
-	p_topoc->p_helioc = p_geoc->p_helioc;
-
-	np = p_topoc->np;
-	nd = p_topoc->nd;
-
-	xi = (p_gp->p_ellps->a / SG2_AU);
-
-	for (kp = 0; kp < np; kp++)
-	{
-
-		cos_phi_kp = p_gp->cos_phi[kp];
-		sin_phi_kp = p_gp->sin_phi[kp];
-
-		u_kp = p_gp->u[kp];
-		x_kp = p_gp->x[kp];
-		y_kp = p_gp->y[kp];
-
-		geoc_nu = p_geoc->nu;
-		geoc_r_alpha = p_geoc->r_alpha;
-		geoc_delta = p_geoc->delta;
-
-		for (kd = 0; kd < nd; kd++)
-		{
-
-			omega_g_kp_kd = geoc_nu[kd] - geoc_r_alpha[kd] + p_gp->lambda[kp];
-			cos_geoc_delta_kd = cos(geoc_delta[kd]);
-
-			Delta_r_alpha_kp_kd = (-x_kp * sin(omega_g_kp_kd)
-					/ cos_geoc_delta_kd * xi);
-			p_topoc->r_alpha[kp][kd] = geoc_r_alpha[kd] + Delta_r_alpha_kp_kd;
-
-			p_topoc->delta[kp][kd] = geoc_delta[kd] + (x_kp
-					* cos(omega_g_kp_kd) * sin(geoc_delta[kd]) - y_kp
-					* cos_geoc_delta_kd) * xi;
-
-			p_topoc->omega[kp][kd] = omega_g_kp_kd - Delta_r_alpha_kp_kd;
-
-			cos_omega_kp_kd = cos(p_topoc->omega[kp][kd]);
-			cos_delta_kp_kd = cos(p_topoc->delta[kp][kd]);
-			sin_delta_kp_kd = sin(p_topoc->delta[kp][kd]);
-			tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
-
-			p_topoc->gamma_S0[kp][kd] = asin(sin_phi_kp * sin_delta_kp_kd
-					+ cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
-
-			p_topoc->alpha_S[kp][kd]
-					= atan2(sin(p_topoc->omega[kp][kd]), cos_omega_kp_kd
-							* sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
-							+ SG2_PI;
-
-			if (p_topoc->gamma_S0[kp][kd] > 0.0) {
-				p_topoc->toa_ni[kp][kd] = (1367.0)
-						/ (p_topoc->p_helioc->R[kd] * p_topoc->p_helioc->R[kd]);
-				p_topoc->toa_hi[kp][kd] = (p_topoc->toa_ni[kp][kd]
-						* sin(p_topoc->gamma_S0[kp][kd]));
-			} else {
-				p_topoc->toa_ni[kp][kd] = 0.0;
-				p_topoc->toa_hi[kp][kd] = 0.0;
-			}
-
-		}
+	gamma_S0 = *p_gamma_S0;
+	if (gamma_S0 <= -0.010036) {
+		*p_gamma_S = gamma_S0 + (-20.774 / tan_gamma_S0) * K;
+	} else if (gamma_S0 <= 0.087266) {
+		gamma_S0_2 = gamma_S0 * gamma_S0;
+		gamma_S0_3 = gamma_S0_2 * gamma_S0;
+		gamma_S0_4 = gamma_S0_4 * gamma_S0;
+		*p_gamma_S = gamma_S0
+				+ (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * gamma_S0_2
+						+ -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4)
+						* K;
+	} else if (gamma_S0 <= 1.483529864195180) {
+		*p_gamma_S = gamma_S0
+				+ K
+						* (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0)
+								+ 0.000086 / pow(tan_gamma_S0, 5.0));
 	}
 
 }
@@ -562,61 +168,89 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 
 	switch (method)
 	{
-
 	case SG2_CORRECTION_REFRACTION_SAE:
-
-		P = p_data_corr[0];
-		T = p_data_corr[1];
-
-		K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
-		for (k = 0; k < n; k++)
-		{
-			gamma_S0 = p_gamma_S0[k];
-			if (gamma_S0 > gamma_S0_seuil)
-			{
-				p_gamma_S[k] = gamma_S0 + K / (tan(gamma_S0 + 0.0031376
-						/ (gamma_S0 + 0.089186)));
-			}
-			else
-			{
-				p_gamma_S[k] = gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(
-						gamma_S0);
-			}
-		}
+		sg2_topocentric_correction_refraction_SAE(p_gamma_S0, p_data_corr, p_gamma_S, p_err);
 		break;
 	case SG2_CORRECTION_REFRACTION_ZIM:
-
-		P = p_data_corr[0];
-		T = p_data_corr[1];
-
-		K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
-		for (k = 0; k < n; k++)
-		{
-			gamma_S0 = p_gamma_S0[k];
-			if (gamma_S0 <= -0.010036)
-			{
-				p_gamma_S[k] = gamma_S0 + (-20.774 / tan_gamma_S0) * K;
-			}
-			else if (gamma_S0 <= 0.087266)
-			{
-				gamma_S0_2 = gamma_S0 * gamma_S0;
-				gamma_S0_3 = gamma_S0_2 * gamma_S0;
-				gamma_S0_4 = gamma_S0_4 * gamma_S0;
-				p_gamma_S[k] = gamma_S0 + (1735 - 2.969067e4 * gamma_S0
-						+ 3.394422e5 * gamma_S0_2 + -2.405683e6 * gamma_S0_3
-						+ 7.66231727e6 * gamma_S0_4) * K;
-			}
-			else if (gamma_S0 <= 1.483529864195180)
-			{
-				p_gamma_S[k] = gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07
-						/ pow(tan_gamma_S0, 3.0) + 0.000086 / pow(tan_gamma_S0,
-						5.0));
-			}
-		}
+		sg2_topocentric_correction_refraction_ZIM(p_gamma_S0, p_data_corr, p_gamma_S, p_err);
 		break;
-	default:
+	case SG2_CORRECTION_REFRACTION_NONE:
 		memcpy(p_gamma_S, p_gamma_S0, n * sizeof(double));
 		return;
+	}
+
+}
+
+void sg2_topocentric_set_topoc_data(sg2_topocentric_data_t * ths, sg2_geocentric_sun_position_t const * sun_position,
+		sg2_geopoint_t const * geopoint, int * err)
+{
+
+	unsigned long np, kp, nd, kd;
+	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
+	double omega_g_kp_kd;
+	double geoc_r_alpha, geoc_delta, geoc_nu;
+	double cos_geoc_delta_kd;
+	double Delta_r_alpha_kp_kd, cos_omega_kp_kd;
+	double cos_delta_kp_kd, sin_delta_kp_kd, tan_delta_kp_kd;
+	double xi;
+
+	ths->geopoint = geopoint;
+	ths->sun_position = sun_position;
+
+	xi = (geopoint->ellps->a / SG2_AU);
+
+	{
+
+		cos_phi_kp = geopoint->cos_phi;
+		sin_phi_kp = geopoint->sin_phi;
+
+		u_kp = geopoint->u;
+		x_kp = geopoint->x;
+		y_kp = geopoint->y;
+
+		geoc_nu = sun_position->geoc.nu;
+		geoc_r_alpha = sun_position->geoc.r_alpha;
+		geoc_delta = sun_position->geoc.delta;
+
+		{
+
+			omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint->lambda;
+			cos_geoc_delta_kd = cos(geoc_delta);
+
+			Delta_r_alpha_kp_kd = (-x_kp * sin(omega_g_kp_kd)
+					/ cos_geoc_delta_kd * xi);
+			ths->r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
+
+			ths->delta = geoc_delta + (x_kp
+					* cos(omega_g_kp_kd) * sin(geoc_delta) - y_kp
+					* cos_geoc_delta_kd) * xi;
+
+			ths->omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
+
+			cos_omega_kp_kd = cos(ths->omega);
+			cos_delta_kp_kd = cos(ths->delta);
+			sin_delta_kp_kd = sin(ths->delta);
+			tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
+
+			ths->gamma_S0 = asin(sin_phi_kp * sin_delta_kp_kd
+					+ cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
+
+			ths->alpha_S
+					= atan2(sin(ths->omega), cos_omega_kp_kd
+							* sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
+							+ SG2_PI;
+
+			if (ths->gamma_S0 > 0.0) {
+				ths->toa_ni = (1367.0)
+						/ (sun_position->helioc.R * sun_position->helioc.R);
+				ths->toa_hi = (ths->toa_ni
+						* sin(ths->gamma_S0));
+			} else {
+				ths->toa_ni = 0.0;
+				ths->toa_hi = 0.0;
+			}
+
+		}
 	}
 
 }

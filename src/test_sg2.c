@@ -19,6 +19,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+/* needed for NAN */
+#include <math.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -41,39 +44,24 @@ int main(int argc, char ** argv) {
 	double alt = atof(argv[3]);
 	double jd = atof(argv[4]);
 
-	int err = 0;
-
 	/** time related data **/
-	S_SG2_DATE_TABJD * xjd = SG2_date_create_tabjd(1, &err);
-	S_SG2_HELIOC_DATA * xhelioc = SG2_heliocentric_create_helioc_data(1, &err);
-	S_SG2_GEOC_DATA * xgeoc = SG2_geocentric_create_geoc_data(1, &err);
+	sg2_geocentric_sun_position_t sun_position;
 
 	/** location related data **/
-	S_SG2_TABGEOPOINT * xgeopoint = SG2_topocentric_create_tabgeopoint(1, SG2_ELLPSTYPE_WGS84, &err);
+	sg2_geopoint_t geopoint;
 
 	/** local-time related data **/
-	S_SG2_TOPOC_DATA * xtopoc = SG2_topocentric_create_topoc_data(1, 1, &err);
+	sg2_topocentric_data_t topoc;
 
+
+	int err = 0;
 
 	/**
 	 * Computing solar system state.
 	 **/
 
-	/* TODO: beter interfaces */
-	xjd->jd_ut[0] = jd;
-	SG2_date_set_tabjd_tt(NULL, xjd, &err);
-	if(err != 0) {
-		printf("error while setting julian date\n");
-		return err;
-	}
-
-	SG2_heliocentric_set_helioc_data(xjd, xhelioc, &err);
-	if(err != 0) {
-		printf("error while computing heliocentric data\n");
-		return err;
-	}
-
-	SG2_geocentric_set_geoc_data(xjd, xhelioc, xgeoc, &err);
+	/* TODO: better interfaces */
+	sg2_geocentric_set_geocentric_sun_position(&sun_position, jd, NAN, &err);
 	if (err != 0) {
 		printf("error while computing geocentric data\n");
 		return err;
@@ -82,7 +70,7 @@ int main(int argc, char ** argv) {
 	/**
 	 * Computing local geometry data.
 	 **/
-	SG2_topocecentric_set_tabgeopoint(&lon, &lat, &alt, xgeopoint, &err);
+	sg2_topocecentric_set_tabgeopoint(&geopoint, lon, lat, alt, SG2_ELLPSTYPE_WGS84, &err);
 	if(err != 0) {
 		printf("error while setting geopoint\n");
 		return err;
@@ -91,48 +79,46 @@ int main(int argc, char ** argv) {
 	/**
 	 * computing sun position at selected location.
 	 **/
-	SG2_topocentric_set_topoc_data(xgeoc, xgeopoint, xtopoc, &err);
+	sg2_topocentric_set_topoc_data(&topoc, &sun_position, &geopoint, &err);
 	if(err != 0) {
 		printf("error while cumputing topocentric data\n");
 		return err;
 	}
 
 	printf("Time related data (i.e. solar system geometry)\n");
-	printf("jd.jd_ut           = %f\n", xjd->jd_ut[0]);
-	printf("jd.jd_tt           = %f\n", xjd->jd_tt[0]);
+	printf("jd.jd_ut           = %f\n", sun_position.jd.jd_ut);
+	printf("jd.jd_tt           = %f\n", sun_position.jd.jd_tt);
 
-	printf("helioc.R           = %f\n", xhelioc->R[0]);
-	printf("helioc.L           = %f\n", xhelioc->L[0]);
+	printf("helioc.R           = %f\n", sun_position.helioc.R);
+	printf("helioc.L           = %f\n", sun_position.helioc.L);
 
-	printf("geoc.delta         = %f\n", xgeoc->delta[0]);
-	printf("geoc.EOT           = %f\n", xgeoc->EOT[0]);
-	printf("geoc.Theta_a       = %f\n", xgeoc->Theta_a[0]);
-	printf("geoc.epsilon       = %f\n", xgeoc->epsilon[0]);
-	printf("geoc.nu            = %f\n", xgeoc->nu[0]);
-	printf("geoc.r_alpha       = %f\n", xgeoc->r_alpha[0]);
-	printf("geoc.Delta_psi     = %f\n", xgeoc->Delta_psi[0]);
+	printf("geoc.delta         = %f\n", sun_position.geoc.delta);
+	printf("geoc.EOT           = %f\n", sun_position.geoc.EOT);
+	printf("geoc.Theta_a       = %f\n", sun_position.geoc.Theta_a);
+	printf("geoc.epsilon       = %f\n", sun_position.geoc.epsilon);
+	printf("geoc.nu            = %f\n", sun_position.geoc.nu);
+	printf("geoc.r_alpha       = %f\n", sun_position.geoc.r_alpha);
+	printf("geoc.Delta_psi     = %f\n", sun_position.geoc.Delta_psi);
 
 	printf("Location related data\n");
 
-	printf("geopoint.lambda   = %f\n", xgeopoint->lambda[0]);
-	printf("geopoint.phi      = %f\n", xgeopoint->phi[0]);
-	printf("geopoint.u        = %f\n", xgeopoint->u[0]);
-	printf("geopoint.x        = %f\n", xgeopoint->x[0]);
-	printf("geopoint.y        = %f\n", xgeopoint->y[0]);
-	printf("geopoint.cos_phi  = %f\n", xgeopoint->cos_phi[0]);
-	printf("geopoint.sin_phi  = %f\n", xgeopoint->sin_phi[0]);
+	printf("geopoint.lambda   = %f\n", geopoint.lambda);
+	printf("geopoint.phi      = %f\n", geopoint.phi);
+	printf("geopoint.u        = %f\n", geopoint.u);
+	printf("geopoint.x        = %f\n", geopoint.x);
+	printf("geopoint.y        = %f\n", geopoint.y);
+	printf("geopoint.cos_phi  = %f\n", geopoint.cos_phi);
+	printf("geopoint.sin_phi  = %f\n", geopoint.sin_phi);
 
 	printf("Sun related data\n");
 
-	printf("topoc.delta       = %f\n", xtopoc->delta[0][0]);
-	printf("topoc.alpha_S     = %f\n", xtopoc->alpha_S[0][0]);
-	printf("topoc.gamma_S0    = %f\n", xtopoc->gamma_S0[0][0]);
-	printf("topoc.omega       = %f\n", xtopoc->omega[0][0]);
-	printf("topoc.r_alpha     = %f\n", xtopoc->r_alpha[0][0]);
-	printf("topoc.toa_hi      = %f\n", xtopoc->toa_hi[0][0]);
-	printf("topoc.toa_ni      = %f\n", xtopoc->toa_ni[0][0]);
-
-	/** TODO: clean exit on error **/
+	printf("topoc.delta       = %f\n", topoc.delta);
+	printf("topoc.alpha_S     = %f\n", topoc.alpha_S);
+	printf("topoc.gamma_S0    = %f\n", topoc.gamma_S0);
+	printf("topoc.omega       = %f\n", topoc.omega);
+	printf("topoc.r_alpha     = %f\n", topoc.r_alpha);
+	printf("topoc.toa_hi      = %f\n", topoc.toa_hi);
+	printf("topoc.toa_ni      = %f\n", topoc.toa_ni);
 
 	return 0;
 

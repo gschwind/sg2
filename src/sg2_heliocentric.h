@@ -26,14 +26,7 @@ extern "C"
 {
 #endif
 
-S_SG2_HELIOC_DATA
-*SG2_heliocentric_create_helioc_data(unsigned long n, int *p_err);
-
-void SG2_heliocentric_delete_helioc_data(S_SG2_HELIOC_DATA *p_helioc,
-		int *p_err);
-
-void SG2_heliocentric_set_helioc_data(S_SG2_DATE_TABJD *p_jd,
-		S_SG2_HELIOC_DATA *p_helioc, int *p_err);
+void sg2_heliocentric_set_helioc_data(sg2_heliocentric_data_t * ths, time_data_t * jd, int *p_err);
 
 #ifdef	__cplusplus
 }
