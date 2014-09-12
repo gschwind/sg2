@@ -40,6 +40,9 @@ void sg2_date_tabydoyh_to_tabymdh(date_ydoyh_t const * p_ydoyh,
 
 void sg2_date_set_time_data_tt(time_data_t * ths, double *p_delta_tt, int *err);
 
+void sg2_julian_date_to_tabymdh(double jd, date_ymdh_t *p_ymdh);
+
+double sg2_date_tabymdh_to_julian_date(date_ymdh_t const *p_ymdh);
 
 #ifdef	__cplusplus
 }

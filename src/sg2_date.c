@@ -37,11 +37,8 @@ inline static int SG2_date_leapyear(short year) {
 	return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
-void sg2_date_tabjd_to_tabymdh(time_data_t const * p_jd,
-		date_ymdh_t *p_ymdh, int *p_err) {
-	double H, L, N, I, J, K, jd;
-
-	jd = p_jd->jd_ut;
+void sg2_julian_date_to_tabymdh(double jd, date_ymdh_t *p_ymdh) {
+	double H, L, N, I, J, K;
 
 	H = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 	L = floor(jd + 0.5) + 68569.0;
@@ -60,15 +57,14 @@ void sg2_date_tabjd_to_tabymdh(time_data_t const * p_jd,
 	p_ymdh->month = (short) J;
 	p_ymdh->day_of_month = (short) K;
 	p_ymdh->hour = H;
-
 }
 
-/**
- * NOTE: /!\ do not fill terrestrial time, rebember to call sg2_date_set_time_data_tt afterward.
- **/
-void sg2_date_tabymdh_to_tabjd(date_ymdh_t const *p_ymdh, time_data_t *p_jd,
-		int *p_err) {
+void sg2_date_tabjd_to_tabymdh(time_data_t const * p_jd,
+		date_ymdh_t *p_ymdh, int *p_err) {
+	sg2_julian_date_to_tabymdh(p_jd->jd_ut, p_ymdh);
+}
 
+double sg2_date_tabymdh_to_julian_date(date_ymdh_t const *p_ymdh) {
 	int k;
 	double Y, M, D, H;
 
@@ -82,10 +78,17 @@ void sg2_date_tabymdh_to_tabjd(date_ymdh_t const *p_ymdh, time_data_t *p_jd,
 		Y -= 1;
 	}
 
-	p_jd->jd_ut = 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0 * Y
+	return 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0 * Y
 			+ floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0) + H / 24.0
 			- 0.5;
+}
 
+/**
+ * NOTE: /!\ do not fill terrestrial time, rebember to call sg2_date_set_time_data_tt afterward.
+ **/
+void sg2_date_tabymdh_to_tabjd(date_ymdh_t const *p_ymdh, time_data_t *p_jd,
+		int *p_err) {
+	p_jd->jd_ut = sg2_date_tabymdh_to_julian_date(p_ymdh);
 }
 
 void sg2_date_tabymdh_to_tabydoyh(date_ymdh_t const *p_ymdh,
