@@ -120,6 +120,10 @@ int main(int argc, char ** argv) {
 	printf("topoc.toa_hi      = %f\n", topoc.toa_hi);
 	printf("topoc.toa_ni      = %f\n", topoc.toa_ni);
 
+	printf("Extra data\n");
+	double x = (sun_position.jd.jd_ut + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
+	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
+
 	return 0;
 
 }
