@@ -42,6 +42,8 @@ static double const AU = 149597870691.0; /* +/- 6 m (McCarthy et Petit, 2003) */
 inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
 inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
 
+struct date;
+struct julian;
 struct ymdh;
 struct ydoyh;
 struct julian_time_data;

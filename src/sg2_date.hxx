@@ -26,19 +26,63 @@
 
 namespace sg2 {
 
+struct date {
+	int64_t nsec; // nanosecond since 1970
+
+	date(int64_t nsec); // TODO
+	date(double jd); // TODO
+	date(ymdh const & d); // TODO
+	date(ydoyh const & d); // TODO
+
+	operator int64_t() const
+	{
+		return nsec;
+	}
+
+};
+
+struct julian {
+	double jd; // julian date in factionnal days
+
+	julian(double jd);
+	julian(ymdh const & d); // TODO
+	julian(ydoyh const & d); // TODO
+	julian(date nsec); // TODO
+
+	operator double() const
+	{
+		return jd;
+	}
+
+};
+
 /* Date YMD + H en heure décimale UT */
 struct ymdh {
-	short year;
-	char month;
-	char day_of_month;
+	int year;
+	int month;
+	int day_of_month;
 	double hour;
 
 	ymdh(short year, short month, char day_of_month, double hour);
 	ymdh(julian_time_data const & jd);
-	ymdh(ydoyh const & date);
 	ymdh(double jd);
+	ymdh(date const & d);
+	ymdh(ydoyh const & ydoyh);
 
 	double jd() const;
+
+};
+
+struct ymdhmsn {
+	int year;
+	int month;
+	int day_of_month;
+	int hour;
+	int min;
+	int sec;
+	int nsec;
+
+	ymdhmsn(date const date);
 
 };
 
@@ -54,8 +98,6 @@ struct ydoyh {
 
 };
 
-using date_ydoyh_t = ydoyh;
-
 struct julian_time_data {
 	double jd_ut;            /* julian date UT (decimal day) */
 	double jd_tt;            /* TT : terrestrial time */
@@ -64,8 +106,6 @@ struct julian_time_data {
 	julian_time_data(ymdh const & date, double jd_tt = NAN);
 
 };
-
-using time_data_t = julian_time_data;
 
 }
 

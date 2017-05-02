@@ -30,17 +30,37 @@
 
 namespace sg2 {
 
+/** 1970-01-01T12:00 **/
+static double const EPOCH_JD = 2440587.5;
+
 inline int _date_leapyear(int year) {
 	return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
+/* return the julian day at 12h */
+inline int _ymd_to_julian_day(int year, int month, int day)
+{
+	int k;
+	double Y, M, D, H;
 
-ymdh::ymdh(double jd)
+	Y = year;
+	M = month;
+	D = day;
+	if (M < 3) {
+		M += 12;
+		Y -= 1;
+	}
+
+	return 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0 * Y
+			+ floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0);
+
+}
+
+inline void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
 {
 	double H, L, N, I, J, K;
 
-	H = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
-	L = floor(jd + 0.5) + 68569.0;
+	L = jd + 68569.0;
 	N = floor(4 * L / 146097.0);
 	L = L - floor((146097.0 * N + 3.0) / 4.0);
 	I = floor(4000 * (L + 1) / 1461001.0);
@@ -52,16 +72,38 @@ ymdh::ymdh(double jd)
 	J = J + 2.0 - 12.0 * L;
 	I = 100.0 * (N - 49.0) + I + L;
 
-	this->year = (short) I;
-	this->month = (short) J;
-	this->day_of_month = (short) K;
-	this->hour = H;
+	year = I;
+	month = J;
+	day = K;
+
+}
+
+ymdh::ymdh(short year, short month, char day_of_month, double hour) :
+	year{year},
+	month{month},
+	day_of_month{day_of_month},
+	hour{hour}
+{
+
+}
+
+ymdh::ymdh(double jd)
+{
+	_julian_day_to_ymd(jd, year, month, day_of_month);
+	hour = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 }
 
 ymdh::ymdh(julian_time_data const & jd) :
 	ymdh{jd.jd_ut}
 {
 
+}
+
+ymdh::ymdh(date const & d)
+{
+	int jd = d.nsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
+	_julian_day_to_ymd(jd, year, month, day_of_month);
+	hour = static_cast<double>(d.nsec % 1000000000L)/(60.0*60.0*1e9);
 }
 
 double ymdh::jd() const {
@@ -81,6 +123,50 @@ double ymdh::jd() const {
 	return 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0 * Y
 			+ floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0) + H / 24.0
 			- 0.5;
+}
+
+ymdh::ymdh(ydoyh const & p_ydoyh)
+{
+	double B;
+	B = (double) _date_leapyear(p_ydoyh.year);
+	this->year = p_ydoyh.year;
+	this->hour = p_ydoyh.hour;
+
+	if (p_ydoyh.day_of_year < 32) {
+		this->month = 1;
+	} else {
+		this->month = 1
+				+ (short) (floor((303.0 + 5.
+				* (((double) p_ydoyh.day_of_year) - 59.0 - B))/ 153.0));
+	}
+
+	if (this->month < 2) {
+		this->day_of_month = p_ydoyh.day_of_year - 31 * (this->month - 1);
+	} else {
+		this->day_of_month = p_ydoyh.day_of_year
+				- ((short) (floor((153.0 * ((double) this->month) - 2.0) / 5.0)
+						- 32.0 + B));
+	}
+}
+
+ymdhmsn::ymdhmsn(date const date)
+{
+	int64_t xnsec = date.nsec;
+
+	// Find the nearest integer jd.
+	int jd = xnsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
+	_julian_day_to_ymd(jd, year, month, day_of_month);
+
+	/* in this order we avoid a lot of modulo */
+	xnsec %= (1000000000L * 60L * 60L * 24L);
+	hour = xnsec / (1000000000L * 60L * 60L);
+	xnsec -= hour * (1000000000L * 60L * 60L);
+	min = xnsec / (1000000000L * 60L);
+	xnsec -= min * (1000000000L * 60L);
+	sec = xnsec / (1000000000L);
+	xnsec -= sec * (1000000000L);
+	nsec = (int)xnsec;
+
 }
 
 julian_time_data::julian_time_data(double _jd_ut, double _jd_tt) :
@@ -121,28 +207,47 @@ ydoyh::ydoyh(ymdh const & p_ymdh)
 			- 30.0;
 }
 
-ymdh::ymdh(date_ydoyh_t const & p_ydoyh)
+date::date(int64_t nsec) :
+	nsec{nsec}
 {
-	double B;
-	B = (double) _date_leapyear(p_ydoyh.year);
-	this->year = p_ydoyh.year;
-	this->hour = p_ydoyh.hour;
 
-	if (p_ydoyh.day_of_year < 32) {
-		this->month = 1;
-	} else {
-		this->month = 1
-				+ (short) (floor((303.0 + 5.
-				* (((double) p_ydoyh.day_of_year) - 59.0 - B))/ 153.0));
-	}
+}
 
-	if (this->month < 2) {
-		this->day_of_month = p_ydoyh.day_of_year - 31 * (this->month - 1);
-	} else {
-		this->day_of_month = p_ydoyh.day_of_year
-				- ((short) (floor((153.0 * ((double) this->month) - 2.0) / 5.0)
-						- 32.0 + B));
-	}
+date::date(double jd) :
+	nsec((jd-EPOCH_JD)*24.0*60.0*60.0*1e9)
+{
+
+}
+
+date::date(ymdh const & d)
+{
+	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
+	nsec = (xjd-EPOCH_JD)*(24L*60L*60L*1000000000L) + d.hour*60.0*60.0*1e9;
+}
+
+date::date(ydoyh const & d) :
+	date{ymdh{d}}
+{
+
+}
+
+julian::julian(double jd) : jd{jd} { }
+
+julian::julian(ymdh const & d)
+{
+	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
+	jd = xjd - 0.5 + d.hour / 24.0;
+}
+
+julian::julian(ydoyh const & d) :
+	julian{ymdh{d}}
+{
+
+}
+
+julian::julian(date const nsec) :
+	jd{nsec/(24.0*60.0*60.0*1e9)+EPOCH_JD}
+{
 }
 
 }
