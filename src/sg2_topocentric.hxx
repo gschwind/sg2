@@ -24,6 +24,7 @@
 #include "sg2_typedef.hxx"
 #include "sg2_geocentric.hxx"
 #include "sg2_math.hxx"
+#include "sg2_angle.hxx"
 
 #include <cmath>
 #include <cstdlib>
@@ -52,11 +53,9 @@ struct ellps {
 
 struct geopoint_data {
 	ellps  ellipse;
-	double phi;        /* Latitude (rad) */
+	angle  phi;        /* Latitude (rad) */
 	double lambda;     /* Longitude (rad) */
 	double h;          /* Altitude Above the Reference Ellipsoid */
-	double cos_phi;
-	double sin_phi;
 	double u;
 	double x;
 	double y;
@@ -73,20 +72,12 @@ struct geopoint_data {
 
 	auto operator=(geopoint_data const &) -> geopoint_data & = default;
 
-	double get_phi() const {
+	angle const & get_phi() const {
 		return phi;
 	}
 
 	double get_lambda() const {
 		return lambda;
-	}
-
-	double get_cos_phi() const {
-		return cos_phi;
-	}
-
-	double get_sin_phi() const {
-		return sin_phi;
 	}
 
 	double get_u() const {
@@ -185,15 +176,13 @@ inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps cons
 
 	cos_phi_kp = math::cos(phi);
 	sin_phi_kp = math::sin(phi);
-	tan_phi_kp = sin_phi_kp / cos_phi_kp;
+	tan_phi_kp = math::tan(phi);
 
 	h_a_kp = h / a;
 	u_kp = math::atan(app * tan_phi_kp);
 	x = math::cos(u_kp) + h_a_kp * cos_phi_kp;
 	y = app * math::sin(u_kp) + h_a_kp * sin_phi_kp;
 	u = u_kp;
-	cos_phi = cos_phi_kp;
-	sin_phi = sin_phi_kp;
 
 }
 
@@ -278,8 +267,8 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
 
 	xi = (geopoint.ellipse.a / AU);
 
-    cos_phi_kp = geopoint.cos_phi;
-    sin_phi_kp = geopoint.sin_phi;
+    cos_phi_kp = math::cos(geopoint.phi);
+    sin_phi_kp = math::sin(geopoint.phi);
 
     u_kp = geopoint.u;
     x_kp = geopoint.x;
