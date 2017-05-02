@@ -93,7 +93,7 @@ ymdh::ymdh(double jd)
 	hour = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 }
 
-ymdh::ymdh(julian_time_data const & jd) :
+ymdh::ymdh(time_data const & jd) :
 	ymdh{jd.jd_ut}
 {
 
@@ -150,7 +150,7 @@ ymdhmsn::ymdhmsn(date const date)
 
 }
 
-julian_time_data::julian_time_data(double _jd_ut, double _jd_tt) :
+time_data::time_data(double _jd_ut, double _jd_tt) :
 	jd_ut{_jd_ut},
 	jd_tt{_jd_tt}
 {
@@ -169,8 +169,8 @@ julian_time_data::julian_time_data(double _jd_ut, double _jd_tt) :
 /**
  * NOTE: /!\ do not fill terrestrial time, rebember to call sg2_date_set_time_data_tt afterward.
  **/
-julian_time_data::julian_time_data(ymdh const & p_ymdh, double jd_tt) :
-	julian_time_data{julian(p_ymdh), jd_tt}
+time_data::time_data(ymdh const & p_ymdh, double jd_tt) :
+	time_data{julian(p_ymdh), jd_tt}
 {
 
 }

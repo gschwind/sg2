@@ -75,7 +75,7 @@ inline double _heliocentric_compute_L(double jd_tt)
 			+ dx * SG2_precomputed_heliocentric_L[idx0 + 1];
 }
 
-geocentric_data::geocentric_data(julian_time_data const & jd)
+geocentric_data::geocentric_data(time_data const & jd)
 {
 	short idx0;
 	int kd;

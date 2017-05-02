@@ -41,7 +41,7 @@ int main(int argc, char ** argv) {
 	double alt = atof(argv[3]);
 	double jd = atof(argv[4]);
 
-	sg2::julian_time_data xjd{jd};
+	sg2::time_data xjd{jd};
 
 	/** location related data **/
 	sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPSTYPE_WGS84};

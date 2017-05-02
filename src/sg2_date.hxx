@@ -67,7 +67,7 @@ struct ymdh {
 
 	ymdh() { }
 	ymdh(short year, short month, char day_of_month, double hour);
-	ymdh(julian_time_data const & jd);
+	ymdh(time_data const & jd);
 	ymdh(double jd);
 	ymdh(date const & d);
 	ymdh(ydoyh const & ydoyh);
@@ -98,15 +98,15 @@ struct ydoyh {
 
 };
 
-struct julian_time_data {
+struct time_data {
 	double jd_ut;            /* julian date UT (decimal day) */
 	double jd_tt;            /* TT : terrestrial time */
 
-	julian_time_data() { }
-	julian_time_data(double jd_ut, double jd_tt = NAN);
-	julian_time_data(ymdh const & date, double jd_tt = NAN);
+	time_data() { }
+	time_data(double jd_ut, double jd_tt = NAN);
+	time_data(ymdh const & date, double jd_tt = NAN);
 
-	auto operator=(julian_time_data const &) -> julian_time_data & = default;
+	auto operator=(time_data const &) -> time_data & = default;
 
 	double get_universal_time() const {
 		return jd_ut;

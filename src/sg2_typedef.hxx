@@ -46,7 +46,7 @@ struct date;
 struct julian;
 struct ymdh;
 struct ydoyh;
-struct julian_time_data;
+struct time_data;
 struct geocentric_data;
 struct ellps;
 struct geopoint_data;

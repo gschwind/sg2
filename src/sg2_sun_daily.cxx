@@ -42,7 +42,7 @@ void sun_daily_data::update(double jd) {
 	jd += _p.lambda / PI; // aprox UT time for the given longitude
 
 	auto get_sun_elevation = [this](double jd) -> double {
-		julian_time_data xjd{jd};
+		time_data xjd{jd};
 		geocentric_data geoc{xjd};
 		topocentric_data topoc{geoc, this->_p};
 		return topoc.gamma_S0;
