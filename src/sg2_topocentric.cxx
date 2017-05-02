@@ -70,93 +70,68 @@ geopoint_data::geopoint_data(double lon, double lat, double h, ellps const & ell
 
 }
 
-inline void _topocentric_correction_refraction_SAE(double *p_gamma_S0, double *p_data_corr, double *p_gamma_S)
+inline double _topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T)
 {
-	static const double gamma_S0_seuil = -0.010035643198967;
-	static const double R = 0.029614018235657;
+	double const gamma_S0_seuil = -0.010035643198967;
+	double const R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
 	double tan_gamma_S0 = 0.0;
-	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
+	double gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
 	unsigned long k;
-	double P, T;
-
-	P = p_data_corr[0];
-	T = p_data_corr[1];
 
 	K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
 
-	gamma_S0 = *p_gamma_S0;
 	if (gamma_S0 > gamma_S0_seuil) {
-		*p_gamma_S = gamma_S0
-				+ K / (tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
+		return gamma_S0 + K / (tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
 	} else {
-		*p_gamma_S = gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(gamma_S0);
+		return gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(gamma_S0);
 	}
 
 }
 
-inline void _topocentric_correction_refraction_ZIM(double *p_gamma_S0, double *p_data_corr, double *p_gamma_S)
+inline double _topocentric_correction_refraction_ZIM(double const gamma_S0, double const P, double const T)
 {
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
 	double tan_gamma_S0 = 0.0;
-	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
+	double gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
 	unsigned long k;
-	double P, T;
-
-	P = p_data_corr[0];
-	T = p_data_corr[1];
 
 	K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
 
-	gamma_S0 = *p_gamma_S0;
 	if (gamma_S0 <= -0.010036) {
-		*p_gamma_S = gamma_S0 + (-20.774 / tan_gamma_S0) * K;
+		return gamma_S0 + (-20.774 / tan_gamma_S0) * K;
 	} else if (gamma_S0 <= 0.087266) {
 		gamma_S0_2 = gamma_S0 * gamma_S0;
 		gamma_S0_3 = gamma_S0_2 * gamma_S0;
 		gamma_S0_4 = gamma_S0_4 * gamma_S0;
-		*p_gamma_S = gamma_S0
+		return gamma_S0
 				+ (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * gamma_S0_2
-						+ -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4)
-						* K;
+				+ -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4) * K;
 	} else if (gamma_S0 <= 1.483529864195180) {
-		*p_gamma_S = gamma_S0
-				+ K
-						* (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0)
-								+ 0.000086 / pow(tan_gamma_S0, 5.0));
+		return gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0) + 0.000086 / pow(tan_gamma_S0, 5.0));
+	} else {
+		return NAN;
 	}
 
 }
 
-void topocentric_data::topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
-		CORRECTION_REFRACTION method, double *p_data_corr,
-		double *p_gamma_S)
+double topocentric_data::topocentric_correction_refraction(double const P,
+		double const T, CORRECTION_REFRACTION method) const
 {
-
-	static const double gamma_S0_seuil = -0.010035643198967;
-	static const double R = 0.029614018235657;
-	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
-	double K;
-	double tan_gamma_S0 = 0.0;
-	double gamma_S0 = 0.0, gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
-	unsigned long k;
-	double P, T;
-
-	switch (method)
-	{
+	switch (method) {
 	case SG2_CORRECTION_REFRACTION_SAE:
-		_topocentric_correction_refraction_SAE(p_gamma_S0, p_data_corr, p_gamma_S);
+		return _topocentric_correction_refraction_SAE(gamma_S0, P, T);
 		break;
 	case SG2_CORRECTION_REFRACTION_ZIM:
-		_topocentric_correction_refraction_ZIM(p_gamma_S0, p_data_corr, p_gamma_S);
+		return _topocentric_correction_refraction_ZIM(gamma_S0, P, T);
 		break;
 	case SG2_CORRECTION_REFRACTION_NONE:
-		memcpy(p_gamma_S, p_gamma_S0, n * sizeof(double));
-		return;
+		return gamma_S0;
+		break;
 	}
 
 }

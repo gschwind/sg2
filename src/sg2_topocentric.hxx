@@ -118,8 +118,7 @@ struct topocentric_data {
 
 	auto operator=(topocentric_data const &) -> topocentric_data & = default;
 
-	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
-			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);
+	double topocentric_correction_refraction(double const P, double const T, CORRECTION_REFRACTION method = SG2_CORRECTION_REFRACTION_NONE) const;
 
 	/* Topocentric right sun ascension (rad) */
 	double get_right_sun_ascension() const {
