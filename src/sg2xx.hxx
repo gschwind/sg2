@@ -26,10 +26,102 @@
 
 #include <limits>
 #include <vector>
-using namespace std;
+#include <functional>
+#include <stdexcept>
 
 namespace sg2 {
 
+using namespace std;
+
+/**
+ * Find the local extrema of the function 'func'
+ * between left_bound and right_bound.
+ * by default try to find the minimum
+ **/
+template<typename F, typename comp = std::less<double> >
+double hc_find_extrema(F func, double const EPS, double left_bound, double right_bound) {
+	comp _comp;
+
+    double left = left_bound;
+    double right = right_bound;
+    double mid = (left_bound+right_bound)/2.0;
+
+    double vleft = func(left);
+    double vmid = func(mid);
+    double vright = func(right);
+
+    while((right - left) > EPS) {
+        double mleft = (mid+left)/2.0;
+        double mright = (mid+right)/2.0;
+
+    	double vmleft = func(mleft);
+		double vmright = func(mright);
+
+		if(_comp(vmleft, vleft) and _comp(vmleft, vmid) and _comp(vmleft, vmright) and _comp(vmleft, vright)) {
+				vright = vmid;
+				right = mid;
+				vmid = vmleft;
+				mid = mleft;
+		} else if(_comp(vmid, vleft) and _comp(vmid, vmleft) and _comp(vmid, vmright) and _comp(vmid, vright)) {
+				vleft = vmleft;
+				left = mleft;
+				vright = vmright;
+				right = mright;
+		} else if(_comp(vmright, vleft) and _comp(vmright, vmleft) and _comp(vmright, vmid) and _comp(vmright, vright)) {
+				vleft = vmid;
+				left = mid;
+				vmid = vmright;
+				mid = mright;
+		} else {
+				throw std::runtime_error("the function is constant");
+		}
+    }
+
+    return mid;
+
+}
+
+template<typename F>
+double hc_find_max(F func, double const EPS, double left_bound, double right_bound) {
+	return hc_find_extrema<decltype(func), std::greater<double> >(func, EPS, left_bound, right_bound);
+}
+
+template<typename F>
+double hc_find_min(F func, double const EPS, double left_bound, double right_bound) {
+	return hc_find_extrema<decltype(func), std::less<double> >(func, EPS, left_bound, right_bound);
+}
+
+
+template<typename F>
+double hc_find_zero(F func, double const EPS, double left_bound, double right_bound) {
+    double left = left_bound;
+    double right = right_bound;
+
+    double vleft = func(left);
+    double vright = func(right);
+    double mid = (left_bound+right_bound)/2.0;
+    double vmid = func(mid);
+
+    if(vleft > vright) {
+    	std::swap(vleft, vright);
+    	std::swap(left, right);
+    }
+
+    while((right - left) > EPS) {
+		if(vmid >= 0.0) {
+			vright = vmid;
+			right = mid;
+		} else {
+			vleft = vmid;
+			left = mid;
+		}
+        mid = (left+right)/2.0;
+        vmid = func(mid);
+    }
+
+    return mid;
+
+}
 
 class ellipse {
 	struct s_ellps e;
