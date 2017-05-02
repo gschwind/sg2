@@ -33,7 +33,6 @@ namespace sg2 {
 
 using namespace std;
 
-#if __cplusplus > 199711L
 /** DO not export this template if C++ is not above C++11 **/
 
 
@@ -126,8 +125,6 @@ double hc_find_zero(F func, double const EPS, double left_bound, double right_bo
     return mid;
 
 }
-
-#endif
 
 class sun_day_parameters {
 	geopoint_data const & _p;
