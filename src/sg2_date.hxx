@@ -29,6 +29,7 @@ namespace sg2 {
 struct date {
 	int64_t nsec; // nanosecond since 1970
 
+	date() { }
 	date(int64_t nsec); // TODO
 	date(double jd); // TODO
 	date(ymdh const & d); // TODO
@@ -44,6 +45,7 @@ struct date {
 struct julian {
 	double jd; // julian date in factionnal days
 
+	julian() { }
 	julian(double jd);
 	julian(ymdh const & d); // TODO
 	julian(ydoyh const & d); // TODO
@@ -63,13 +65,12 @@ struct ymdh {
 	int day_of_month;
 	double hour;
 
+	ymdh() { }
 	ymdh(short year, short month, char day_of_month, double hour);
 	ymdh(julian_time_data const & jd);
 	ymdh(double jd);
 	ymdh(date const & d);
 	ymdh(ydoyh const & ydoyh);
-
-	double jd() const;
 
 };
 
@@ -82,6 +83,7 @@ struct ymdhmsn {
 	int sec;
 	int nsec;
 
+	ymdhmsn() { }
 	ymdhmsn(date const date);
 
 };
@@ -91,6 +93,7 @@ struct ydoyh {
 	short day_of_year;
 	double hour;
 
+	ydoyh() { }
 	ydoyh(ymdh const & date);
 
 };

@@ -106,25 +106,6 @@ ymdh::ymdh(date const & d)
 	hour = static_cast<double>(d.nsec % 1000000000LL)/(60.0*60.0*1e9);
 }
 
-double ymdh::jd() const {
-	int k;
-	double Y, M, D, H;
-
-	Y = this->year;
-	M = this->month;
-	D = this->day_of_month;
-	H = this->hour;
-
-	if (M < 3) {
-		M += 12;
-		Y -= 1;
-	}
-
-	return 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0 * Y
-			+ floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0) + H / 24.0
-			- 0.5;
-}
-
 ymdh::ymdh(ydoyh const & p_ydoyh)
 {
 	double B;
@@ -189,7 +170,7 @@ julian_time_data::julian_time_data(double _jd_ut, double _jd_tt) :
  * NOTE: /!\ do not fill terrestrial time, rebember to call sg2_date_set_time_data_tt afterward.
  **/
 julian_time_data::julian_time_data(ymdh const & p_ymdh, double jd_tt) :
-	julian_time_data{p_ymdh.jd(), jd_tt}
+	julian_time_data{julian(p_ymdh), jd_tt}
 {
 
 }
