@@ -98,9 +98,9 @@ struct geopoint_data {
 };
 
 enum correction_refraction_e {
-	SG2_CORRECTION_REFRACTION_NONE = 0,
-	SG2_CORRECTION_REFRACTION_SAE = 1,
-	SG2_CORRECTION_REFRACTION_ZIM = 2
+	REFRACTION_NONE = 0,
+	REFRACTION_SAE = 1,
+	REFRACTION_ZIM = 2
 };
 
 struct topocentric_data {
@@ -118,7 +118,7 @@ struct topocentric_data {
 
 	auto operator=(topocentric_data const &) -> topocentric_data & = default;
 
-	double topocentric_correction_refraction(double const P, double const T, correction_refraction_e method = SG2_CORRECTION_REFRACTION_NONE) const;
+	double topocentric_correction_refraction(double const P, double const T, correction_refraction_e method = REFRACTION_NONE) const;
 
 	/* Topocentric right sun ascension (rad) */
 	double get_right_sun_ascension() const {

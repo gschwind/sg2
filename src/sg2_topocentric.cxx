@@ -123,13 +123,13 @@ double topocentric_data::topocentric_correction_refraction(double const P,
 		double const T, correction_refraction_e method) const
 {
 	switch (method) {
-	case SG2_CORRECTION_REFRACTION_SAE:
+	case REFRACTION_SAE:
 		return _topocentric_correction_refraction_SAE(gamma_S0, P, T);
 		break;
-	case SG2_CORRECTION_REFRACTION_ZIM:
+	case REFRACTION_ZIM:
 		return _topocentric_correction_refraction_ZIM(gamma_S0, P, T);
 		break;
-	case SG2_CORRECTION_REFRACTION_NONE:
+	case REFRACTION_NONE:
 		return gamma_S0;
 		break;
 	}
