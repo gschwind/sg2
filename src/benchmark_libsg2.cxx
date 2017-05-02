@@ -24,7 +24,7 @@
 #include <cstdlib>
 #include <vector>
 #include <cstdint>
-#include <time.h>
+#include <chrono>
 
 void usage(void) {
 	printf("usage: benchmark_libsg2\n");
@@ -45,10 +45,7 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 
-	struct timespec tic;
-	struct timespec toc;
-
-	clock_gettime(CLOCK_MONOTONIC, &tic);
+	auto tic = std::chrono::steady_clock::now();
 
 	std::vector<double> out(jd_count);
 	for (int i = 0; i < jd_count; ++i) {
@@ -63,17 +60,11 @@ int main(int argc, char ** argv) {
 		out[i] = topoc.gamma_S0;
 	}
 
-	clock_gettime(CLOCK_MONOTONIC, &toc);
+	auto toc = std::chrono::steady_clock::now();
 
-//	for (auto x: out) {
-//		printf("%f\n", x);
-//	}
+	std::chrono::nanoseconds diff = toc-tic;
 
-	int64_t ntic = tic.tv_nsec + tic.tv_sec*1000000000LL;
-	int64_t ntoc = toc.tv_nsec + toc.tv_sec*1000000000LL;
-
-	double sec = (ntoc-ntic)/1e9;
-	printf("elapsed time: %f seconds\n", sec);
+	printf("elapsed time: %f seconds\n", diff.count()/1e9);
 
 	return 0;
 
