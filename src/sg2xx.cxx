@@ -28,7 +28,7 @@
 
 namespace sg2 {
 
-sun_day_parameters::sun_day_parameters(geopoint_data const & p) :
+sun_daily_data::sun_daily_data(geopoint_data const & p) :
 	_p(p),
 	_sun_rise_time(NAN),
 	_sun_set_time(NAN),
@@ -37,7 +37,7 @@ sun_day_parameters::sun_day_parameters(geopoint_data const & p) :
 
 }
 
-void sun_day_parameters::update(double jd) {
+void sun_daily_data::update(double jd) {
 	jd = std::floor(jd + 0.5); // round to the nearest integer JD
 	jd += _p.lambda / PI; // aprox UT time for the given longitude
 
