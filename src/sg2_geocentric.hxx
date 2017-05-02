@@ -43,6 +43,43 @@ struct geocentric_data {
 
 	auto operator=(geocentric_data const &) -> geocentric_data & = default;
 
+
+	double get_sun_earth_radius() const {
+		return R;
+	}
+
+	double get_heliocentric_true_longitude() const {
+		return L;
+	}
+
+	double get_delta_psi() const {
+		return Delta_psi;
+	}
+
+	double get_earth_true_obliquity() const {
+		return epsilon;
+	}
+
+	double get_geocentric_true_longitude() const {
+		return Theta_a;
+	}
+
+	double get_geocentric_right_ascension() const {
+		return r_alpha;
+	}
+
+	double get_geocentric_declination() const {
+		return delta;
+	}
+
+	double get_apparent_sideral_time() const {
+		return nu;
+	}
+
+	double get_mst_solar_time_difference() const {
+		return EOT;
+	}
+
 };
 
 } // namespace sg2

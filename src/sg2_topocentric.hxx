@@ -67,6 +67,34 @@ struct geopoint_data {
 
 	auto operator=(geopoint_data const &) -> geopoint_data & = default;
 
+	double get_phi() const {
+		return phi;
+	}
+
+	double get_lambda() const {
+		return lambda;
+	}
+
+	double get_cos_phi() const {
+		return cos_phi;
+	}
+
+	double get_sin_phi() const {
+		return sin_phi;
+	}
+
+	double get_u() const {
+		return u;
+	}
+
+	double get_x() const {
+		return x;
+	}
+
+	double get_y() const {
+		return y;
+	}
+
 };
 
 enum CORRECTION_REFRACTION {
@@ -93,6 +121,40 @@ struct topocentric_data {
 	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);
 
+	/* Topocentric right sun ascension (rad) */
+	double get_right_sun_ascension() const {
+		return r_alpha;
+	}
+
+	/* Topocentric sun declination (rad) */
+	double get_sun_declination() const {
+		return delta;
+	}
+
+	/* Topocentric local hour angle (rad) */
+	double get_omega() const {
+		return omega;
+	}
+
+	/* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
+	double get_geometric_sun_elevation() const {
+		return gamma_S0;
+	}
+
+	/* Topocentric sun azimuth (rad) */
+	double get_geometric_azimuth() const {
+		return alpha_S;
+	}
+
+	/* irradiation at top of atmosphere normal incidence (W/m2) */
+	double get_top_of_atmosphere_normal_incidence() const {
+		return toa_ni;
+	}
+
+	/* irradiation at top of atmosphere horizontal incidence (W/m2) */
+	double get_top_of_atmosphere_horizontal_incidence() const {
+		return toa_hi;
+	}
 
 };
 

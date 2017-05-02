@@ -108,6 +108,14 @@ struct julian_time_data {
 
 	auto operator=(julian_time_data const &) -> julian_time_data & = default;
 
+	double get_universal_time() const {
+		return jd_ut;
+	}
+
+	double get_terrestrial_time() const {
+		return jd_tt;
+	}
+
 };
 
 }
