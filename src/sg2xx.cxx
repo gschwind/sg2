@@ -23,6 +23,7 @@
 
 #include <stdexcept>
 #include <cstdlib>
+#include <cmath>
 
 namespace sg2 {
 
@@ -101,6 +102,29 @@ topocentric_sun_position::topocentric_sun_position(geopoint const & p, geocentri
 }
 
 topocentric_sun_position::~topocentric_sun_position() {
+
+}
+
+void sun_day_parameters::update(double jd) {
+	jd = std::floor(jd + 0.5); // round to the nearest integer JD
+	jd += _p.get_lambda() / M_PI; // aprox UT time for the given longitude
+
+	auto get_sun_elevation = [this](double jd) -> double {
+		geocentric_sun_position geoc(jd);
+		topocentric_sun_position topoc(this->_p, geoc);
+		return topoc.get_geometric_sun_elevation();
+	};
+
+	_sun_zenit_time = hc_find_max(get_sun_elevation, 1e-6,
+			jd - 2.0/24.0, jd + 2.0/24.0);
+
+	double sun_lower_time = hc_find_min(get_sun_elevation, 1e-6,
+			_sun_zenit_time - 14.0/24.0, _sun_zenit_time);
+
+	_sun_rise_time = hc_find_zero(get_sun_elevation, 1e-6,
+			sun_lower_time, _sun_zenit_time);
+
+	_sun_set_time = 2*_sun_zenit_time - _sun_rise_time;
 
 }
 

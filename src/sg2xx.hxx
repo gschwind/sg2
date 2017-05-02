@@ -140,7 +140,7 @@ public:
 
 };
 
-/** available predefine ellipses **/
+/** available predefined ellipses **/
 extern ellipse const WGS84;
 extern ellipse const RGF83;
 extern ellipse const NTF;
@@ -283,6 +283,30 @@ public:
 
 	double get_top_of_atmosphere_horizontal_incidence() {
 		return _topoc.toa_hi;
+	}
+
+};
+
+class sun_day_parameters {
+	geopoint const & _p;
+	double _sun_rise_time;
+	double _sun_set_time;
+	double _sun_zenit_time;
+
+public:
+	sun_day_parameters(geopoint const & p);
+	void update(double jd);
+
+	double get_sun_rise_time() {
+		return _sun_rise_time;
+	}
+
+	double get_sun_set_time() {
+		return _sun_set_time;
+	}
+
+	double get_sun_zenit_time() {
+		return _sun_zenit_time;
 	}
 
 };
