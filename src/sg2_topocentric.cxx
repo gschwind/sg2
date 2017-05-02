@@ -120,7 +120,7 @@ inline double _topocentric_correction_refraction_ZIM(double const gamma_S0, doub
 }
 
 double topocentric_data::topocentric_correction_refraction(double const P,
-		double const T, CORRECTION_REFRACTION method) const
+		double const T, correction_refraction_e method) const
 {
 	switch (method) {
 	case SG2_CORRECTION_REFRACTION_SAE:
