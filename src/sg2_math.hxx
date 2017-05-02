@@ -23,8 +23,6 @@
 #ifndef SRC_SG2_MATH_HXX_
 #define SRC_SG2_MATH_HXX_
 
-#include "sg2_config.hxx"
-
 #ifndef SG2_HAVE_VDT
 
 #include <cmath>
