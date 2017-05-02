@@ -18,34 +18,54 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_DATE_H_
-#define SG2_DATE_H_
+#ifndef SG2_DATE_HXX_
+#define SG2_DATE_HXX_
 
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
+#include "sg2_typedef.hxx"
 
-void sg2_date_tabjd_to_tabymdh(time_data_t const * p_jd, date_ymdh_t * p_ymdh,
-		int *p_err);
+namespace sg2 {
 
-void sg2_date_tabymdh_to_tabjd(date_ymdh_t const * p_ymdh, time_data_t *p_jd,
-		int *p_err);
+/* Date YMD + H en heure décimale UT */
+struct ymdh {
+	short year;
+	char month;
+	char day_of_month;
+	double hour;
 
-void sg2_date_tabymdh_to_tabydoyh(date_ymdh_t const * p_ymdh,
-		date_ydoyh_t * p_ydoyh, int *p_err);
+	ymdh(short year, short month, char day_of_month, double hour);
+	ymdh(julian_time_data const & jd);
+	ymdh(ydoyh const & date);
+	ymdh(double jd);
 
-void sg2_date_tabydoyh_to_tabymdh(date_ydoyh_t const * p_ydoyh,
-		date_ymdh_t * p_ymdh, int *p_err);
+	double jd() const;
 
-void sg2_date_set_time_data_tt(time_data_t * ths, double *p_delta_tt, int *err);
+};
 
-void sg2_julian_date_to_tabymdh(double jd, date_ymdh_t *p_ymdh);
+/* TODO: remove */
+using date_ymdh_t = ymdh;
 
-double sg2_date_tabymdh_to_julian_date(date_ymdh_t const *p_ymdh);
+struct ydoyh {
+	short year;
+	short day_of_year;
+	double hour;
 
-#ifdef	__cplusplus
+	ydoyh(ymdh const & date);
+
+};
+
+using date_ydoyh_t = ydoyh;
+
+struct julian_time_data {
+	double jd_ut;            /* julian date UT (decimal day) */
+	double jd_tt;            /* TT : terrestrial time */
+
+	julian_time_data(double jd_ut, double jd_tt = NAN);
+	julian_time_data(ymdh const & date, double jd_tt = NAN);
+
+};
+
+using time_data_t = julian_time_data;
+
 }
-#endif
 
-#endif /* SG2_DATE_H_ */
+#endif /* SG2_DATE_HXX_ */

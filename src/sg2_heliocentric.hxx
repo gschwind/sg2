@@ -18,18 +18,22 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_HELIOCENTRIC_H_
-#define SG2_HELIOCENTRIC_H_
+#ifndef SG2_HELIOCENTRIC_HXX_
+#define SG2_HELIOCENTRIC_HXX_
 
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
+#include "sg2_typedef.hxx"
 
-void sg2_heliocentric_set_helioc_data(sg2_heliocentric_data_t * ths, time_data_t * jd, int *p_err);
+namespace sg2 {
 
-#ifdef	__cplusplus
-}
-#endif
+/* Heliocentric coordinates */
+struct heliocentric_data {
+	double R; /* Radius Sun-Earth (ua) */
+	double L; /* Heliocentric Earth true longitude (rad) */
 
-#endif /* SG2_HELIOCENTRIC_H_ */
+	heliocentric_data(julian_time_data const & jd);
+
+};
+
+} // namespace sg2
+
+#endif /* SG2_HELIOCENTRIC_HXX_ */

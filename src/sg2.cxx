@@ -20,7 +20,7 @@
 
 #define SG2_C_
 
-#include "sg2.h"
+#include "sg2.hxx"
 
 #include <math.h>
 #include <stdlib.h>

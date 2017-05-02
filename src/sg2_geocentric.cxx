@@ -18,84 +18,65 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#define SG2_GEOCENTRIC_C_
+#include "sg2_geocentric.hxx"
+#include "sg2_err.hxx"
 
-#include "sg2.h"
-#include "sg2_precomputed_heliocentric.h"
 #include "sg2_precomputed_geocentric.h"
-#include "sg2_err.h"
-#include "sg2_date.h"
-#include "sg2_heliocentric.h"
-#include "sg2_geocentric.h"
-#include "sg2_topocentric.h"
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
-inline static void sg2_geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, double * epsilon, int * err) {
+namespace sg2 {
+
+inline void _geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, double * epsilon) {
 	int idx0;
 	idx0 = (int) floor(
 			(jd_tt - SG2_precomputed_geocentric_Delta_psi_j0)
 					/ SG2_precomputed_geocentric_Delta_psi_dj + 0.5);
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
-		*err = SG2_ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
 		*Delta_psi = NAN;
 		*epsilon = NAN;
+		throw SG2_ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
 	}
 	*Delta_psi = SG2_precomputed_geocentric_Delta_psi[idx0];
 	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
 }
 
-void
-sg2_geocentric_set_geoc_data(sg2_geocentric_data_t * ths, time_data_t * jd,
-		sg2_heliocentric_data_t * helioc, int * err) {
+geocentric_data::geocentric_data(julian_time_data const & jd, heliocentric_data const & helioc)
+{
 	short idx0;
 	int kd;
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
 
-	sg2_geocentric_compute_Delta_psi(jd->jd_tt, &(ths->Delta_psi), &(ths->epsilon), err);
-	if(*err < 0)
-		return;
+	_geocentric_compute_Delta_psi(jd.jd_tt, &(Delta_psi), &(epsilon));
 
-	ths->Theta_a = helioc->L + SG2_PI + ths->Delta_psi
+	Theta_a = helioc.L + PI + Delta_psi
 			+ SG2_precomputed_geocentric_Delta_tau;
 
-	sin_Theta_a_kd = sin(ths->Theta_a);
-	cos_epsilon_kd = cos(ths->epsilon);
+	sin_Theta_a_kd = sin(Theta_a);
+	cos_epsilon_kd = cos(epsilon);
 
-	ths->r_alpha = atan2(sin_Theta_a_kd * cos_epsilon_kd,
-			cos(ths->Theta_a));
-	ths->delta = asin(sin_Theta_a_kd * sin(ths->epsilon));
+	r_alpha = atan2(sin_Theta_a_kd * cos_epsilon_kd,
+			cos(Theta_a));
+	delta = asin(sin_Theta_a_kd * sin(epsilon));
 
-	nu0_kd = 6.300388099 * jd->jd_ut - 1.539965571482657e+007;
-	Delta_psi_cos_epsilon_kd = ths->Delta_psi * cos_epsilon_kd;
-	M_kd = 1.720279169744191e-002 * jd->jd_tt - 4.204914238795757e+004;
+	nu0_kd = 6.300388099 * jd.jd_ut - 1.539965571482657e+007;
+	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
+	M_kd = 1.720279169744191e-002 * jd.jd_tt - 4.204914238795757e+004;
 
-	ths->nu = nu0_kd + Delta_psi_cos_epsilon_kd;
-	ths->EOT = M_kd - 0.0001 - ths->r_alpha + Delta_psi_cos_epsilon_kd;
+	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
+	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;
 }
 
-void
-sg2_geocentric_set_geocentric_sun_position(sg2_geocentric_sun_position_t * ths, double jd, double delta_tt, int * err) {
-
-	ths->jd.jd_ut = jd;
-	if(isnan(delta_tt)) {
-		sg2_date_set_time_data_tt(&(ths->jd), NULL, err);
-	} else {
-		sg2_date_set_time_data_tt(&(ths->jd), &delta_tt, err);
-	}
-	if(*err < 0) {
-		return;
-	}
-
-	sg2_heliocentric_set_helioc_data(&(ths->helioc), &(ths->jd), err);
-	if(*err < 0) {
-		return;
-	}
-
-	sg2_geocentric_set_geoc_data(&(ths->geoc), &(ths->jd), &(ths->helioc), err);
+geocentric_sun_position::geocentric_sun_position(double xjd, double delta_tt) :
+	jd{xjd, delta_tt},
+	helioc{jd},
+	geoc{jd, helioc}
+{
 
 }
+
+} // namespace sg2

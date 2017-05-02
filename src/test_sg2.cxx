@@ -19,13 +19,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-/* needed for NAN */
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "sg2.h"
+#include "sg2xx.hxx"
 
 
 void usage(void) {
@@ -45,45 +42,19 @@ int main(int argc, char ** argv) {
 	double jd = atof(argv[4]);
 
 	/** time related data **/
-	sg2_geocentric_sun_position_t sun_position;
+	sg2::geocentric_sun_position sun_position{jd};
 
 	/** location related data **/
-	sg2_geopoint_t geopoint;
+	sg2::geopoint geopoint{lon, lat, alt};
 
 	/** local-time related data **/
-	sg2_topocentric_data_t topoc;
-
+	sg2::topocentric_data topoc{sun_position, geopoint};
 
 	int err = 0;
 
 	/**
 	 * Computing solar system state.
 	 **/
-
-	/* TODO: better interfaces */
-	sg2_geocentric_set_geocentric_sun_position(&sun_position, jd, NAN, &err);
-	if (err != 0) {
-		printf("error while computing geocentric data\n");
-		return err;
-	}
-
-	/**
-	 * Computing local geometry data.
-	 **/
-	sg2_topocecentric_set_tabgeopoint(&geopoint, lon, lat, alt, SG2_ELLPSTYPE_WGS84, &err);
-	if(err != 0) {
-		printf("error while setting geopoint\n");
-		return err;
-	}
-
-	/**
-	 * computing sun position at selected location.
-	 **/
-	sg2_topocentric_set_topoc_data(&topoc, &sun_position, &geopoint, &err);
-	if(err != 0) {
-		printf("error while cumputing topocentric data\n");
-		return err;
-	}
 
 	printf("Time related data (i.e. solar system geometry)\n");
 	printf("jd.jd_ut           = %f\n", sun_position.jd.jd_ut);

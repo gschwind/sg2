@@ -18,31 +18,80 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_TOPOCENTRIC_H_
-#define SG2_TOPOCENTRIC_H_
+#ifndef SG2_TOPOCENTRIC_HXX_
+#define SG2_TOPOCENTRIC_HXX_
 
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
+#include "sg2_typedef.hxx"
+#include "sg2_geocentric.hxx"
 
-S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f);
+namespace sg2 {
 
-void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
-		SG2_CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S, int *p_err);
+struct ellps {
+	double a; /* Axis a (m) */
+	double f; /* Flatness (-)*/
 
-void
-sg2_topocecentric_set_tabgeopoint(sg2_geopoint_t * ths, double lon, double lat, double h, S_SG2_ELLPS const *p_data_ellps, int *p_err);
+	ellps(double a, double f);
 
-void
-sg2_topocentric_set_topoc_data(sg2_topocentric_data_t * ths, sg2_geocentric_sun_position_t const * sun_position,
-		sg2_geopoint_t const * geopoint, int * err);
+};
+
+extern ellps const ELLPSTYPE_WGS84;
+extern ellps const ELLPSTYPE_RGF83;
+extern ellps const ELLPSTYPE_NTF;
+extern ellps const ELLPSTYPE_AA;
+extern ellps const ELLPSTYPE_SPA;
+extern ellps const ELLPSTYPE_NGP;
+extern ellps const ELLPSTYPE_SPHERE;
+
+struct geopoint {
+	ellps const ellipse;
+	double phi;        /* Latitude (rad) */
+	double lambda;     /* Longitude (rad) */
+	double h;          /* Altitude Above the Reference Ellipsoid */
+	double cos_phi;
+	double sin_phi;
+	double u;
+	double x;
+	double y;
+
+	geopoint(geopoint const &) = default;
+
+	/**
+	 * @input lat: latitude in degrees
+	 * @input lon: longitude in degrees
+	 * @input h: altitude in meters
+	 **/
+	geopoint(double lon, double lat, double h, ellps const & p_data_ellps = ELLPSTYPE_WGS84);
+
+};
+
+enum CORRECTION_REFRACTION {
+	SG2_CORRECTION_REFRACTION_NONE = 0,
+	SG2_CORRECTION_REFRACTION_SAE = 1,
+	SG2_CORRECTION_REFRACTION_ZIM = 2
+};
+
+struct topocentric_data {
+	geocentric_sun_position sun_position;
+	geopoint point;
+	double r_alpha;  /* Topocentric right sun ascension (rad) */
+	double delta;    /* Topocentric sun declination (rad) */
+	double omega;    /* Topocentric local hour angle (rad) */
+	double gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
+	double alpha_S;  /* Topocentric sun azimuth (rad) */
+	double toa_ni;   /* irradiation at top of atmosphere normal incidence (W/m2) */
+	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
+
+	topocentric_data(topocentric_data const &) = default;
+	topocentric_data(geocentric_sun_position const & sun_position, geopoint const & geopoint);
+
+	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
+			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);
+
+
+};
 
 
 
+} // namespace sg2
 
-#ifdef	__cplusplus
-}
-#endif
-
-#endif /* SG2_TOPOCENTRIC_H_ */
+#endif /* SG2_TOPOCENTRIC_HXX_ */

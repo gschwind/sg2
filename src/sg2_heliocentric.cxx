@@ -18,22 +18,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#define SG2_HELIOCENTRIC_C_
+#include "sg2_heliocentric.hxx"
+#include "sg2_err.hxx"
+#include "sg2_date.hxx"
 
-#include "sg2.h"
 #include "sg2_precomputed_heliocentric.h"
-#include "sg2_err.h"
-#include "sg2_date.h"
-#include "sg2_heliocentric.h"
-#include "sg2_geocentric.h"
-#include "sg2_topocentric.h"
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+namespace sg2 {
 
-inline static double sg2_heliocentric_compute_R(double jd_tt, int * p_err) {
+inline double _heliocentric_compute_R(double jd_tt)
+{
 	int idx0;
 	double x, x0, dx;
 	x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
@@ -43,14 +37,14 @@ inline static double sg2_heliocentric_compute_R(double jd_tt, int * p_err) {
 
 	idx0 = (short) x0;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj - 1)) {
-		*p_err = SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
-		return NAN;
+		throw SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 	return (1.0 - dx) * SG2_precomputed_heliocentric_R[idx0]
 			+ dx * SG2_precomputed_heliocentric_R[idx0 + 1];
 }
 
-inline static double sg2_heliocentric_compute_L(double jd_tt, int * p_err) {
+inline double _heliocentric_compute_L(double jd_tt)
+{
 	int idx0;
 	double x, x0, dx;
 	x = (jd_tt - SG2_precomputed_heliocentric_L_j0)
@@ -60,8 +54,7 @@ inline static double sg2_heliocentric_compute_L(double jd_tt, int * p_err) {
 
 	idx0 = (int) x0;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj - 1)) {
-		*p_err = SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
-		return NAN;
+		throw SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	return (1.0 - dx) * SG2_precomputed_heliocentric_L[idx0]
@@ -69,21 +62,16 @@ inline static double sg2_heliocentric_compute_L(double jd_tt, int * p_err) {
 }
 
 
-void sg2_heliocentric_set_helioc_data(sg2_heliocentric_data_t * ths,
-		time_data_t * jd, int *p_err) {
+heliocentric_data::heliocentric_data(julian_time_data const & jd)
+{
 	short idx0;
 	double x, x0, dx;
 	int k;
 
-	ths->R = sg2_heliocentric_compute_R(jd->jd_tt, p_err);
-	if(*p_err < 0)
-		return;
-
-	ths->L = sg2_heliocentric_compute_L(jd->jd_tt, p_err);
-	if(*p_err < 0)
-		return;
+	R = _heliocentric_compute_R(jd.jd_tt);
+	L = _heliocentric_compute_L(jd.jd_tt);
 
 }
 
-
+} // namespace sg2
 

@@ -18,79 +18,60 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#define SG2_TOPOCENTRIC_C_
 
-#include "sg2.h"
-#include "sg2_err.h"
-#include "sg2_date.h"
-#include "sg2_heliocentric.h"
-#include "sg2_geocentric.h"
-#include "sg2_topocentric.h"
+#include "sg2_topocentric.hxx"
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
-static const S_SG2_ELLPS tab_ellps_ref[8] =
+namespace sg2 {
+
+ellps const ELLPSTYPE_WGS84  = { 6378137.0, 3.352810664747481e-003 }; /* WGS84 */
+ellps const ELLPSTYPE_RGF83  = { 6378137.0, 3.352810681182319e-003 }; /* RFG83 */
+ellps const ELLPSTYPE_NTF    = { 6378249.2, 3.407549520015651e-003 }; /* NTF / CLARKE1880 */
+ellps const ELLPSTYPE_AA     = { 6378136.6, 3.352819697896193e-003 }; /* AA */
+ellps const ELLPSTYPE_SPA    = { 6378140.0, 3.352810000000000e-003 }; /* SPA */
+ellps const ELLPSTYPE_NGP    = { 6378169.0, 3.384231430681783e-003 }; /* NGP*/
+ellps const ELLPSTYPE_SPHERE = { 6378130.0, 0.0                    }; /* SPHERE */
+
+ellps::ellps(double a, double f) :
+		a{a},
+		f{f}
 {
-{ 6378137.0, 3.352810664747481e-003 }, /* WGS84 */
-{ 6378137.0, 3.352810681182319e-003 }, /* RFG83 */
-{ 6378249.2, 3.407549520015651e-003 }, /* NTF / CLARKE1880 */
-{ 6378136.6, 3.352819697896193e-003 }, /* AA */
-{ 6378140.0, 3.352810000000000e-003 }, /* SPA */
-{ 6378169.0, 3.384231430681783e-003 }, /* NGP*/
-{ 6378130.0, 0.0 }, /* SPHERE */
-{ 0.0, 0.0 }, /* USER-DEFINED */
-};
 
-S_SG2_ELLPS const * SG2_ELLPSTYPE_WGS84 = &tab_ellps_ref[0];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_RGF83 = &tab_ellps_ref[1];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_NTF = &tab_ellps_ref[2];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_AA = &tab_ellps_ref[3];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_SPA = &tab_ellps_ref[4];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_NGP = &tab_ellps_ref[5];
-S_SG2_ELLPS const * SG2_ELLPSTYPE_SPHERE = &tab_ellps_ref[6];
-
-S_SG2_ELLPS *SG2_create_user_ellipse(double a, double f) {
-	S_SG2_ELLPS * p_ret = (S_SG2_ELLPS *) malloc(sizeof(S_SG2_ELLPS));
-	p_ret->a = a;
-	p_ret->f = f;
-	return p_ret;
 }
 
-void sg2_topocecentric_set_tabgeopoint(sg2_geopoint_t * ths, double lon,
-		double lat, double h, S_SG2_ELLPS const *p_data_ellps, int *p_err) {
+geopoint::geopoint(double lon, double lat, double h, ellps const & p_data_ellps) :
+	ellipse{p_data_ellps},
+	lambda{lon * DEG2RAD},
+	phi{lat * DEG2RAD},
+	h{h}
+{
 	int kp;
 	double a, app;
 	double u_kp, cos_phi_kp, sin_phi_kp, tan_phi_kp, h_a_kp;
 
-	ths->ellps = p_data_ellps;
+	a = ellipse.a;
+	app = 1.0 - ellipse.f;
 
-	a = p_data_ellps->a;
-	app = 1.0 - p_data_ellps->f;
-
-	ths->lambda = lon * SG2_DEG2RAD;
-	ths->phi = lat * SG2_DEG2RAD;
-	ths->h = h;
-
-	cos_phi_kp = cos(ths->phi);
-	sin_phi_kp = sin(ths->phi);
+	cos_phi_kp = cos(phi);
+	sin_phi_kp = sin(phi);
 	tan_phi_kp = sin_phi_kp / cos_phi_kp;
 
-	h_a_kp = ths->h / a;
+	h_a_kp = h / a;
 	u_kp = atan(app * tan_phi_kp);
-	ths->x = cos(u_kp) + h_a_kp * cos_phi_kp;
-	ths->y = app * sin(u_kp) + h_a_kp * sin_phi_kp;
-	ths->u = u_kp;
-	ths->cos_phi = cos_phi_kp;
-	ths->sin_phi = sin_phi_kp;
+	x = cos(u_kp) + h_a_kp * cos_phi_kp;
+	y = app * sin(u_kp) + h_a_kp * sin_phi_kp;
+	u = u_kp;
+	cos_phi = cos_phi_kp;
+	sin_phi = sin_phi_kp;
 
 }
 
-inline static void sg2_topocentric_correction_refraction_SAE(double *p_gamma_S0, double *p_data_corr,
-		double *p_gamma_S, int *p_err) {
-
+inline void _topocentric_correction_refraction_SAE(double *p_gamma_S0, double *p_data_corr, double *p_gamma_S)
+{
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
@@ -115,9 +96,8 @@ inline static void sg2_topocentric_correction_refraction_SAE(double *p_gamma_S0,
 
 }
 
-inline static void sg2_topocentric_correction_refraction_ZIM(double *p_gamma_S0,
-		double *p_data_corr, double *p_gamma_S, int *p_err) {
-
+inline void _topocentric_correction_refraction_ZIM(double *p_gamma_S0, double *p_data_corr, double *p_gamma_S)
+{
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
@@ -152,9 +132,9 @@ inline static void sg2_topocentric_correction_refraction_ZIM(double *p_gamma_S0,
 
 }
 
-void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
-		SG2_CORRECTION_REFRACTION method, double *p_data_corr,
-		double *p_gamma_S, int *p_err)
+void topocentric_data::topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
+		CORRECTION_REFRACTION method, double *p_data_corr,
+		double *p_gamma_S)
 {
 
 	static const double gamma_S0_seuil = -0.010035643198967;
@@ -169,10 +149,10 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 	switch (method)
 	{
 	case SG2_CORRECTION_REFRACTION_SAE:
-		sg2_topocentric_correction_refraction_SAE(p_gamma_S0, p_data_corr, p_gamma_S, p_err);
+		_topocentric_correction_refraction_SAE(p_gamma_S0, p_data_corr, p_gamma_S);
 		break;
 	case SG2_CORRECTION_REFRACTION_ZIM:
-		sg2_topocentric_correction_refraction_ZIM(p_gamma_S0, p_data_corr, p_gamma_S, p_err);
+		_topocentric_correction_refraction_ZIM(p_gamma_S0, p_data_corr, p_gamma_S);
 		break;
 	case SG2_CORRECTION_REFRACTION_NONE:
 		memcpy(p_gamma_S, p_gamma_S0, n * sizeof(double));
@@ -181,10 +161,10 @@ void SG2_topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 
 }
 
-void sg2_topocentric_set_topoc_data(sg2_topocentric_data_t * ths, sg2_geocentric_sun_position_t const * sun_position,
-		sg2_geopoint_t const * geopoint, int * err)
+topocentric_data::topocentric_data(sg2_geocentric_sun_position_t const & sun_position, sg2_geopoint_t const & geopoint) :
+	point{geopoint},
+	sun_position{sun_position}
 {
-
 	unsigned long np, kp, nd, kd;
 	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
 	double omega_g_kp_kd;
@@ -194,64 +174,49 @@ void sg2_topocentric_set_topoc_data(sg2_topocentric_data_t * ths, sg2_geocentric
 	double cos_delta_kp_kd, sin_delta_kp_kd, tan_delta_kp_kd;
 	double xi;
 
-	ths->geopoint = geopoint;
-	ths->sun_position = sun_position;
+	xi = (geopoint.ellipse.a / AU);
 
-	xi = (geopoint->ellps->a / SG2_AU);
+    cos_phi_kp = geopoint.cos_phi;
+    sin_phi_kp = geopoint.sin_phi;
 
-	{
+    u_kp = geopoint.u;
+    x_kp = geopoint.x;
+    y_kp = geopoint.y;
 
-		cos_phi_kp = geopoint->cos_phi;
-		sin_phi_kp = geopoint->sin_phi;
+    geoc_nu = sun_position.geoc.nu;
+    geoc_r_alpha = sun_position.geoc.r_alpha;
+    geoc_delta = sun_position.geoc.delta;
 
-		u_kp = geopoint->u;
-		x_kp = geopoint->x;
-		y_kp = geopoint->y;
+    omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
+    cos_geoc_delta_kd = cos(geoc_delta);
 
-		geoc_nu = sun_position->geoc.nu;
-		geoc_r_alpha = sun_position->geoc.r_alpha;
-		geoc_delta = sun_position->geoc.delta;
+    Delta_r_alpha_kp_kd = (-x_kp * sin(omega_g_kp_kd)
+            / cos_geoc_delta_kd * xi);
+    r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
 
-		{
+    delta = geoc_delta + (x_kp * cos(omega_g_kp_kd) * sin(geoc_delta)
+                             - y_kp * cos_geoc_delta_kd) * xi;
 
-			omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint->lambda;
-			cos_geoc_delta_kd = cos(geoc_delta);
+    omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
 
-			Delta_r_alpha_kp_kd = (-x_kp * sin(omega_g_kp_kd)
-					/ cos_geoc_delta_kd * xi);
-			ths->r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
+    cos_omega_kp_kd = cos(omega);
+    cos_delta_kp_kd = cos(delta);
+    sin_delta_kp_kd = sin(delta);
+    tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
 
-			ths->delta = geoc_delta + (x_kp
-					* cos(omega_g_kp_kd) * sin(geoc_delta) - y_kp
-					* cos_geoc_delta_kd) * xi;
+    gamma_S0 = asin(sin_phi_kp * sin_delta_kp_kd
+                       + cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
 
-			ths->omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
+    alpha_S = atan2(sin(omega), cos_omega_kp_kd * sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
+                    + PI;
 
-			cos_omega_kp_kd = cos(ths->omega);
-			cos_delta_kp_kd = cos(ths->delta);
-			sin_delta_kp_kd = sin(ths->delta);
-			tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
-
-			ths->gamma_S0 = asin(sin_phi_kp * sin_delta_kp_kd
-					+ cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
-
-			ths->alpha_S
-					= atan2(sin(ths->omega), cos_omega_kp_kd
-							* sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
-							+ SG2_PI;
-
-			if (ths->gamma_S0 > 0.0) {
-				ths->toa_ni = (1367.0)
-						/ (sun_position->helioc.R * sun_position->helioc.R);
-				ths->toa_hi = (ths->toa_ni
-						* sin(ths->gamma_S0));
-			} else {
-				ths->toa_ni = 0.0;
-				ths->toa_hi = 0.0;
-			}
-
-		}
-	}
-
+    if (gamma_S0 > 0.0) {
+        toa_ni = SOLAR_CONSTANT / (sun_position.helioc.R * sun_position.helioc.R);
+        toa_hi = toa_ni * sin(gamma_S0);
+    } else {
+        toa_ni = 0.0;
+        toa_hi = 0.0;
+    }
 }
 
+} // namespace sg2
