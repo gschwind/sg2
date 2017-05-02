@@ -56,7 +56,7 @@ struct geopoint_data {
 	angle  phi;        /* Latitude (rad) */
 	double lambda;     /* Longitude (rad) */
 	double h;          /* Altitude Above the Reference Ellipsoid */
-	double u;
+	double u;          ///< phi geocentric
 	double x;
 	double y;
 

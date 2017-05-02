@@ -74,6 +74,10 @@ public:
     }
 
     auto tan() const -> double {
+		if (cos() == 0.0)
+			return std::signbit(sin()) ?
+					-std::numeric_limits<double>::infinity() :
+					std::numeric_limits<double>::infinity();
     	return sin()/cos();
     }
 
