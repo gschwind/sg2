@@ -52,14 +52,6 @@ struct ellps;
 struct geopoint_data;
 struct topocentric_data;
 
-
-/* TODO: remove */
-using sg2_geocentric_data_t = geocentric_data;
-using S_SG2_ELLPS = ellps;
-using PS_SG2_ELLPS = ellps *;
-using sg2_topocentric_data_t = topocentric_data;
-
-
 } // namespace sg2
 
 #endif /* SG2_TYPEDEF_HXX_ */
