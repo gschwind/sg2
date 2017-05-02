@@ -86,9 +86,6 @@ struct ymdhmsn {
 
 };
 
-/* TODO: remove */
-using date_ymdh_t = ymdh;
-
 struct ydoyh {
 	short year;
 	short day_of_year;

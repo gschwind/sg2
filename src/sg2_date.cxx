@@ -103,7 +103,7 @@ ymdh::ymdh(date const & d)
 {
 	int jd = d.nsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
 	_julian_day_to_ymd(jd, year, month, day_of_month);
-	hour = static_cast<double>(d.nsec % 1000000000L)/(60.0*60.0*1e9);
+	hour = static_cast<double>(d.nsec % 1000000000LL)/(60.0*60.0*1e9);
 }
 
 double ymdh::jd() const {
@@ -158,13 +158,13 @@ ymdhmsn::ymdhmsn(date const date)
 	_julian_day_to_ymd(jd, year, month, day_of_month);
 
 	/* in this order we avoid a lot of modulo */
-	xnsec %= (1000000000L * 60L * 60L * 24L);
-	hour = xnsec / (1000000000L * 60L * 60L);
-	xnsec -= hour * (1000000000L * 60L * 60L);
-	min = xnsec / (1000000000L * 60L);
-	xnsec -= min * (1000000000L * 60L);
-	sec = xnsec / (1000000000L);
-	xnsec -= sec * (1000000000L);
+	xnsec %= (1000000000LL * 60LL * 60LL * 24LL);
+	hour = xnsec / (1000000000LL * 60LL * 60LL);
+	xnsec -= hour * (1000000000LL * 60LL * 60LL);
+	min = xnsec / (1000000000LL * 60LL);
+	xnsec -= min * (1000000000LL * 60LL);
+	sec = xnsec / (1000000000LL);
+	xnsec -= sec * (1000000000LL);
 	nsec = (int)xnsec;
 
 }
@@ -222,7 +222,7 @@ date::date(double jd) :
 date::date(ymdh const & d)
 {
 	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
-	nsec = (xjd-EPOCH_JD)*(24L*60L*60L*1000000000L) + d.hour*60.0*60.0*1e9;
+	nsec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000000000LL) + d.hour*60.0*60.0*1e9;
 }
 
 date::date(ydoyh const & d) :
