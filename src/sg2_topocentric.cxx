@@ -21,11 +21,6 @@
 
 #include "sg2_topocentric.hxx"
 
-#include <cmath>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
 namespace sg2 {
 
 ellps const ELLPS_WGS84  = { 6378137.0, 3.352810664747481e-003 }; /* WGS84 */

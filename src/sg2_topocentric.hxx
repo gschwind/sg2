@@ -258,8 +258,10 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 	case REFRACTION_NONE:
 		return gamma_S0;
 		break;
+	default:
+		return NAN;
+		break;
 	}
-
 }
 
 inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint)
