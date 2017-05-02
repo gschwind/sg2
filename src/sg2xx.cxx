@@ -21,6 +21,7 @@
 
 #include "sg2xx.hxx"
 
+#include <limits>
 #include <stdexcept>
 #include <cstdlib>
 #include <cmath>
@@ -102,6 +103,15 @@ topocentric_sun_position::topocentric_sun_position(geopoint const & p, geocentri
 }
 
 topocentric_sun_position::~topocentric_sun_position() {
+
+}
+
+sun_day_parameters::sun_day_parameters(geopoint const & p) :
+	_p(p),
+	_sun_rise_time(std::numeric_limits<double>::quiet_NaN()),
+	_sun_set_time(std::numeric_limits<double>::quiet_NaN()),
+	_sun_zenit_time(std::numeric_limits<double>::quiet_NaN())
+{
 
 }
 
