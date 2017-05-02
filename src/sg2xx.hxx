@@ -158,31 +158,31 @@ public:
 	void set(double lon, double lat, double h = 0.0, ellipse const & e = WGS84);
 	~geopoint();
 
-	double get_phi() {
+	double get_phi() const {
 		return _p.phi;
 	}
 
-	double get_lambda() {
+	double get_lambda() const {
 		return _p.lambda;
 	}
 
-	double get_cos_phi() {
+	double get_cos_phi() const {
 		return _p.cos_phi;
 	}
 
-	double get_sin_phi() {
+	double get_sin_phi() const {
 		return _p.sin_phi;
 	}
 
-	double get_u() {
+	double get_u() const {
 		return _p.u;
 	}
 
-	double get_x() {
+	double get_x() const {
 		return _p.x;
 	}
 
-	double get_y() {
+	double get_y() const {
 		return _p.y;
 	}
 
@@ -261,27 +261,27 @@ public:
 		return _topoc.r_alpha;
 	}
 
-	double get_sun_declination() {
+	double get_sun_declination() const {
 		return _topoc.delta;
 	}
 
-	double get_omega() {
+	double get_omega() const {
 		return _topoc.omega;
 	}
 
-	double get_geometric_sun_elevation() {
+	double get_geometric_sun_elevation() const {
 		return _topoc.gamma_S0;
 	}
 
-	double get_geometric_azimuth() {
+	double get_geometric_azimuth() const {
 		return _topoc.alpha_S;
 	}
 
-	double get_top_of_atmosphere_normal_incidence() {
+	double get_top_of_atmosphere_normal_incidence() const {
 		return _topoc.toa_ni;
 	}
 
-	double get_top_of_atmosphere_horizontal_incidence() {
+	double get_top_of_atmosphere_horizontal_incidence() const {
 		return _topoc.toa_hi;
 	}
 
