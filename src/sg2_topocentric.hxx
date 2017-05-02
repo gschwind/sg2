@@ -182,14 +182,14 @@ inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps cons
 	a = ellipse.a;
 	app = 1.0 - ellipse.f;
 
-	cos_phi_kp = cos(phi);
-	sin_phi_kp = sin(phi);
+	cos_phi_kp = vdt::fast_cos(phi);
+	sin_phi_kp = vdt::fast_sin(phi);
 	tan_phi_kp = sin_phi_kp / cos_phi_kp;
 
 	h_a_kp = h / a;
-	u_kp = atan(app * tan_phi_kp);
-	x = cos(u_kp) + h_a_kp * cos_phi_kp;
-	y = app * sin(u_kp) + h_a_kp * sin_phi_kp;
+	u_kp = vdt::fast_atan(app * tan_phi_kp);
+	x = vdt::fast_cos(u_kp) + h_a_kp * cos_phi_kp;
+	y = app * vdt::fast_sin(u_kp) + h_a_kp * sin_phi_kp;
 	u = u_kp;
 	cos_phi = cos_phi_kp;
 	sin_phi = sin_phi_kp;
@@ -209,9 +209,9 @@ inline static double _topocentric_correction_refraction_SAE(double const gamma_S
 	K = (P / 1010.0) * (283. / (273. + T)) * 2.96706e-4;
 
 	if (gamma_S0 > gamma_S0_seuil) {
-		return gamma_S0 + K / (tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
+		return gamma_S0 + K / (vdt::fast_tan(gamma_S0 + 0.0031376 / (gamma_S0 + 0.089186)));
 	} else {
-		return gamma_S0 + (K / R) * tan(gamma_S0_seuil) / tan(gamma_S0);
+		return gamma_S0 + (K / R) * vdt::fast_tan(gamma_S0_seuil) / vdt::fast_tan(gamma_S0);
 	}
 
 }
@@ -291,29 +291,29 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
     omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
     cos_geoc_delta_kd = cos(geoc_delta);
 
-    Delta_r_alpha_kp_kd = (-x_kp * sin(omega_g_kp_kd)
+    Delta_r_alpha_kp_kd = (-x_kp * vdt::fast_sin(omega_g_kp_kd)
             / cos_geoc_delta_kd * xi);
     r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
 
-    delta = geoc_delta + (x_kp * cos(omega_g_kp_kd) * sin(geoc_delta)
+    delta = geoc_delta + (x_kp * vdt::fast_cos(omega_g_kp_kd) * vdt::fast_sin(geoc_delta)
                              - y_kp * cos_geoc_delta_kd) * xi;
 
     omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
 
-    cos_omega_kp_kd = cos(omega);
-    cos_delta_kp_kd = cos(delta);
-    sin_delta_kp_kd = sin(delta);
+    cos_omega_kp_kd = vdt::fast_cos(omega);
+    cos_delta_kp_kd = vdt::fast_cos(delta);
+    sin_delta_kp_kd = vdt::fast_sin(delta);
     tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
 
-    gamma_S0 = asin(sin_phi_kp * sin_delta_kp_kd
+    gamma_S0 = vdt::fast_asin(sin_phi_kp * sin_delta_kp_kd
                        + cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
 
-    alpha_S = atan2(sin(omega), cos_omega_kp_kd * sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
+    alpha_S = vdt::fast_atan2(vdt::fast_sin(omega), cos_omega_kp_kd * sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
                     + PI;
 
     if (gamma_S0 > 0.0) {
         toa_ni = SOLAR_CONSTANT / (geoc.R * geoc.R);
-        toa_hi = toa_ni * sin(gamma_S0);
+        toa_hi = toa_ni * vdt::fast_sin(gamma_S0);
     } else {
         toa_ni = 0.0;
         toa_hi = 0.0;

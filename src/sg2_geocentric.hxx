@@ -28,6 +28,8 @@
 #include "sg2_precomputed_heliocentric.h"
 #include "sg2_precomputed_geocentric.h"
 
+#include <vdt/vdtMath.h>
+
 namespace sg2 {
 
 /* Geocentric coordinates */
@@ -150,12 +152,12 @@ inline geocentric_data::geocentric_data(time_data const & jd)
 	Theta_a = L + PI + Delta_psi
 			+ SG2_precomputed_geocentric_Delta_tau;
 
-	sin_Theta_a_kd = sin(Theta_a);
-	cos_epsilon_kd = cos(epsilon);
+	sin_Theta_a_kd = vdt::fast_sin(Theta_a);
+	cos_epsilon_kd = vdt::fast_cos(epsilon);
 
-	r_alpha = atan2(sin_Theta_a_kd * cos_epsilon_kd,
-			cos(Theta_a));
-	delta = asin(sin_Theta_a_kd * sin(epsilon));
+	r_alpha = vdt::fast_atan2(sin_Theta_a_kd * cos_epsilon_kd,
+			vdt::fast_cos(Theta_a));
+	delta = vdt::fast_asin(sin_Theta_a_kd * vdt::fast_sin(epsilon));
 
 	nu0_kd = 6.300388099 * jd.jd_ut - 1.539965571482657e+007;
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
