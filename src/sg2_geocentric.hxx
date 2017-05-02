@@ -37,7 +37,7 @@ struct geocentric_data {
 	double delta;      /* Geocentric declination (rad) */
 	double nu;         /* Apparent sideral time (rad) */
 	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
-	geocentric_data() = default;
+	geocentric_data() { }
 	geocentric_data(geocentric_data const &) = default;
 	geocentric_data(julian_time_data const & jd);
 

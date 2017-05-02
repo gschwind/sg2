@@ -26,14 +26,6 @@
 
 namespace sg2 {
 
-struct ellps {
-	double a; /* Axis a (m) */
-	double f; /* Flatness (-)*/
-
-	ellps(double a, double f);
-
-};
-
 extern ellps const ELLPSTYPE_WGS84;
 extern ellps const ELLPSTYPE_RGF83;
 extern ellps const ELLPSTYPE_NTF;
@@ -41,6 +33,16 @@ extern ellps const ELLPSTYPE_AA;
 extern ellps const ELLPSTYPE_SPA;
 extern ellps const ELLPSTYPE_NGP;
 extern ellps const ELLPSTYPE_SPHERE;
+
+struct ellps {
+	double a; /* Axis a (m) */
+	double f; /* Flatness (-)*/
+
+	ellps() { }
+	ellps(ellps const &) = default;
+	ellps(double a, double f);
+
+};
 
 struct geopoint_data {
 	ellps  ellipse;
@@ -53,7 +55,7 @@ struct geopoint_data {
 	double x;
 	double y;
 
-	geopoint_data() = default;
+	geopoint_data() { }
 	geopoint_data(geopoint_data const &) = default;
 
 	/**
@@ -82,6 +84,7 @@ struct topocentric_data {
 	double toa_ni;   /* irradiation at top of atmosphere normal incidence (W/m2) */
 	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
 
+	topocentric_data() { }
 	topocentric_data(topocentric_data const &) = default;
 	topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint);
 

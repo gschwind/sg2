@@ -99,7 +99,7 @@ struct julian_time_data {
 	double jd_ut;            /* julian date UT (decimal day) */
 	double jd_tt;            /* TT : terrestrial time */
 
-	julian_time_data() = default;
+	julian_time_data() { }
 	julian_time_data(double jd_ut, double jd_tt = NAN);
 	julian_time_data(ymdh const & date, double jd_tt = NAN);
 
