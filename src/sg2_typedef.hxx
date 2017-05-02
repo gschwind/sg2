@@ -46,11 +46,13 @@ struct date;
 struct julian;
 struct ymdh;
 struct ydoyh;
-struct time_data;
-struct geocentric_data;
 struct ellps;
+
+struct time_data;
 struct geopoint_data;
+struct geocentric_data;
 struct topocentric_data;
+struct geopoint_snap_data;
 
 } // namespace sg2
 

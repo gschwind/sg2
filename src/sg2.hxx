@@ -27,8 +27,15 @@
 #include "sg2_topocentric.hxx"
 #include "sg2_sun_daily.hxx"
 
-#ifdef  __cplusplus
-#include "sg2xx.hxx"
-#endif
+namespace sg2 {
+
+struct geopoint_snap_data {
+	time_data time;
+	geopoint_data geopoint;
+	geocentric_data geoc;
+	topocentric_data topoc;
+};
+
+}
 
 #endif /* SG2_H_ */
