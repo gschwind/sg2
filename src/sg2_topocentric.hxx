@@ -26,13 +26,13 @@
 
 namespace sg2 {
 
-extern ellps const ELLPSTYPE_WGS84;
-extern ellps const ELLPSTYPE_RGF83;
-extern ellps const ELLPSTYPE_NTF;
-extern ellps const ELLPSTYPE_AA;
-extern ellps const ELLPSTYPE_SPA;
-extern ellps const ELLPSTYPE_NGP;
-extern ellps const ELLPSTYPE_SPHERE;
+extern ellps const ELLPS_WGS84;
+extern ellps const ELLPS_RGF83;
+extern ellps const ELLPS_NTF;
+extern ellps const ELLPS_AA;
+extern ellps const ELLPS_SPA;
+extern ellps const ELLPS_NGP;
+extern ellps const ELLPS_SPHERE;
 
 struct ellps {
 	double a; /* Axis a (m) */
@@ -63,7 +63,7 @@ struct geopoint_data {
 	 * @input lon: longitude in degrees
 	 * @input h: altitude in meters
 	 **/
-	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPSTYPE_WGS84);
+	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPS_WGS84);
 
 	auto operator=(geopoint_data const &) -> geopoint_data & = default;
 
