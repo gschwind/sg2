@@ -48,9 +48,7 @@ int main(int argc, char ** argv) {
 	sg2::geopoint geopoint{lon, lat, alt};
 
 	/** local-time related data **/
-	sg2::topocentric_data topoc{sun_position, geopoint};
-
-	int err = 0;
+	sg2::topocentric_data topoc{geoc, helioc, geopoint};
 
 	/**
 	 * Computing solar system state.

@@ -42,8 +42,8 @@ extern ellps const ELLPSTYPE_SPA;
 extern ellps const ELLPSTYPE_NGP;
 extern ellps const ELLPSTYPE_SPHERE;
 
-struct geopoint {
-	ellps const ellipse;
+struct geopoint_data {
+	ellps  ellipse;
 	double phi;        /* Latitude (rad) */
 	double lambda;     /* Longitude (rad) */
 	double h;          /* Altitude Above the Reference Ellipsoid */
@@ -82,7 +82,7 @@ struct topocentric_data {
 	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
 
 	topocentric_data(topocentric_data const &) = default;
-	topocentric_data(geocentric_sun_position const & sun_position, geopoint const & geopoint);
+	topocentric_data(geocentric_data const & geoc, heliocentric_data const & helioc, geopoint_data const & geopoint);
 
 	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);

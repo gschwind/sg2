@@ -43,8 +43,8 @@ ellps::ellps(double a, double f) :
 
 }
 
-geopoint::geopoint(double lon, double lat, double h, ellps const & p_data_ellps) :
-	ellipse{p_data_ellps},
+geopoint_data::geopoint_data(double lon, double lat, double h, ellps const & ellipse) :
+	ellipse{ellipse},
 	lambda{lon * DEG2RAD},
 	phi{lat * DEG2RAD},
 	h{h}
@@ -161,9 +161,7 @@ void topocentric_data::topocentric_correction_refraction(double *p_gamma_S0, uns
 
 }
 
-topocentric_data::topocentric_data(sg2_geocentric_sun_position_t const & sun_position, sg2_geopoint_t const & geopoint) :
-	point{geopoint},
-	sun_position{sun_position}
+topocentric_data::topocentric_data(geocentric_data const & geoc, heliocentric_data const & helioc, geopoint_data const & geopoint)
 {
 	unsigned long np, kp, nd, kd;
 	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
