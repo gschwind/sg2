@@ -19,8 +19,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "sg2xx.hxx"
-#include "sg2_geocentric.hxx"
+#include "sg2_sun_daily.hxx"
+
 #include "sg2_topocentric.hxx"
 
 #include <stdexcept>

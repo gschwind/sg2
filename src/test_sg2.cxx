@@ -19,10 +19,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#include <sg2_sun_daily.hxx>
 #include <cstdio>
 #include <cstdlib>
 
-#include "sg2xx.hxx"
 
 
 void usage(void) {
