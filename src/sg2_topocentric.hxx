@@ -53,14 +53,14 @@ struct geopoint_data {
 	double x;
 	double y;
 
-	geopoint(geopoint const &) = default;
+	geopoint_data(geopoint_data const &) = default;
 
 	/**
 	 * @input lat: latitude in degrees
 	 * @input lon: longitude in degrees
 	 * @input h: altitude in meters
 	 **/
-	geopoint(double lon, double lat, double h, ellps const & p_data_ellps = ELLPSTYPE_WGS84);
+	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPSTYPE_WGS84);
 
 };
 
@@ -71,8 +71,6 @@ enum CORRECTION_REFRACTION {
 };
 
 struct topocentric_data {
-	geocentric_sun_position sun_position;
-	geopoint point;
 	double r_alpha;  /* Topocentric right sun ascension (rad) */
 	double delta;    /* Topocentric sun declination (rad) */
 	double omega;    /* Topocentric local hour angle (rad) */
@@ -82,7 +80,7 @@ struct topocentric_data {
 	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
 
 	topocentric_data(topocentric_data const &) = default;
-	topocentric_data(geocentric_data const & geoc, heliocentric_data const & helioc, geopoint_data const & geopoint);
+	topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint);
 
 	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);

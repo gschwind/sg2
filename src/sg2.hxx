@@ -21,24 +21,10 @@
 #ifndef SG2_H_
 #define SG2_H_
 
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
-
-#include "sg2_typedef.h"
-#include "sg2_err.h"
-#include "sg2_date.h"
-#include "sg2_heliocentric.h"
-#include "sg2_geocentric.h"
-#include "sg2_topocentric.h"
-
-#include <stdio.h>
-
-#ifdef	__cplusplus
-}
-#endif
-
+#include "sg2_typedef.hxx"
+#include "sg2_date.hxx"
+#include "sg2_geocentric.hxx"
+#include "sg2_topocentric.hxx"
 
 #ifdef  __cplusplus
 #include "sg2xx.hxx"

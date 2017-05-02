@@ -20,6 +20,7 @@
  */
 
 #include "sg2xx.hxx"
+#include "sg2_geocentric.hxx"
 #include "sg2_topocentric.hxx"
 
 #include <stdexcept>
@@ -27,7 +28,7 @@
 
 namespace sg2 {
 
-sun_day_parameters::sun_day_parameters(geopoint const & p) :
+sun_day_parameters::sun_day_parameters(geopoint_data const & p) :
 	_p(p),
 	_sun_rise_time(NAN),
 	_sun_set_time(NAN),
@@ -41,8 +42,9 @@ void sun_day_parameters::update(double jd) {
 	jd += _p.lambda / PI; // aprox UT time for the given longitude
 
 	auto get_sun_elevation = [this](double jd) -> double {
-		geocentric_sun_position geoc(jd);
-		topocentric_data topoc(geoc, this->_p);
+		julian_time_data xjd{jd};
+		geocentric_data geoc{xjd};
+		topocentric_data topoc{geoc, this->_p};
 		return topoc.gamma_S0;
 	};
 

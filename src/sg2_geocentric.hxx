@@ -23,12 +23,13 @@
 
 #include "sg2_typedef.hxx"
 #include "sg2_date.hxx"
-#include "sg2_heliocentric.hxx"
 
 namespace sg2 {
 
 /* Geocentric coordinates */
 struct geocentric_data {
+	double R;          /* Radius Sun-Earth (ua) */
+	double L;          /* Heliocentric Earth true longitude (rad) */
 	double Delta_psi;  /* Nutation in Geocentric Sun longitude (rad) */
 	double epsilon;    /* Earth true obliquity (rad) */
 	double Theta_a;    /* Geocentric Earth true longitude (rad) */
@@ -36,26 +37,9 @@ struct geocentric_data {
 	double delta;      /* Geocentric declination (rad) */
 	double nu;         /* Apparent sideral time (rad) */
 	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
-
-	geocentric_data(julian_time_data const & jd, heliocentric_data const & p_helioc);
-
-};
-
-/** handle time related geocentric sun position **/
-struct geocentric_sun_position {
-	julian_time_data jd;
-	heliocentric_data helioc;
-	geocentric_data geoc;
-
-	/**
-	 * Setup geocentric sun position
-	 *
-	 * @output ths: a geocentric_sun_position to be set
-	 * @input jd: julian day
-	 * @input delta_tt: delta for terrestrial time or NAN (i.e. computed)
-	 * @output err: first error encountered
-	 **/
-	geocentric_sun_position(double jd, double delta_tt = NAN);
+	geocentric_data() = default;
+	geocentric_data(geocentric_data const &) = default;
+	geocentric_data(julian_time_data const & jd);
 
 };
 

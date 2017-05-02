@@ -21,12 +21,8 @@
 #include "sg2_geocentric.hxx"
 #include "sg2_err.hxx"
 
+#include "sg2_precomputed_heliocentric.h"
 #include "sg2_precomputed_geocentric.h"
-
-#include <cmath>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
 
 namespace sg2 {
 
@@ -44,16 +40,54 @@ inline void _geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, doub
 	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
 }
 
-geocentric_data::geocentric_data(julian_time_data const & jd, heliocentric_data const & helioc)
+inline double _heliocentric_compute_R(double jd_tt)
+{
+	int idx0;
+	double x, x0, dx;
+	x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
+			/ SG2_precomputed_heliocentric_R_dj;
+	x0 = floor(x);
+	dx = x - x0;
+
+	idx0 = (short) x0;
+	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj - 1)) {
+		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
+	}
+	return (1.0 - dx) * SG2_precomputed_heliocentric_R[idx0]
+			+ dx * SG2_precomputed_heliocentric_R[idx0 + 1];
+}
+
+inline double _heliocentric_compute_L(double jd_tt)
+{
+	int idx0;
+	double x, x0, dx;
+	x = (jd_tt - SG2_precomputed_heliocentric_L_j0)
+			/ SG2_precomputed_heliocentric_L_dj;
+	x0 = floor(x);
+	dx = x - x0;
+
+	idx0 = (int) x0;
+	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj - 1)) {
+		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
+	}
+
+	return (1.0 - dx) * SG2_precomputed_heliocentric_L[idx0]
+			+ dx * SG2_precomputed_heliocentric_L[idx0 + 1];
+}
+
+geocentric_data::geocentric_data(julian_time_data const & jd)
 {
 	short idx0;
 	int kd;
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
 
+	R = _heliocentric_compute_R(jd.jd_tt);
+	L = _heliocentric_compute_L(jd.jd_tt);
+
 	_geocentric_compute_Delta_psi(jd.jd_tt, &(Delta_psi), &(epsilon));
 
-	Theta_a = helioc.L + PI + Delta_psi
+	Theta_a = L + PI + Delta_psi
 			+ SG2_precomputed_geocentric_Delta_tau;
 
 	sin_Theta_a_kd = sin(Theta_a);
@@ -69,14 +103,6 @@ geocentric_data::geocentric_data(julian_time_data const & jd, heliocentric_data 
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;
-}
-
-geocentric_sun_position::geocentric_sun_position(double xjd, double delta_tt) :
-	jd{xjd, delta_tt},
-	helioc{jd},
-	geoc{jd, helioc}
-{
-
 }
 
 } // namespace sg2

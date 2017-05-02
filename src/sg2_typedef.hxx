@@ -46,20 +46,15 @@ struct ymdh;
 struct ydoyh;
 struct julian_time_data;
 struct geocentric_data;
-struct geocentric_sun_position;
-struct heliocentric_data;
 struct ellps;
-struct geopoint;
+struct geopoint_data;
 struct topocentric_data;
 
 
 /* TODO: remove */
-using sg2_heliocentric_data_t = heliocentric_data;
 using sg2_geocentric_data_t = geocentric_data;
-using sg2_geocentric_sun_position_t = geocentric_sun_position;
 using S_SG2_ELLPS = ellps;
 using PS_SG2_ELLPS = ellps *;
-using sg2_geopoint_t = geopoint;
 using sg2_topocentric_data_t = topocentric_data;
 
 

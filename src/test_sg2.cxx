@@ -41,33 +41,35 @@ int main(int argc, char ** argv) {
 	double alt = atof(argv[3]);
 	double jd = atof(argv[4]);
 
-	/** time related data **/
-	sg2::geocentric_sun_position sun_position{jd};
+	sg2::julian_time_data xjd{jd};
 
 	/** location related data **/
-	sg2::geopoint geopoint{lon, lat, alt};
+	sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPSTYPE_WGS84};
+
+	/** time related data **/
+	sg2::geocentric_data geoc{xjd};
 
 	/** local-time related data **/
-	sg2::topocentric_data topoc{geoc, helioc, geopoint};
+	sg2::topocentric_data topoc{geoc, geopoint};
 
 	/**
 	 * Computing solar system state.
 	 **/
 
 	printf("Time related data (i.e. solar system geometry)\n");
-	printf("jd.jd_ut           = %f\n", sun_position.jd.jd_ut);
-	printf("jd.jd_tt           = %f\n", sun_position.jd.jd_tt);
+	printf("jd.jd_ut           = %f\n", xjd.jd_ut);
+	printf("jd.jd_tt           = %f\n", xjd.jd_tt);
 
-	printf("helioc.R           = %f\n", sun_position.helioc.R);
-	printf("helioc.L           = %f\n", sun_position.helioc.L);
+	printf("helioc.R           = %f\n", geoc.R);
+	printf("helioc.L           = %f\n", geoc.L);
 
-	printf("geoc.delta         = %f\n", sun_position.geoc.delta);
-	printf("geoc.EOT           = %f\n", sun_position.geoc.EOT);
-	printf("geoc.Theta_a       = %f\n", sun_position.geoc.Theta_a);
-	printf("geoc.epsilon       = %f\n", sun_position.geoc.epsilon);
-	printf("geoc.nu            = %f\n", sun_position.geoc.nu);
-	printf("geoc.r_alpha       = %f\n", sun_position.geoc.r_alpha);
-	printf("geoc.Delta_psi     = %f\n", sun_position.geoc.Delta_psi);
+	printf("geoc.delta         = %f\n", geoc.delta);
+	printf("geoc.EOT           = %f\n", geoc.EOT);
+	printf("geoc.Theta_a       = %f\n", geoc.Theta_a);
+	printf("geoc.epsilon       = %f\n", geoc.epsilon);
+	printf("geoc.nu            = %f\n", geoc.nu);
+	printf("geoc.r_alpha       = %f\n", geoc.r_alpha);
+	printf("geoc.Delta_psi     = %f\n", geoc.Delta_psi);
 
 	printf("Location related data\n");
 
@@ -90,7 +92,7 @@ int main(int argc, char ** argv) {
 	printf("topoc.toa_ni      = %f\n", topoc.toa_ni);
 
 	printf("Extra data\n");
-	double x = (sun_position.jd.jd_ut + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
+	double x = (xjd.jd_ut + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
 
 	return 0;

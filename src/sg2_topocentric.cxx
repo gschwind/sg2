@@ -161,7 +161,7 @@ void topocentric_data::topocentric_correction_refraction(double *p_gamma_S0, uns
 
 }
 
-topocentric_data::topocentric_data(geocentric_data const & geoc, heliocentric_data const & helioc, geopoint_data const & geopoint)
+topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint)
 {
 	unsigned long np, kp, nd, kd;
 	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
@@ -181,9 +181,9 @@ topocentric_data::topocentric_data(geocentric_data const & geoc, heliocentric_da
     x_kp = geopoint.x;
     y_kp = geopoint.y;
 
-    geoc_nu = sun_position.geoc.nu;
-    geoc_r_alpha = sun_position.geoc.r_alpha;
-    geoc_delta = sun_position.geoc.delta;
+    geoc_nu = geoc.nu;
+    geoc_r_alpha = geoc.r_alpha;
+    geoc_delta = geoc.delta;
 
     omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
     cos_geoc_delta_kd = cos(geoc_delta);
@@ -209,7 +209,7 @@ topocentric_data::topocentric_data(geocentric_data const & geoc, heliocentric_da
                     + PI;
 
     if (gamma_S0 > 0.0) {
-        toa_ni = SOLAR_CONSTANT / (sun_position.helioc.R * sun_position.helioc.R);
+        toa_ni = SOLAR_CONSTANT / (geoc.R * geoc.R);
         toa_hi = toa_ni * sin(gamma_S0);
     } else {
         toa_ni = 0.0;
