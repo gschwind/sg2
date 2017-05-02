@@ -41,6 +41,8 @@ struct geocentric_data {
 	geocentric_data(geocentric_data const &) = default;
 	geocentric_data(julian_time_data const & jd);
 
+	auto operator=(geocentric_data const &) -> geocentric_data & = default;
+
 };
 
 } // namespace sg2

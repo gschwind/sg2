@@ -53,6 +53,7 @@ struct geopoint_data {
 	double x;
 	double y;
 
+	geopoint_data() = default;
 	geopoint_data(geopoint_data const &) = default;
 
 	/**
@@ -61,6 +62,8 @@ struct geopoint_data {
 	 * @input h: altitude in meters
 	 **/
 	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPSTYPE_WGS84);
+
+	auto operator=(geopoint_data const &) -> geopoint_data & = default;
 
 };
 
@@ -81,6 +84,8 @@ struct topocentric_data {
 
 	topocentric_data(topocentric_data const &) = default;
 	topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint);
+
+	auto operator=(topocentric_data const &) -> topocentric_data & = default;
 
 	static void topocentric_correction_refraction(double *p_gamma_S0, unsigned long n,
 			CORRECTION_REFRACTION method, double *p_data_corr, double *p_gamma_S);
