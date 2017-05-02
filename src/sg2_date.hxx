@@ -22,6 +22,7 @@
 #define SG2_DATE_HXX_
 
 #include "sg2_typedef.hxx"
+#include <cstdint>
 
 namespace sg2 {
 

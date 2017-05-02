@@ -37,7 +37,7 @@ inline double _heliocentric_compute_R(double jd_tt)
 
 	idx0 = (short) x0;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj - 1)) {
-		throw SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
+		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 	return (1.0 - dx) * SG2_precomputed_heliocentric_R[idx0]
 			+ dx * SG2_precomputed_heliocentric_R[idx0 + 1];
@@ -54,7 +54,7 @@ inline double _heliocentric_compute_L(double jd_tt)
 
 	idx0 = (int) x0;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj - 1)) {
-		throw SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
+		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	return (1.0 - dx) * SG2_precomputed_heliocentric_L[idx0]

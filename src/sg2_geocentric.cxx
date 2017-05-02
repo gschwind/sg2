@@ -38,7 +38,7 @@ inline void _geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, doub
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
 		*Delta_psi = NAN;
 		*epsilon = NAN;
-		throw SG2_ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
+		throw ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
 	}
 	*Delta_psi = SG2_precomputed_geocentric_Delta_psi[idx0];
 	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
