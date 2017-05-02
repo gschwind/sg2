@@ -33,6 +33,10 @@ namespace sg2 {
 
 using namespace std;
 
+#if __cplusplus > 199711L
+/** DO not export this template if C++ is not above C++11 **/
+
+
 /**
  * Find the local extrema of the function 'func'
  * between left_bound and right_bound.
@@ -122,6 +126,8 @@ double hc_find_zero(F func, double const EPS, double left_bound, double right_bo
     return mid;
 
 }
+
+#endif
 
 class ellipse {
 	struct s_ellps e;
