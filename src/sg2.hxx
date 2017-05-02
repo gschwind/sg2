@@ -21,6 +21,7 @@
 #ifndef SG2_H_
 #define SG2_H_
 
+#include "sg2_config.hxx"
 #include "sg2_typedef.hxx"
 #include "sg2_date.hxx"
 #include "sg2_geocentric.hxx"
