@@ -256,7 +256,7 @@ inline ymdh::ymdh(short year, short month, char day_of_month, double hour) :
 
 inline ymdh::ymdh(double jd)
 {
-	_julian_day_to_ymd(jd, year, month, day_of_month);
+	_julian_day_to_ymd(floor(jd + 0.5), year, month, day_of_month);
 	hour = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 }
 
