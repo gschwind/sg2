@@ -52,6 +52,9 @@ int main(int argc, char ** argv) {
 	/** local-time related data **/
 	sg2::topocentric_data topoc{geoc, geopoint};
 
+	sg2::sun_daily_data day{geopoint};
+	day.update(floor(jd+0.5));
+
 	/**
 	 * Computing solar system state.
 	 **/
@@ -94,6 +97,10 @@ int main(int argc, char ** argv) {
 	printf("Extra data\n");
 	double x = (xjd.jd_ut + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
+
+	printf("sun_rise          = %f\n", day.get_sun_rise_time());
+	printf("sun_set           = %f\n", day.get_sun_set_time());
+	printf("sun_zenit         = %f\n", day.get_sun_zenit_time());
 
 	return 0;
 
