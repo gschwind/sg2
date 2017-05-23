@@ -53,7 +53,11 @@ int main(int argc, char ** argv) {
 	sg2::topocentric_data topoc{geoc, geopoint};
 
 	sg2::sun_daily_data day{geopoint};
-	day.update(floor(jd+0.5));
+	try {
+		day.update(floor(jd+0.5));
+	} catch (...) {
+		printf("fail to compute daily value\n");
+	}
 
 	/**
 	 * Computing solar system state.

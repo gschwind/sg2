@@ -76,7 +76,7 @@ double hc_find_extrema(F func, double const EPS, double left_bound, double right
 				vmid = vmright;
 				mid = mright;
 		} else {
-				throw std::runtime_error("the function is constant");
+				throw std::runtime_error("Unexpected function shape");
 		}
     }
 

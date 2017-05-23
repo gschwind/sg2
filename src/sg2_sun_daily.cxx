@@ -39,7 +39,7 @@ sun_daily_data::sun_daily_data(geopoint_data const & p) :
 
 void sun_daily_data::update(double jd) {
 	jd = std::floor(jd + 0.5); // round to the nearest integer JD
-	jd += _p.lambda / PI; // aprox UT time for the given longitude
+	jd -= _p.lambda / D_PI; // approximate noon UT time for the given longitude
 
 	auto get_sun_elevation = [this](double jd) -> double {
 		time_data xjd{jd};
@@ -51,13 +51,25 @@ void sun_daily_data::update(double jd) {
 	_sun_zenit_time = hc_find_max(get_sun_elevation, 1e-6,
 			jd - 2.0/24.0, jd + 2.0/24.0);
 
-	double sun_lower_time = hc_find_min(get_sun_elevation, 1e-6,
+	double sun_rise_lower_time = hc_find_min(get_sun_elevation, 1e-6,
 			_sun_zenit_time - 14.0/24.0, _sun_zenit_time);
 
-	_sun_rise_time = hc_find_zero(get_sun_elevation, 1e-6,
-			sun_lower_time, _sun_zenit_time);
+	double sun_set_lower_time = hc_find_min(get_sun_elevation, 1e-6,
+			_sun_zenit_time, _sun_zenit_time + 14.0/24.0);
 
-	_sun_set_time = 2*_sun_zenit_time - _sun_rise_time;
+	if (get_sun_elevation(sun_rise_lower_time) < 0.0) {
+		_sun_rise_time = hc_find_zero(get_sun_elevation, 1e-6,
+				sun_rise_lower_time, _sun_zenit_time);
+	} else {
+		_sun_rise_time = NAN;
+	}
+
+	if (get_sun_elevation(sun_set_lower_time) < 0.0) {
+		_sun_set_time = hc_find_zero(get_sun_elevation, 1e-6,
+				_sun_zenit_time, sun_set_lower_time);
+	} else {
+		_sun_set_time = NAN;
+	}
 
 }
 
