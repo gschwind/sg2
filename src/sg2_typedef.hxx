@@ -35,7 +35,7 @@ static double const D_PI = 6.2831853071795862;
 static double const DEG2RAD = 1.745329251994330e-002;
 static double const RAD2DEG = 5.729577951308232e+001;
 /* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
-static double const SOLAR_CONSTANT = 1367.0;
+static double const SOLAR_CONSTANT = 1362.0;
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
 static double const AU = 149597870691.0; /* +/- 6 m (McCarthy et Petit, 2003) */
 
