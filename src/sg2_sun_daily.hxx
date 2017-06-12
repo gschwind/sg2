@@ -35,56 +35,35 @@ using namespace std;
 
 /** DO not export this template if C++ is not above C++11 **/
 
+static double constexpr golden_ratio = (1.0 + std::sqrt(5))/2.0;
+
 
 /**
- * Find the local extrema of the function 'func'
- * between left_bound and right_bound.
- * by default try to find the minimum
+ * Implement the golden-section search
+ * ref: https://en.wikipedia.org/wiki/Golden-section_search
  **/
 template<typename F, typename comp = std::less<double> >
 double hc_find_extrema(F func, double const EPS, double left_bound, double right_bound) {
 	comp _comp;
+	double a, b, c, d;
 
-    double left = left_bound;
-    double right = right_bound;
-    double mid = (left_bound+right_bound)/2.0;
+	a = left_bound;
+	b = right_bound;
 
-    double vleft = func(left);
-    double vmid = func(mid);
-    double vright = func(right);
+    c = b - (b - a) / golden_ratio;
+    d = a + (b - a) / golden_ratio;
 
-//    printf("l f(%f) => %f\n", left, vleft);
-//    printf("m f(%f) => %f\n", mid, vmid);
-//    printf("r f(%f) => %f\n", right, vright);
-
-    while((right - left) > EPS) {
-        double mleft = (mid+left)/2.0;
-        double mright = (mid+right)/2.0;
-
-    	double vmleft = func(mleft);
-		double vmright = func(mright);
-
-		if(_comp(vmleft, vleft) and _comp(vmleft, vmid) and _comp(vmleft, vmright) and _comp(vmleft, vright)) {
-				vright = vmid;
-				right = mid;
-				vmid = vmleft;
-				mid = mleft;
-		} else if(_comp(vmid, vleft) and _comp(vmid, vmleft) and _comp(vmid, vmright) and _comp(vmid, vright)) {
-				vleft = vmleft;
-				left = mleft;
-				vright = vmright;
-				right = mright;
-		} else if(_comp(vmright, vleft) and _comp(vmright, vmleft) and _comp(vmright, vmid) and _comp(vmright, vright)) {
-				vleft = vmid;
-				left = mid;
-				vmid = vmright;
-				mid = mright;
+	while (std::fabs(c - d) > EPS) {
+		if (_comp(func(c), func(d))) {
+			b = d;
 		} else {
-				throw std::runtime_error("Unexpected function shape");
+			a = c;
 		}
-    }
+	    c = b - (b - a) / golden_ratio;
+	    d = a + (b - a) / golden_ratio;
+	}
 
-    return mid;
+    return (a + b)/2.0;
 
 }
 
