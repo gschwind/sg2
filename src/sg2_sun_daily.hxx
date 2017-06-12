@@ -53,6 +53,10 @@ double hc_find_extrema(F func, double const EPS, double left_bound, double right
     double vmid = func(mid);
     double vright = func(right);
 
+//    printf("l f(%f) => %f\n", left, vleft);
+//    printf("m f(%f) => %f\n", mid, vmid);
+//    printf("r f(%f) => %f\n", right, vright);
+
     while((right - left) > EPS) {
         double mleft = (mid+left)/2.0;
         double mright = (mid+right)/2.0;
@@ -131,6 +135,8 @@ class sun_daily_data {
 	double _sun_rise_time;
 	double _sun_set_time;
 	double _sun_zenit_time;
+	double _sun_begin_of_day_time;
+	double _sun_end_of_day_time;
 
 public:
 	sun_daily_data(geopoint_data const & p);
@@ -146,6 +152,14 @@ public:
 
 	double get_sun_zenit_time() {
 		return _sun_zenit_time;
+	}
+
+	double get_sun_begin_of_day_time() {
+		return _sun_begin_of_day_time;
+	}
+
+	double get_sun_end_of_day_time() {
+		return _sun_end_of_day_time;
 	}
 
 };

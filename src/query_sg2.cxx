@@ -105,6 +105,8 @@ int main(int argc, char ** argv) {
 	printf("sun_rise          = %f\n", day.get_sun_rise_time());
 	printf("sun_set           = %f\n", day.get_sun_set_time());
 	printf("sun_zenit         = %f\n", day.get_sun_zenit_time());
+	printf("sun_begin_of_day  = %f\n", day.get_sun_begin_of_day_time());
+	printf("sun_end_of_day    = %f\n", day.get_sun_end_of_day_time());
 
 	return 0;
 

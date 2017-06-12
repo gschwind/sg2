@@ -32,7 +32,9 @@ sun_daily_data::sun_daily_data(geopoint_data const & p) :
 	_p(p),
 	_sun_rise_time(NAN),
 	_sun_set_time(NAN),
-	_sun_zenit_time(NAN)
+	_sun_zenit_time(NAN),
+	_sun_begin_of_day_time(NAN),
+	_sun_end_of_day_time(NAN)
 {
 
 }
@@ -49,26 +51,35 @@ void sun_daily_data::update(double jd) {
 	};
 
 	_sun_zenit_time = hc_find_max(get_sun_elevation, 1e-6,
-			jd - 2.0/24.0, jd + 2.0/24.0);
+			jd - 1.0/72.0, jd + 1.0/72.0);
 
-	double sun_rise_lower_time = hc_find_min(get_sun_elevation, 1e-6,
-			_sun_zenit_time - 14.0/24.0, _sun_zenit_time);
+	_sun_begin_of_day_time = hc_find_min(get_sun_elevation, 1e-6,
+			_sun_zenit_time - (1.0/72.0) - 0.5, _sun_zenit_time + (1.0/72.0) - 0.5);
 
-	double sun_set_lower_time = hc_find_min(get_sun_elevation, 1e-6,
-			_sun_zenit_time, _sun_zenit_time + 14.0/24.0);
+	_sun_end_of_day_time = hc_find_min(get_sun_elevation, 1e-6,
+			_sun_zenit_time - (1.0/72.0) + 0.5, _sun_zenit_time + (1.0/72.0) + 0.5);
 
-	if (get_sun_elevation(sun_rise_lower_time) < 0.0) {
-		_sun_rise_time = hc_find_zero(get_sun_elevation, 1e-6,
-				sun_rise_lower_time, _sun_zenit_time);
-	} else {
+	// if the sun zenit is below the horizon, the sun never rise
+	if(get_sun_elevation(_sun_zenit_time) < 0.0) {
+		_sun_set_time = NAN;
 		_sun_rise_time = NAN;
+		return;
 	}
 
-	if (get_sun_elevation(sun_set_lower_time) < 0.0) {
-		_sun_set_time = hc_find_zero(get_sun_elevation, 1e-6,
-				_sun_zenit_time, sun_set_lower_time);
+	// if the sun is above the horizon at begin of the day, the sun is already rise
+	if (get_sun_elevation(_sun_begin_of_day_time) < 0.0) {
+		_sun_rise_time = hc_find_zero(get_sun_elevation, 1e-6,
+				_sun_begin_of_day_time, _sun_zenit_time);
 	} else {
-		_sun_set_time = NAN;
+		_sun_rise_time = _sun_begin_of_day_time;
+	}
+
+	// if the sun is above the horizon at begin of the day, the sun never set
+	if (get_sun_elevation(_sun_end_of_day_time) < 0.0) {
+		_sun_set_time = hc_find_zero(get_sun_elevation, 1e-6,
+				_sun_zenit_time, _sun_end_of_day_time);
+	} else {
+		_sun_set_time = _sun_end_of_day_time;
 	}
 
 }
