@@ -18,24 +18,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_PRECOMPUTED_DELTA_TT_H_
-#define SG2_PRECOMPUTED_DELTA_TT_H_
-
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
-
-static const double SG2_precomputed_delta_tt_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_delta_tt_dj = 1.0000000000000000e+000;
-static const unsigned long SG2_precomputed_delta_tt_nj = 18689;
+#include "sg2_precomputed_delta_tt.hxx"
 
 /*
 SG2_precomputed_delta_tt
    Delta between TT and UT1 (s)
 */
 
-static const double SG2_precomputed_delta_tt[18689] = {
+double const SG2_precomputed_delta_tt[18689] = {
 5.0476205198450536e+001,
 5.0476205198450536e+001,
 5.0476205198450536e+001,
@@ -18725,10 +18715,4 @@ static const double SG2_precomputed_delta_tt[18689] = {
 7.8231393546006998e+001,
 7.8231393546006998e+001,
 7.8231393546006998e+001 };
-
-#ifdef	__cplusplus
-}
-#endif
-
-#endif /* SG2_PRECOMPUTED_DELTA_TT_H_ */
 

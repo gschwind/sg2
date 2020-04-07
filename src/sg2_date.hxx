@@ -24,13 +24,12 @@
 #include "sg2_typedef.hxx"
 #include "sg2_err.hxx"
 
-#include "sg2_precomputed_delta_tt.h"
-
 #include <cstdint>
 #include <cmath>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include "sg2_precomputed_delta_tt.hxx"
 
 
 namespace sg2 {
