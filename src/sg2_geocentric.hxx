@@ -25,9 +25,8 @@
 #include "sg2_date.hxx"
 #include "sg2_err.hxx"
 
-#include "sg2_precomputed_geocentric.h"
-
 #include "sg2_math.hxx"
+#include "sg2_precomputed_geocentric.hxx"
 #include "sg2_precomputed_heliocentric.hxx"
 
 namespace sg2 {
