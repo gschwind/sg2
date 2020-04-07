@@ -18,20 +18,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_PRECOMPUTED_HELIOCENTRIC_H_
-#define SG2_PRECOMPUTED_HELIOCENTRIC_H_
-
-#ifdef  __cplusplus
-extern "C"
-{
-#endif
-
-static const double SG2_precomputed_heliocentric_R_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_heliocentric_R_dj = 1.0000000000000000e+000;
-static const unsigned long SG2_precomputed_heliocentric_R_nj = 18689;
-static const double SG2_precomputed_heliocentric_L_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_heliocentric_L_dj = 1.0000000000000000e+000;
-static const unsigned long SG2_precomputed_heliocentric_L_nj = 18689;
+#include "sg2_precomputed_heliocentric.hxx"
 
 /*
 SG2_precomputed_heliocentric_R
@@ -39,7 +26,7 @@ SG2_precomputed_heliocentric_R
 SG2_precomputed_heliocentric_L
    Heliocentric longitude (radian) */
 
-static const double SG2_precomputed_heliocentric_R[18689] = {
+double const SG2_precomputed_heliocentric_R[18689] = {
 9.8604541826735836e-001,
 9.8589329821041272e-001,
 9.8574539386857840e-001,
@@ -18729,7 +18716,8 @@ static const double SG2_precomputed_heliocentric_R[18689] = {
 9.8496519664188598e-001,
 9.8508754238599039e-001,
 9.8521434227491844e-001 };
-static const double SG2_precomputed_heliocentric_L[18689] = {
+
+double const SG2_precomputed_heliocentric_L[18689] = {
 1.2078652243005636e+000,
 1.2255551894444696e+000,
 1.2432503159693928e+000,
@@ -37420,9 +37408,4 @@ static const double SG2_precomputed_heliocentric_L[18689] = {
 3.2270934521590323e+002,
 3.2272707218599766e+002 };
 
-#ifdef	__cplusplus
-}
-#endif
-
-#endif /* SG2_PRECOMPUTED_HELIOCENTRIC_H_ */
 
