@@ -8,6 +8,7 @@
 #define SG2_DATE_C_
 
 #include "sg2.h"
+#include "SG2_precomputed_delta_tt_ut.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -239,22 +240,17 @@ void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
 void SG2_date_jd_delta_tt_ut(S_SG2_DATE_JD *p_jd, int *p_err) {
 
 	int k;
-	int a_calculer;
-	short y, m, y_prec, m_prec;
+	unsigned long idx;
 
-	p_ymd_h = SG2_date_create_ymd_h(p_jd->n, p_err);
-	if (*p_err != 0) {
-		return;
-	}
-
-	SG2_date_jd_to_ymdh(p_jd, p_ymdh, p_err);
-
-	SG2_date_delete_ymd_h(p_ymdh, p_err);
-
-	a_calculer = 1;
-
-	for (k=0; k < p_jd->n; k++) {
-
+	for (k = 0; k < p_jd->n; k++) {
+		idx = (unsigned short) round((p_jd->jd[k]
+				- SG2_precomputed_delta_tt_ut_j0)
+				/ SG2_precomputed_delta_tt_ut_dj);
+		if ((idx < 0) || (idx > SG2_precomputed_tab_delta_tt_ut_nj)) {
+			*p_err = SG2_ERR_DATE_JD_DELTA_TT_UT_OUTOFPERIOD;
+			return;
+		}
+		p_jd->delta_tt_ut[k] = SG2_precomputed_delta_tt_ut_tab[idx];
 	}
 
 }
