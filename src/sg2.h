@@ -32,6 +32,7 @@ extern "C"
 #include "SG2_date.h"
 #include "sg2_heliocentric.h"
 #include "sg2_geocentric.h"
+#include "sg2_topocentric.h"
 
 #ifdef	__cplusplus
 }

@@ -104,7 +104,7 @@ typedef struct s_topocentric {
 	S_SG2_GEOC *p_geoc;
 	S_SG2_GEOPT *p_gp;
 
-	double **r_alpha; /* Topocentric right ascension (rad) */
+	double **r_alpha; /* Topocentric right sun ascension (rad) */
 	double **delta; /* Topocentric sun declination (rad) */
 	double **omega; /* Topocentric local hour angle (rad) */
 	double **gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/

@@ -13,11 +13,11 @@ extern "C"
 {
 #endif
 
-S_SG2_GEOPOINT *SG2_topocentric_create_geopoint(unsigned long np,
+S_SG2_GEOPT *SG2_topocentric_create_geopt(unsigned long np,
 		SG2_ELLPSTYPE ellpstype, int *p_err);
 
 void SG2_topocentric_delete_geopt(S_SG2_GEOPT *p_gp, int *p_err);
-S_SG2_TCOORD *SG2_topocentric_create_tcoord(unsigned long n, unsigned long p,
+S_SG2_TOPOC *SG2_topocentric_create_topoc(unsigned long n, unsigned long p,
 		int *p_err);
 
 S_SG2_TOPOC *SG2_topocentric_create_topoc(unsigned long nd, unsigned long np,

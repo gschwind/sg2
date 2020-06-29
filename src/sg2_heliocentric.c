@@ -15,8 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 
-S_SG2_HELIOC *SG2_heliocentric_create_helioc(unsigned long n,
-		int *p_err) {
+S_SG2_HELIOC *SG2_heliocentric_create_helioc(unsigned long n, int *p_err) {
 	S_SG2_HELIOC *p_helioc;
 
 	p_helioc = (S_SG2_HELIOC *) malloc(sizeof(S_SG2_HELIOC));
@@ -42,15 +41,14 @@ S_SG2_HELIOC *SG2_heliocentric_create_helioc(unsigned long n,
 	return p_helioc;
 }
 
-void SG2_heliocentric_delete_helioc(S_SG2_HELIOC *p_helioc,
-		int *p_err) {
+void SG2_heliocentric_delete_helioc(S_SG2_HELIOC *p_helioc, int *p_err) {
 	free(p_helioc->R);
 	free(p_helioc->L);
 	free(p_helioc);
 }
 
-void SG2_heliocentric_set_helioc(S_SG2_DATE_JD *p_jd,
-		S_SG2_HELIOC *p_helioc, int *p_err) {
+void SG2_heliocentric_set_helioc(S_SG2_DATE_JD *p_jd, S_SG2_HELIOC *p_helioc,
+		int *p_err) {
 	short idx0;
 	double x, x0, dx;
 	int k;
@@ -67,8 +65,7 @@ void SG2_heliocentric_set_helioc(S_SG2_DATE_JD *p_jd,
 		x = (p_jd->jd_tt[k] - SG2_precomputed_heliocentric_R_j0)
 				/ SG2_precomputed_heliocentric_R_dj;
 		idx0 = (short) round(x);
-		if ((idx0 < 0)
-				|| (idx0 > SG2_precomputed_heliocentric_R_nj)) {
+		if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj)) {
 			*p_err = SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 			return;
 		}
@@ -80,14 +77,12 @@ void SG2_heliocentric_set_helioc(S_SG2_DATE_JD *p_jd,
 		dx = x - x0;
 
 		idx0 = (short) x0;
-		if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj
-				- 1)) {
+		if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj - 1)) {
 			*p_err = SG2_ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 			return;
 		}
 
-		p_helioc->L[k] = (1.0 - dx)
-				* SG2_precomputed_heliocentric_L[idx0] + dx
+		p_helioc->L[k] = (1.0 - dx) * SG2_precomputed_heliocentric_L[idx0] + dx
 				* SG2_precomputed_heliocentric_L[idx0 + 1];
 
 	}
