@@ -17,6 +17,8 @@ S_SG2_HCOORD *SG2_heliocentric_coordinates_create_hcoord(unsigned long n,
 		int *p_err);
 void SG2_heliocentric_coordinates_delete_hcoord(S_SG2_HCOORD *p_hcoord,
 		int *p_err);
+void SG2_heliocentric_coordinates_set_hcoord(S_SG2_DATE_JD *p_jd,
+		S_SG2_HCOORD *p_hcoord, int *p_err);
 
 #ifdef	__cplusplus
 }

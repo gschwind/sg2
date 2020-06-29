@@ -35,6 +35,7 @@ S_SG2_DATE_JD *SG2_date_create_jd(unsigned long n, int *p_err) {
 		return NULL;
 	}
 	p_jd->jd_tt_set = 0;
+	p_jd->jd_tt = (double *) malloc(p_jd->n * sizeof(double));
 	if (p_jd->jd_tt == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_3;
 		free(p_jd->jd_ut);

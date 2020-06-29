@@ -34,16 +34,27 @@ typedef struct s_date_ydoy_h {
 /* Julian date en jour décimal */
 typedef struct s_date_jd {
 	unsigned long n;
-	double *jd_ut;
+	double *jd_ut; /* julian date UT (decimal day) */
 	unsigned char jd_tt_set;
 	double *jd_tt; /* TT : terrestrial time */
 } S_SG2_DATE_JD, *PS_SG2_DATE_JD;
 
+/* Heliocentric coordinates */
 typedef struct s_hcoord {
 	S_SG2_DATE_JD *p_jd;
-	double *R;
-	double *L;
+	double *R; /* Radius Sun-Earth (ua) */
+	double *L; /* Heliocentric Earth true longitude (radian) */
 } S_SG2_HCOORD, *PS_SG2_HCOORD;
+
+/* Geocentric coordinates */
+typedef struct s_gcoord {
+	S_SG2_DATE_JD *p_jd;
+	double *epsilon; /* Earth true obliquity (radian) */
+	double *Theta_a; /* Geocentric Earth true longitude (radian) */
+	double *r_alpha; /* Geocentric right ascension (radian) */
+	double *delta; /* Geocentric declination (radian) */
+} S_SG2_GCOORD, *PS_SG2_GCOORD;
+
 
 #ifdef	__cplusplus
 }
