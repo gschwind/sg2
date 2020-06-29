@@ -14,15 +14,15 @@
 #include <stdio.h>
 #include <string.h>
 
-static S_SG2_ELLPS tab_ellps_ref[] = { { .a = 6378137.0, .f =
-		3.352810664747481e-003 }, /* WGS84 */
-{ .a = 6378137.0, .f = 3.352810681182319e-003 }, /* RFG83 */
-{ .a = 6378249.2, .f = 3.407549520015651e-003 }, /* NTF / CLARKE1880 */
-{ .a = 6378136.6, .f = 3.352819697896193e-003 }, /* AA */
-{ .a = 6378140.0, .f = 3.352810000000000e-003 }, /* SPA */
-{ .a = 6378169.0, .f = 3.384231430681783e-003 }, /* NGP*/
-{ .a = 6378130.0, .f = 0.0 }, /* SPHERE */
-{ .a = 0.0, .f = 0.0 }, /* USER-DEFINED */
+static const S_SG2_ELLPS tab_ellps_ref[8] = { { .ellpstype = 0, .a = 6378137.0,
+		.f = 3.352810664747481e-003 }, /* WGS84 */
+{ .ellpstype = 1, .a = 6378137.0, .f = 3.352810681182319e-003 }, /* RFG83 */
+{ .ellpstype = 2, .a = 6378249.2, .f = 3.407549520015651e-003 }, /* NTF / CLARKE1880 */
+{ .ellpstype = 3, .a = 6378136.6, .f = 3.352819697896193e-003 }, /* AA */
+{ .ellpstype = 4, .a = 6378140.0, .f = 3.352810000000000e-003 }, /* SPA */
+{ .ellpstype = 5, .a = 6378169.0, .f = 3.384231430681783e-003 }, /* NGP*/
+{ .ellpstype = 6, .a = 6378130.0, .f = 0.0 }, /* SPHERE */
+{ .ellpstype = 7, .a = 0.0, .f = 0.0 }, /* USER-DEFINED */
 };
 
 S_SG2_GEOPT *SG2_topocentric_create_geopt(unsigned long np,
@@ -41,7 +41,9 @@ S_SG2_GEOPT *SG2_topocentric_create_geopt(unsigned long np,
 		free(p_gp);
 		return NULL;
 	}
-	memcpy(p_gp->p_ellps, &tab_ellps_ref[ellpstype], 1);
+	p_gp->p_ellps->ellpstype = ellpstype;
+	p_gp->p_ellps->a = tab_ellps_ref[ellpstype].a;
+	p_gp->p_ellps->f = tab_ellps_ref[ellpstype].f;
 
 	p_gp->phi = (double *) malloc(sizeof(double) * np);
 	if (p_gp->phi == NULL) {
@@ -282,6 +284,12 @@ void SG2_topocentric_set_topoc(S_SG2_GEOC *p_geoc, S_SG2_GEOPT *p_gp,
 		geoc_r_alpha = p_geoc->r_alpha;
 		geoc_delta = p_geoc->delta;
 
+		fprintf(stderr, "\nGP : %.5f %.5f %.2f (ELLPS[%d]::%.2f, %.8f)\n",
+				p_gp->lambda[kp] * SG2_RAD2DEG, p_gp->phi[kp] * SG2_RAD2DEG,
+				p_gp->h[kp], (int) p_gp->p_ellps->ellpstype,
+				p_gp->p_ellps->a,
+				p_gp->p_ellps->f);
+
 		for (kd = 0; kd < nd; kd++) {
 
 			omega_g_kp_kd = geoc_nu[kd] - geoc_r_alpha[kd] + p_gp->lambda[kp];
@@ -305,9 +313,13 @@ void SG2_topocentric_set_topoc(S_SG2_GEOC *p_geoc, S_SG2_GEOPT *p_gp,
 			p_topoc->gamma_S0[kp][kd] = asin(sin_phi_kp * sin_delta_kp_kd
 					+ cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
 
-			p_topoc->alpha_S[kp][kd] = atan2(sin(p_topoc->omega[kp][kd]),cos_omega_kp_kd*sin_phi_kp-tan_delta_kp_kd*cos_phi_kp)+SG2_PI;
+			p_topoc->alpha_S[kp][kd]
+					= atan2(sin(p_topoc->omega[kp][kd]), cos_omega_kp_kd
+							* sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
+							+ SG2_PI;
 
+
+		}
 	}
-}
 
 }

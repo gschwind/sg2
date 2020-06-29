@@ -70,11 +70,6 @@ typedef struct s_geoc {
 
 } S_SG2_GEOC, *PS_SG2_GEOC;
 
-typedef struct s_ellps {
-	double a; /* Axis a (m) */
-	double f; /* Flatness (-)*/
-} S_SG2_ELLPS, *PS_SG2_ELLPS;
-
 typedef enum {
 	SG2_ELLPSTYPE_WGS84 = 0,
 	SG2_ELLPSTYPE_RGF83 = 1,
@@ -85,6 +80,13 @@ typedef enum {
 	SG2_ELLPSTYPE_SPHERE = 6,
 	SG2_ELLPSTYPE_USER = 7,
 } SG2_ELLPSTYPE;
+
+typedef struct s_ellps {
+	SG2_ELLPSTYPE ellpstype;
+	double a; /* Axis a (m) */
+	double f; /* Flatness (-)*/
+} S_SG2_ELLPS, *PS_SG2_ELLPS;
+
 
 typedef struct s_geopt {
 	S_SG2_ELLPS *p_ellps;
