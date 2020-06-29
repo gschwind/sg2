@@ -8,7 +8,7 @@
 #define SG2_DATE_C_
 
 #include "sg2.h"
-#include "SG2_precomputed_delta_tt_ut.h"
+#include "SG2_precomputed_delta_tt.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -252,13 +252,13 @@ void SG2_date_jd_set_Delta_tt(S_SG2_DATE_JD *p_jd, int *p_err) {
 
 	for (k = 0; k < p_jd->n; k++) {
 		idx = (short) round((p_jd->jd[k]
-				- SG2_precomputed_delta_tt_ut_j0)
-				/ SG2_precomputed_delta_tt_ut_dj);
-		if ((idx < 0) || (idx > SG2_precomputed_tab_delta_tt_ut_nj)) {
+				- SG2_precomputed_delta_tt_j0)
+				/ SG2_precomputed_delta_tt_dj);
+		if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
 			*p_err = SG2_ERR_DATE_JD_DELTA_TT_UT_OUTOFPERIOD;
 			return;
 		}
-		p_jd->Delta_tt[k] = SG2_precomputed_delta_tt_ut_tab[idx];
+		p_jd->Delta_tt[k] = SG2_precomputed_delta_tt[idx];
 	}
 
 }

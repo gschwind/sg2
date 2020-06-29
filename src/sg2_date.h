@@ -32,7 +32,7 @@ void SG2_date_ymdh_to_ydoy(S_SG2_DATE_YMD_H *p_ymdh,
 void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
 		S_SG2_DATE_YMD_H *p_ymdh, int *p_err);
 
-void SG2_date_jd_delta_tt_ut(S_SG2_DATE_JD *p_jd, int *p_err);
+void SG2_date_jd_set_Delta_tt(S_SG2_DATE_JD *p_jd, int *p_err);
 
 #ifdef	__cplusplus
 }
