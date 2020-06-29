@@ -1,8 +1,21 @@
 /*
- *  sg2_typedef.h
+ * Copyright 2011 Philippe Blanc <philippe.blanc@mines-paristech.fr>
  *
- *  Created on: feb. 2011
- *  Author: pblanc
+ * This file is part of libsg2.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the Lesser GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * Lesser GNU General Public License for more details.
+ *
+ * You should have received a copy of the Lesser GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #ifndef SG2_TYPEDEF_H_
@@ -29,7 +42,7 @@ extern "C"
 #endif
 
 
-/* Date YMD + H en heure décimale UT */
+/* Date YMD + H en heure dï¿½cimale UT */
 typedef struct s_date_ymd_h {
 
 	unsigned long nd;
@@ -40,7 +53,7 @@ typedef struct s_date_ymd_h {
 
 } S_SG2_DATE_TABYMDH;
 
-/* Date YDOY + H en heure décimale UT */
+/* Date YDOY + H en heure dï¿½cimale UT */
 typedef struct s_date_ydoy_h {
 
 	unsigned long nd;
