@@ -28,25 +28,26 @@ S_SG2_DATE_JD *SG2_date_create_jd(unsigned long n, int *p_err) {
 		return NULL;
 	}
 	p_jd->n = n;
-	p_jd->jd = (double *) malloc(p_jd->n * sizeof(double));
-	if (p_jd->jd == NULL) {
+	p_jd->jd_ut = (double *) malloc(p_jd->n * sizeof(double));
+	if (p_jd->jd_ut == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_2;
 		free(p_jd);
 		return NULL;
 	}
-	p_jd->Delta_tt = (double *) malloc(p_jd->n * sizeof(double));
-	if (p_jd->Delta_tt == NULL) {
+	p_jd->jd_tt_set = 0;
+	if (p_jd->jd_tt == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_3;
-		free(p_jd->jd);
+		free(p_jd->jd_ut);
 		free(p_jd);
 		return NULL;
 	}
+
 	return p_jd;
 }
 
 void SG2_date_delete_jd(S_SG2_DATE_JD *p_jd, int *p_err) {
-	free(p_jd->jd);
-	free(p_jd->Delta_tt);
+	free(p_jd->jd_ut);
+	free(p_jd->jd_tt);
 	free(p_jd);
 }
 
@@ -151,7 +152,7 @@ void SG2_date_jd_to_ymdh(S_SG2_DATE_JD *p_jd, S_SG2_DATE_YMD_H *p_ymdh,
 
 	for (k = 0; k < p_jd->n; k++) {
 
-		jd = p_jd->jd[k];
+		jd = p_jd->jd_ut[k];
 
 		H = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 		L = floor(jd + 0.5) + 68569.0;
@@ -193,11 +194,12 @@ void SG2_date_ymdh_to_jd(S_SG2_DATE_YMD_H *p_ymdh, S_SG2_DATE_JD *p_jd,
 			Y -= 1;
 		}
 
-		p_jd->jd[k] = 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0
+		p_jd->jd_ut[k] = 1721028.0 + D + floor((153.0 * M - 2.0) / 5.0) + 365.0
 				* Y + floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0) + H
 				/ 24.0 - 0.5;
 
 	}
+	p_jd->jd_tt_set = 0;
 
 }
 
@@ -245,21 +247,27 @@ void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
 
 }
 
-void SG2_date_jd_set_Delta_tt(S_SG2_DATE_JD *p_jd, int *p_err) {
+void SG2_date_jd_set_jd_tt(S_SG2_DATE_JD *p_jd, double *p_delta_tt, int *p_err) {
 
 	int k;
 	long idx;
 
-	for (k = 0; k < p_jd->n; k++) {
-		idx = (short) round((p_jd->jd[k]
-				- SG2_precomputed_delta_tt_j0)
-				/ SG2_precomputed_delta_tt_dj);
-		if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
-			*p_err = SG2_ERR_DATE_JD_DELTA_TT_UT_OUTOFPERIOD;
-			return;
+	if (p_delta_tt == NULL) {
+		for (k = 0; k < p_jd->n; k++) {
+			idx = (short) round((p_jd->jd_ut[k] - SG2_precomputed_delta_tt_j0)
+					/ SG2_precomputed_delta_tt_dj);
+			if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
+				*p_err = SG2_ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
+				return;
+			}
+			p_jd->jd_tt[k] = p_jd->jd_ut[k] + SG2_precomputed_delta_tt[idx]
+					/ 86400.0;
 		}
-		p_jd->Delta_tt[k] = SG2_precomputed_delta_tt[idx];
+	} else {
+		for (k = 0; k < p_jd->n; k++) {
+			p_jd->jd_tt[k] = p_jd->jd_tt[k] + p_delta_tt[k] / 86400.0;
+		}
 	}
-
+	p_jd->jd_tt_set = 1;
 }
 

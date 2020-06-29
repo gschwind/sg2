@@ -31,13 +31,19 @@ typedef struct s_date_ydoy_h {
 
 } S_SG2_DATE_YDOY_H, *PS_SG2_DATE_YDOY_H;
 
-/* Julian date en jour décimal en UT */
+/* Julian date en jour décimal */
 typedef struct s_date_jd {
 	unsigned long n;
-	double *jd;
-	double *Delta_tt; /* Delta TT UT1, en seconde */
+	double *jd_ut;
+	unsigned char jd_tt_set;
+	double *jd_tt; /* TT : terrestrial time */
 } S_SG2_DATE_JD, *PS_SG2_DATE_JD;
 
+typedef struct s_hcoord {
+	S_SG2_DATE_JD *p_jd;
+	double *R;
+	double *L;
+} S_SG2_HCOORD, *PS_SG2_HCOORD;
 
 #ifdef	__cplusplus
 }
