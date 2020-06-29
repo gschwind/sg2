@@ -35,7 +35,7 @@ typedef struct s_date_ydoy_h {
 typedef struct s_date_jd {
 	unsigned long n;
 	double *jd;
-	double *delta_tt_ut; /* en seconde */
+	double *Delta_tt; /* Delta TT UT1, en seconde */
 } S_SG2_DATE_JD, *PS_SG2_DATE_JD;
 
 
