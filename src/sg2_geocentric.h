@@ -13,12 +13,10 @@ extern "C"
 {
 #endif
 
-S_SG2_GCOORD *SG2_geocentric_create_gcoord(unsigned long n,
-		int *p_err);
-void SG2_geocentric_delete_gcoord(S_SG2_GCOORD *p_gcoord,
-		int *p_err);
-void SG2_geocentric_set_gcoord(S_SG2_DATE_JD *p_jd,
-		S_SG2_GCOORD *p_gcoord, int *p_err);
+S_SG2_GEOC *SG2_geocentric_create_geoc(unsigned long n, int *p_err);
+void SG2_geocentric_delete_geoc(S_SG2_GEOC *p_geoc, int *p_err);
+void SG2_geocentric_set_geoc(S_SG2_DATE_JD *p_jd, S_SG2_HELIOC *p_helioc,
+		S_SG2_GEOC *p_geoc, int *p_err);
 
 #ifdef	__cplusplus
 }

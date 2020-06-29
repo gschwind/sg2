@@ -11,7 +11,7 @@
 #define SG2_PI 3.141592653589793
 #define SG2_DEG2RAD 1.745329251994330e-002
 #define SG2_RAD2DEG 5.729577951308232e+001
-/* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
+/* Top of atmosphere broadband irradce on normal incidence (W/m2) */
 #define SG2_SOLAR_CONSTANT 1367
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
 #define SG2_AU 149597870691.0 /* +/- 6 m (McCarthy et Petit, 2003) */
@@ -19,7 +19,7 @@
 /* Date YMD + H en heure décimale UT */
 typedef struct s_date_ymd_h {
 
-	unsigned long n;
+	unsigned long nd;
 	short *y;
 	short *m;
 	short *d;
@@ -30,37 +30,45 @@ typedef struct s_date_ymd_h {
 /* Date YDOY + H en heure décimale UT */
 typedef struct s_date_ydoy_h {
 
-	unsigned long n;
+	unsigned long nd;
 	short *y;
 	short *doy;
 	double *h;
 
 } S_SG2_DATE_YDOY_H, *PS_SG2_DATE_YDOY_H;
 
-/* Julian date en jour décimal */
+/* Julian date */
 typedef struct s_date_jd {
-	unsigned long n;
+	unsigned long nd;
 	double *jd_ut; /* julian date UT (decimal day) */
 	unsigned char jd_tt_set;
 	double *jd_tt; /* TT : terrestrial time */
 } S_SG2_DATE_JD, *PS_SG2_DATE_JD;
 
 /* Heliocentric coordinates */
-typedef struct s_hcoord {
+typedef struct s_helioc {
 	S_SG2_DATE_JD *p_jd;
+	unsigned long nd;
 	double *R; /* Radius Sun-Earth (ua) */
-	double *L; /* Heliocentric Earth true longitude (radian) */
-} S_SG2_HCOORD, *PS_SG2_HCOORD;
+	double *L; /* Heliocentric Earth true longitude (rad) */
+} S_SG2_HELIOC, *PS_SG2_HELIOC;
 
 /* Geocentric coordinates */
-typedef struct s_gcoord {
+typedef struct s_geoc {
 	S_SG2_DATE_JD *p_jd;
-	double *R; /* Radius Sun-Earth (ua) */
-	double *epsilon; /* Earth true obliquity (radian) */
-	double *Theta_a; /* Geocentric Earth true longitude (radian) */
-	double *r_alpha; /* Geocentric right ascension (radian) */
-	double *delta; /* Geocentric declination (radian) */
-} S_SG2_GCOORD, *PS_SG2_GCOORD;
+	S_SG2_HELIOC *p_helioc;
+	unsigned long nd;
+
+	double *Delta_psi; /* Nutation in Geocentric Sun longitude (rad) */
+	double *epsilon; /* Earth true obliquity (rad) */
+	double *Theta_a; /* Geocentric Earth true longitude (rad) */
+	double *r_alpha; /* Geocentric right ascension (rad) */
+	double *delta; /* Geocentric declination (rad) */
+
+	double *nu; /* Apparent sideral time (rad) */
+	double *EOT; /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
+
+} S_SG2_GEOC, *PS_SG2_GEOC;
 
 typedef struct s_ellps {
 	double a; /* Axis a (m) */
@@ -78,28 +86,31 @@ typedef enum {
 	SG2_ELLPSTYPE_USER = 7,
 } SG2_ELLPSTYPE;
 
-typedef struct s_geopoint {
+typedef struct s_geopt {
 	S_SG2_ELLPS *p_ellps;
-	unsigned long p;
+	unsigned long np;
 	double *phi; /* Latitude (rad) */
 	double *lambda; /* Longitude (rad) */
 	double *h; /* Altitude Above the Reference Ellipsoid */
-} S_SG2_GEOPOINT, *PS_SG2_GEOPOINT;
+} S_SG2_GEOPT, *PS_SG2_GEOPT;
 
-typedef struct s_tcoord {
+typedef struct s_topocentric {
 
-	unsigned long n; /* Number of dates */
-	unsigned long p; /* Number of geopoints */
-	S_SG2_GCOORD *p_gcoord;
-	S_SG2_GEOPOINT *p_gp;
+	unsigned long nd; /* Number of dates */
+	unsigned long np; /* Number of geopoints */
+
+	S_SG2_DATE_JD *p_jd;
+	S_SG2_HELIOC *p_helioc;
+	S_SG2_GEOC *p_geoc;
+	S_SG2_GEOPT *p_gp;
 
 	double **r_alpha; /* Topocentric right ascension (rad) */
 	double **delta; /* Topocentric sun declination (rad) */
 	double **omega; /* Topocentric local hour angle (rad) */
-	double **gamma_S; /* Topocentric sun elevation angle (rad)*/
+	double **gamma_S0; /* Topocentric sun elevation angle without correction of atm. corr. (rad)*/
 	double **alpha_S; /* Topocentric sun azimuth (rad) */
 
-} S_SG2_TCOORD, *PS_SG2_TCOORD;
+} S_SG2_TOPOC, *PS_SG2_TOPOC;
 
 #ifdef	__cplusplus
 }

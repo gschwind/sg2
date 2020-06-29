@@ -13,13 +13,13 @@ extern "C"
 {
 #endif
 
-S_SG2_DATE_JD *SG2_date_create_jd(unsigned long n, int *p_err);
+S_SG2_DATE_JD *SG2_date_create_jd(unsigned long nd, int *p_err);
 void SG2_date_delete_jd(S_SG2_DATE_JD *p_jd, int *p_err);
 
-S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long n, int *p_err);
+S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long nd, int *p_err);
 
 void SG2_date_delete_ymd_h(S_SG2_DATE_YMD_H *p_ymdh, int *p_err);
-S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long n, int *p_err);
+S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long nd, int *p_err);
 
 void SG2_date_delete_ydoy_h(S_SG2_DATE_YDOY_H *p_ydoyh, int *p_err);
 

@@ -19,7 +19,7 @@ static int SG2_date_leapyear(short year) {
 	return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
-S_SG2_DATE_JD *SG2_date_create_jd(unsigned long n, int *p_err) {
+S_SG2_DATE_JD *SG2_date_create_jd(unsigned long nd, int *p_err) {
 	S_SG2_DATE_JD *p_jd = NULL;
 
 	p_jd = (S_SG2_DATE_JD *) malloc(sizeof(S_SG2_DATE_JD));
@@ -27,15 +27,15 @@ S_SG2_DATE_JD *SG2_date_create_jd(unsigned long n, int *p_err) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_1;
 		return NULL;
 	}
-	p_jd->n = n;
-	p_jd->jd_ut = (double *) malloc(p_jd->n * sizeof(double));
+	p_jd->nd = nd;
+	p_jd->jd_ut = (double *) malloc(p_jd->nd * sizeof(double));
 	if (p_jd->jd_ut == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_2;
 		free(p_jd);
 		return NULL;
 	}
 	p_jd->jd_tt_set = 0;
-	p_jd->jd_tt = (double *) malloc(p_jd->n * sizeof(double));
+	p_jd->jd_tt = (double *) malloc(p_jd->nd * sizeof(double));
 	if (p_jd->jd_tt == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_JD_MALLOC_3;
 		free(p_jd->jd_ut);
@@ -52,7 +52,7 @@ void SG2_date_delete_jd(S_SG2_DATE_JD *p_jd, int *p_err) {
 	free(p_jd);
 }
 
-S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long n, int *p_err) {
+S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long nd, int *p_err) {
 	S_SG2_DATE_YMD_H *p_ymdh = NULL;
 
 	p_ymdh = (S_SG2_DATE_YMD_H *) malloc(sizeof(S_SG2_DATE_YMD_H));
@@ -60,21 +60,21 @@ S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long n, int *p_err) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_1;
 		return NULL;
 	}
-	p_ymdh->n = n;
-	p_ymdh->y = (short *) malloc(p_ymdh->n * sizeof(short));
+	p_ymdh->nd = nd;
+	p_ymdh->y = (short *) malloc(p_ymdh->nd * sizeof(short));
 	if (p_ymdh->y == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_2;
 		free(p_ymdh);
 		return NULL;
 	}
-	p_ymdh->m = (short *) malloc(p_ymdh->n * sizeof(short));
+	p_ymdh->m = (short *) malloc(p_ymdh->nd * sizeof(short));
 	if (p_ymdh->m == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_3;
 		free(p_ymdh->y);
 		free(p_ymdh);
 		return NULL;
 	}
-	p_ymdh->d = (short *) malloc(p_ymdh->n * sizeof(short));
+	p_ymdh->d = (short *) malloc(p_ymdh->nd * sizeof(short));
 	if (p_ymdh->d == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_4;
 		free(p_ymdh->y);
@@ -83,7 +83,7 @@ S_SG2_DATE_YMD_H *SG2_date_create_ymd_h(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_ymdh->h = (double *) malloc(p_ymdh->n * sizeof(double));
+	p_ymdh->h = (double *) malloc(p_ymdh->nd * sizeof(double));
 	if (p_ymdh->h == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YMD_H_MALLOC_5;
 		free(p_ymdh->y);
@@ -104,7 +104,7 @@ void SG2_date_delete_ymd_h(S_SG2_DATE_YMD_H *p_ymdh, int *p_err) {
 	free(p_ymdh);
 }
 
-S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long n, int *p_err) {
+S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long nd, int *p_err) {
 	S_SG2_DATE_YDOY_H *p_ydoyh = NULL;
 
 	p_ydoyh = (S_SG2_DATE_YDOY_H *) malloc(sizeof(S_SG2_DATE_YDOY_H));
@@ -112,14 +112,14 @@ S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long n, int *p_err) {
 		*p_err = SG2_ERR_DATE_CREATE_YDOY_H_MALLOC_1;
 		return NULL;
 	}
-	p_ydoyh->n = n;
-	p_ydoyh->y = (short *) malloc(p_ydoyh->n * sizeof(short));
+	p_ydoyh->nd = nd;
+	p_ydoyh->y = (short *) malloc(p_ydoyh->nd * sizeof(short));
 	if (p_ydoyh->y == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YDOY_H_MALLOC_2;
 		free(p_ydoyh);
 		return NULL;
 	}
-	p_ydoyh->doy = (short *) malloc(p_ydoyh->n * sizeof(short));
+	p_ydoyh->doy = (short *) malloc(p_ydoyh->nd * sizeof(short));
 	if (p_ydoyh->doy == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YDOY_H_MALLOC_3;
 		free(p_ydoyh->y);
@@ -127,7 +127,7 @@ S_SG2_DATE_YDOY_H *SG2_date_create_ydoy_h(unsigned long n, int *p_err) {
 		return NULL;
 	}
 
-	p_ydoyh->h = (double *) malloc(p_ydoyh->n * sizeof(double));
+	p_ydoyh->h = (double *) malloc(p_ydoyh->nd * sizeof(double));
 	if (p_ydoyh->h == NULL) {
 		*p_err = SG2_ERR_DATE_CREATE_YDOY_H_MALLOC_4;
 		free(p_ydoyh->y);
@@ -151,7 +151,7 @@ void SG2_date_jd_to_ymdh(S_SG2_DATE_JD *p_jd, S_SG2_DATE_YMD_H *p_ymdh,
 	int k;
 	double H, L, N, I, J, K, jd;
 
-	for (k = 0; k < p_jd->n; k++) {
+	for (k = 0; k < p_jd->nd; k++) {
 
 		jd = p_jd->jd_ut[k];
 
@@ -183,7 +183,7 @@ void SG2_date_ymdh_to_jd(S_SG2_DATE_YMD_H *p_ymdh, S_SG2_DATE_JD *p_jd,
 	int k;
 	double Y, M, D, H;
 
-	for (k = 0; k < p_ymdh->n; k++) {
+	for (k = 0; k < p_ymdh->nd; k++) {
 
 		Y = p_ymdh->y[k];
 		M = p_ymdh->m[k];
@@ -209,7 +209,7 @@ void SG2_date_ymdh_to_ydoy(S_SG2_DATE_YMD_H *p_ymdh,
 	int k;
 	double K;
 
-	for (k = 0; k < p_ymdh->n; k++) {
+	for (k = 0; k < p_ymdh->nd; k++) {
 		K = 2 - SG2_date_leapyear(p_ymdh->y[k]);
 		p_ydoyh->y[k] = p_ymdh->y[k];
 		p_ydoyh->h[k] = p_ymdh->h[k];
@@ -225,7 +225,7 @@ void SG2_date_ydoy_to_ymdh(S_SG2_DATE_YDOY_H *p_ydoyh,
 	int k;
 	double B;
 
-	for (k = 0; k < p_ydoyh->n; k++) {
+	for (k = 0; k < p_ydoyh->nd; k++) {
 		B = (double) SG2_date_leapyear(p_ydoyh->y[k]);
 		p_ymdh->y[k] = p_ydoyh->y[k];
 		p_ymdh->h[k] = p_ydoyh->h[k];
@@ -254,7 +254,7 @@ void SG2_date_jd_set_jd_tt(S_SG2_DATE_JD *p_jd, double *p_delta_tt, int *p_err) 
 	long idx;
 
 	if (p_delta_tt == NULL) {
-		for (k = 0; k < p_jd->n; k++) {
+		for (k = 0; k < p_jd->nd; k++) {
 			idx = (short) round((p_jd->jd_ut[k] - SG2_precomputed_delta_tt_j0)
 					/ SG2_precomputed_delta_tt_dj);
 			if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
@@ -265,7 +265,7 @@ void SG2_date_jd_set_jd_tt(S_SG2_DATE_JD *p_jd, double *p_delta_tt, int *p_err) 
 					/ 86400.0;
 		}
 	} else {
-		for (k = 0; k < p_jd->n; k++) {
+		for (k = 0; k < p_jd->nd; k++) {
 			p_jd->jd_tt[k] = p_jd->jd_tt[k] + p_delta_tt[k] / 86400.0;
 		}
 	}
