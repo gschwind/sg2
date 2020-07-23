@@ -29,6 +29,16 @@
 
 namespace sg2 {
 
+void time_data::_init_jd_tt() {
+	int idx = static_cast<int>(floor(
+			(jd_ut - SG2_precomputed_delta_tt_j0)
+					/ SG2_precomputed_delta_tt_dj + 0.5));
+
+	if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
+		throw ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
+	}
+	jd_tt = jd_ut + SG2_precomputed_delta_tt[idx] / 86400.0;
+}
 
 
 }

@@ -29,7 +29,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-#include "sg2_precomputed_delta_tt.hxx"
 
 
 namespace sg2 {
@@ -369,16 +368,6 @@ inline time_data::time_data(ymdh const & p_ymdh, double jd_tt) :
 
 }
 
-inline void time_data::_init_jd_tt() {
-	int idx = static_cast<int>(floor(
-			(jd_ut - SG2_precomputed_delta_tt_j0)
-					/ SG2_precomputed_delta_tt_dj + 0.5));
-
-	if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
-		throw ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
-	}
-	jd_tt = jd_ut + SG2_precomputed_delta_tt[idx] / 86400.0;
-}
 
 }
 
