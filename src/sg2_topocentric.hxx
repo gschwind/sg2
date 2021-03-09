@@ -165,8 +165,8 @@ inline ellps::ellps(double a, double f) :
 
 inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps const & ellipse) :
 	ellipse{ellipse},
-	lambda{lon * DEG2RAD},
-	phi{lat * DEG2RAD},
+	lambda{RAD(lon)},
+	phi{RAD(lat)},
 	h{h}
 {
 

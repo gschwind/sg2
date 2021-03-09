@@ -30,10 +30,17 @@ namespace sg2 {
 
 using namespace std;
 
-static double const PI = 3.1415926535897931;
-static double const D_PI = 6.2831853071795862;
-static double const DEG2RAD = 1.745329251994330e-002;
-static double const RAD2DEG = 5.729577951308232e+001;
+static constexpr double const PI = 3.1415926535897931;
+static constexpr double const D_PI = 6.2831853071795862;
+
+constexpr inline double DEG(double RAD) {
+	return RAD*180.0/PI;
+}
+
+constexpr inline double RAD(double DEG) {
+	return DEG*PI/180.0;
+}
+
 /* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
 static double const SOLAR_CONSTANT = 1362.0;
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
