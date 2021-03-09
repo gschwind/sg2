@@ -113,7 +113,7 @@ struct topocentric_data {
 
 	topocentric_data() { }
 	topocentric_data(topocentric_data const &) = default;
-	topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint);
+	topocentric_data(geocentric_data const & geoc, geopoint_data const & gp);
 
 	auto operator=(topocentric_data const &) -> topocentric_data & = default;
 
@@ -253,18 +253,18 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 	}
 }
 
-inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint)
+inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & gp)
 {
-	double xi = (geopoint.ellipse.a / AU);
+	double xi = (gp.ellipse.a / AU);
 
-    double cos_phi_kp = geopoint.cos_phi_kp;
-    double sin_phi_kp = geopoint.sin_phi_kp;
+    double cos_phi_kp = gp.cos_phi_kp;
+    double sin_phi_kp = gp.sin_phi_kp;
 
-    double u_kp = geopoint.u;
-    double x_kp = geopoint.x;
-    double y_kp = geopoint.y;
+    double u_kp = gp.u;
+    double x_kp = gp.x;
+    double y_kp = gp.y;
 
-    double omega_g_kp_kd = geoc.nu - geoc.r_alpha + geopoint.lambda;
+    double omega_g_kp_kd = geoc.nu - geoc.r_alpha + gp.lambda;
     double cos_geoc_delta_kd = math::cos(geoc.delta);
 
     double Delta_r_alpha_kp_kd = (-x_kp * math::sin(omega_g_kp_kd)
