@@ -264,18 +264,14 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
     double x_kp = geopoint.x;
     double y_kp = geopoint.y;
 
-    double geoc_nu = geoc.nu;
-    double geoc_r_alpha = geoc.r_alpha;
-    double geoc_delta = geoc.delta;
-
-    double omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
-    double cos_geoc_delta_kd = math::cos(geoc_delta);
+    double omega_g_kp_kd = geoc.nu - geoc.r_alpha + geopoint.lambda;
+    double cos_geoc_delta_kd = math::cos(geoc.delta);
 
     double Delta_r_alpha_kp_kd = (-x_kp * math::sin(omega_g_kp_kd)
             / cos_geoc_delta_kd * xi);
-    r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
+    r_alpha = geoc.r_alpha + Delta_r_alpha_kp_kd;
 
-    delta = geoc_delta + (x_kp * math::cos(omega_g_kp_kd) * math::sin(geoc_delta)
+    delta = geoc.delta + (x_kp * math::cos(omega_g_kp_kd) * math::sin(geoc.delta)
                              - y_kp * cos_geoc_delta_kd) * xi;
 
     omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
