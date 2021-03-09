@@ -59,6 +59,9 @@ struct geopoint_data {
 	double x;
 	double y;
 
+	double cos_phi_kp; ///< Usefull cache
+	double sin_phi_kp; ///< Usefull cache
+
 	geopoint_data() { }
 	geopoint_data(geopoint_data const &) = default;
 
@@ -168,7 +171,7 @@ inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps cons
 {
 	int kp;
 	double a, app;
-	double u_kp, cos_phi_kp, sin_phi_kp, tan_phi_kp, h_a_kp;
+	double u_kp, tan_phi_kp, h_a_kp;
 
 	a = ellipse.a;
 	app = 1.0 - ellipse.f;
@@ -266,8 +269,8 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
 
 	xi = (geopoint.ellipse.a / AU);
 
-    cos_phi_kp = math::cos(geopoint.phi);
-    sin_phi_kp = math::sin(geopoint.phi);
+    cos_phi_kp = geopoint.cos_phi_kp;
+    sin_phi_kp = geopoint.sin_phi_kp;
 
     u_kp = geopoint.u;
     x_kp = geopoint.x;
