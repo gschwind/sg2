@@ -27,17 +27,17 @@
 
 namespace sg2 {
 
-static void _geocentric_compute_Delta_psi(int64_t jd_tt, double * Delta_psi, double * epsilon) {
+static std::tuple<double, double> _geocentric_compute_Delta_psi_and_epsilon(int64_t jd_tt)
+{
 	int64_t idx0 = (jd_tt - SG2_precomputed_geocentric_Delta_psi_j0
 			+ (SG2_precomputed_geocentric_Delta_psi_dj/2))
 			/ SG2_precomputed_geocentric_Delta_psi_dj;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
-		*Delta_psi = NAN;
-		*epsilon = NAN;
 		throw ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
 	}
-	*Delta_psi = SG2_precomputed_geocentric_Delta_psi[idx0];
-	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
+	double Delta_psi = SG2_precomputed_geocentric_Delta_psi[idx0];
+	double epsilon = SG2_precomputed_geocentric_epsilon[idx0];
+	return std::make_tuple(Delta_psi, epsilon);
 }
 
 static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
@@ -68,7 +68,7 @@ geocentric_data::geocentric_data(time_data const & jd)
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(jd.jd_tt);
 
-	_geocentric_compute_Delta_psi(jd.jd_tt, &(Delta_psi), &(epsilon));
+	std::tie(Delta_psi, epsilon) = _geocentric_compute_Delta_psi_and_epsilon(jd.jd_tt);
 
 	Theta_a = L + PI + Delta_psi
 			+ SG2_precomputed_geocentric_Delta_tau;
