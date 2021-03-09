@@ -258,32 +258,23 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 
 inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & geopoint)
 {
-	unsigned long np, kp, nd, kd;
-	double u_kp, x_kp, y_kp, cos_phi_kp, sin_phi_kp;
-	double omega_g_kp_kd;
-	double geoc_r_alpha, geoc_delta, geoc_nu;
-	double cos_geoc_delta_kd;
-	double Delta_r_alpha_kp_kd, cos_omega_kp_kd;
-	double cos_delta_kp_kd, sin_delta_kp_kd, tan_delta_kp_kd;
-	double xi;
+	double xi = (geopoint.ellipse.a / AU);
 
-	xi = (geopoint.ellipse.a / AU);
+    double cos_phi_kp = geopoint.cos_phi_kp;
+    double sin_phi_kp = geopoint.sin_phi_kp;
 
-    cos_phi_kp = geopoint.cos_phi_kp;
-    sin_phi_kp = geopoint.sin_phi_kp;
+    double u_kp = geopoint.u;
+    double x_kp = geopoint.x;
+    double y_kp = geopoint.y;
 
-    u_kp = geopoint.u;
-    x_kp = geopoint.x;
-    y_kp = geopoint.y;
+    double geoc_nu = geoc.nu;
+    double geoc_r_alpha = geoc.r_alpha;
+    double geoc_delta = geoc.delta;
 
-    geoc_nu = geoc.nu;
-    geoc_r_alpha = geoc.r_alpha;
-    geoc_delta = geoc.delta;
+    double omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
+    double cos_geoc_delta_kd = math::cos(geoc_delta);
 
-    omega_g_kp_kd = geoc_nu - geoc_r_alpha + geopoint.lambda;
-    cos_geoc_delta_kd = math::cos(geoc_delta);
-
-    Delta_r_alpha_kp_kd = (-x_kp * math::sin(omega_g_kp_kd)
+    double Delta_r_alpha_kp_kd = (-x_kp * math::sin(omega_g_kp_kd)
             / cos_geoc_delta_kd * xi);
     r_alpha = geoc_r_alpha + Delta_r_alpha_kp_kd;
 
@@ -292,10 +283,10 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
 
     omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
 
-    cos_omega_kp_kd = math::cos(omega);
-    cos_delta_kp_kd = math::cos(delta);
-    sin_delta_kp_kd = math::sin(delta);
-    tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
+    double cos_omega_kp_kd = math::cos(omega);
+    double cos_delta_kp_kd = math::cos(delta);
+    double sin_delta_kp_kd = math::sin(delta);
+    double tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
 
     gamma_S0 = math::asin(sin_phi_kp * sin_delta_kp_kd
                        + cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
