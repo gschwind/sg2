@@ -169,19 +169,16 @@ inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps cons
 	phi{lat * DEG2RAD},
 	h{h}
 {
-	int kp;
-	double a, app;
-	double u_kp, tan_phi_kp, h_a_kp;
 
-	a = ellipse.a;
-	app = 1.0 - ellipse.f;
+	double a = ellipse.a;
+	double app = 1.0 - ellipse.f;
 
 	cos_phi_kp = math::cos(phi);
 	sin_phi_kp = math::sin(phi);
-	tan_phi_kp = math::tan(phi);
+	double tan_phi_kp = math::tan(phi);
 
-	h_a_kp = h / a;
-	u_kp = math::atan(app * tan_phi_kp);
+	double h_a_kp = h / a;
+	double u_kp = math::atan(app * tan_phi_kp);
 	x = math::cos(u_kp) + h_a_kp * cos_phi_kp;
 	y = app * math::sin(u_kp) + h_a_kp * sin_phi_kp;
 	u = u_kp;
