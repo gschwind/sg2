@@ -23,6 +23,8 @@
 #include "sg2_precomputed_geocentric.hxx"
 #include "sg2_precomputed_heliocentric.hxx"
 
+#include <tuple>
+
 namespace sg2 {
 
 static void _geocentric_compute_Delta_psi(int64_t jd_tt, double * Delta_psi, double * epsilon) {
@@ -38,7 +40,7 @@ static void _geocentric_compute_Delta_psi(int64_t jd_tt, double * Delta_psi, dou
 	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
 }
 
-static double _heliocentric_compute_R(int64_t jd_tt)
+static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 {
 	int64_t x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
 			/ SG2_precomputed_heliocentric_R_dj;
@@ -51,28 +53,11 @@ static double _heliocentric_compute_R(int64_t jd_tt)
 
 	double alpha = static_cast<double>(dx)
 			/static_cast<double>(SG2_precomputed_heliocentric_R_dj);
-	return std::fma(alpha,
-			(SG2_precomputed_heliocentric_R[x+1]-SG2_precomputed_heliocentric_R[x]),
-			SG2_precomputed_heliocentric_R[x]);
+	double R = std::fma(alpha,(SG2_precomputed_heliocentric_R[x+1]-SG2_precomputed_heliocentric_R[x]),SG2_precomputed_heliocentric_R[x]);
+	double L = std::fma(alpha,(SG2_precomputed_heliocentric_L[x+1]-SG2_precomputed_heliocentric_L[x]),SG2_precomputed_heliocentric_L[x]);
+	return std::make_tuple(R, L);
 }
 
-static double _heliocentric_compute_L(int64_t jd_tt)
-{
-	int64_t x = (jd_tt - SG2_precomputed_heliocentric_L_j0)
-			/ SG2_precomputed_heliocentric_L_dj;
-	int64_t dx = (jd_tt - SG2_precomputed_heliocentric_L_j0)
-					% SG2_precomputed_heliocentric_L_dj;
-
-	if ((x < 0) || (x > SG2_precomputed_heliocentric_L_nj - 1)) {
-		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
-	}
-
-	double alpha = static_cast<double>(dx)
-			/static_cast<double>(SG2_precomputed_heliocentric_L_dj);
-	return std::fma(alpha,
-			(SG2_precomputed_heliocentric_L[x+1]-SG2_precomputed_heliocentric_L[x]),
-			SG2_precomputed_heliocentric_L[x]);
-}
 
 geocentric_data::geocentric_data(time_data const & jd)
 {
@@ -81,8 +66,7 @@ geocentric_data::geocentric_data(time_data const & jd)
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
 
-	R = _heliocentric_compute_R(jd.jd_tt);
-	L = _heliocentric_compute_L(jd.jd_tt);
+	std::tie(R, L) = _heliocentric_compute_R_and_L(jd.jd_tt);
 
 	_geocentric_compute_Delta_psi(jd.jd_tt, &(Delta_psi), &(epsilon));
 
