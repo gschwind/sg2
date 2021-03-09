@@ -25,11 +25,10 @@
 
 namespace sg2 {
 
-static void _geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, double * epsilon) {
-	int idx0;
-	idx0 = (int) floor(
-			(jd_tt - SG2_precomputed_geocentric_Delta_psi_j0)
-					/ SG2_precomputed_geocentric_Delta_psi_dj + 0.5);
+static void _geocentric_compute_Delta_psi(int64_t jd_tt, double * Delta_psi, double * epsilon) {
+	int64_t idx0 = (jd_tt - SG2_precomputed_geocentric_Delta_psi_j0
+			+ (SG2_precomputed_geocentric_Delta_psi_dj/2))
+			/ SG2_precomputed_geocentric_Delta_psi_dj;
 	if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
 		*Delta_psi = NAN;
 		*epsilon = NAN;
@@ -39,39 +38,40 @@ static void _geocentric_compute_Delta_psi(double jd_tt, double * Delta_psi, doub
 	*epsilon = SG2_precomputed_geocentric_epsilon[idx0];
 }
 
-static double _heliocentric_compute_R(double jd_tt)
+static double _heliocentric_compute_R(int64_t jd_tt)
 {
-	int idx0;
-	double x, x0, dx;
-	x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
+	int64_t x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
 			/ SG2_precomputed_heliocentric_R_dj;
-	x0 = floor(x);
-	dx = x - x0;
+	int64_t dx = (jd_tt - SG2_precomputed_heliocentric_R_j0)
+					% SG2_precomputed_heliocentric_R_dj;
 
-	idx0 = (short) x0;
-	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_R_nj - 1)) {
+	if ((x < 0) || (x > SG2_precomputed_heliocentric_R_nj - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
-	return (1.0 - dx) * SG2_precomputed_heliocentric_R[idx0]
-			+ dx * SG2_precomputed_heliocentric_R[idx0 + 1];
+
+	double alpha = static_cast<double>(dx)
+			/static_cast<double>(SG2_precomputed_heliocentric_R_dj);
+	return std::fma(alpha,
+			(SG2_precomputed_heliocentric_R[x+1]-SG2_precomputed_heliocentric_R[x]),
+			SG2_precomputed_heliocentric_R[x]);
 }
 
-static double _heliocentric_compute_L(double jd_tt)
+static double _heliocentric_compute_L(int64_t jd_tt)
 {
-	int idx0;
-	double x, x0, dx;
-	x = (jd_tt - SG2_precomputed_heliocentric_L_j0)
+	int64_t x = (jd_tt - SG2_precomputed_heliocentric_L_j0)
 			/ SG2_precomputed_heliocentric_L_dj;
-	x0 = floor(x);
-	dx = x - x0;
+	int64_t dx = (jd_tt - SG2_precomputed_heliocentric_L_j0)
+					% SG2_precomputed_heliocentric_L_dj;
 
-	idx0 = (int) x0;
-	if ((idx0 < 0) || (idx0 > SG2_precomputed_heliocentric_L_nj - 1)) {
+	if ((x < 0) || (x > SG2_precomputed_heliocentric_L_nj - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
-	return (1.0 - dx) * SG2_precomputed_heliocentric_L[idx0]
-			+ dx * SG2_precomputed_heliocentric_L[idx0 + 1];
+	double alpha = static_cast<double>(dx)
+			/static_cast<double>(SG2_precomputed_heliocentric_L_dj);
+	return std::fma(alpha,
+			(SG2_precomputed_heliocentric_L[x+1]-SG2_precomputed_heliocentric_L[x]),
+			SG2_precomputed_heliocentric_L[x]);
 }
 
 geocentric_data::geocentric_data(time_data const & jd)
@@ -96,9 +96,10 @@ geocentric_data::geocentric_data(time_data const & jd)
 			math::cos(Theta_a));
 	delta = math::asin(sin_Theta_a_kd * math::sin(epsilon));
 
-	nu0_kd = 6.300388099 * jd.jd_ut - 1.539965571482657e+007;
+	// TODO: convert to nano second
+	nu0_kd = 6.300388099 * julian{date{jd.jd_ut}}.jd - 1.539965571482657e+007;
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
-	M_kd = 1.720279169744191e-002 * jd.jd_tt - 4.204914238795757e+004;
+	M_kd = 1.720279169744191e-002 * julian{date{jd.jd_tt}}.jd - 4.204914238795757e+004;
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;

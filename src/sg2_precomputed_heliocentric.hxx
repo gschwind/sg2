@@ -21,16 +21,25 @@
 #ifndef SG2_PRECOMPUTED_HELIOCENTRIC_H_
 #define SG2_PRECOMPUTED_HELIOCENTRIC_H_
 
+#include <cstdint>
+
 #ifdef  __cplusplus
 extern "C"
 {
 #endif
 
-static const double SG2_precomputed_heliocentric_R_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_heliocentric_R_dj = 1.0000000000000000e+000;
+// offset = 1979-12-02T00:00
+static const int64_t
+SG2_precomputed_heliocentric_R_j0 = 312940800000000000;  //< nano second since 1970-01-01T00:00
+static const int64_t
+SG2_precomputed_heliocentric_R_dj =     86400000000000; //< 1 day in nano second
 static const unsigned long SG2_precomputed_heliocentric_R_nj = 18689;
-static const double SG2_precomputed_heliocentric_L_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_heliocentric_L_dj = 1.0000000000000000e+000;
+
+// offset = 1979-12-02T00:00
+static const int64_t
+SG2_precomputed_heliocentric_L_j0 = 312940800000000000;  //< nano second since 1970-01-01T00:00
+static const int64_t
+SG2_precomputed_heliocentric_L_dj =     86400000000000; //< 1 day in nano second
 static const unsigned long SG2_precomputed_heliocentric_L_nj = 18689;
 
 /*

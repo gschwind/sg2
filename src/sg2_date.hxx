@@ -148,22 +148,24 @@ struct ydoyh {
 };
 
 struct time_data {
-	double jd_ut;            /* julian date UT (decimal day) */
-	double jd_tt;            /* TT : terrestrial time */
+	int64_t jd_ut;            //< UT in nano second since 1970-01-01T00:00
+	int64_t jd_tt;            //< Terrestrial Time in nano second since 1970-01-01T00:00
 
 	time_data();
+	time_data(int64_t _jd_ut);
+	time_data(date _jd_ut);
 	time_data(double _jd_ut);
 	time_data(double _jd_ut, double _jd_tt);
 	time_data(ymdh const & p_ymdh);
-	time_data(ymdh const & p_ymdh, double jd_tt);
 
+	time_data(time_data const &) = default;
 	auto operator=(time_data const &) -> time_data & = default;
 
-	double get_universal_time() const {
+	int64_t get_universal_time() const {
 		return jd_ut;
 	}
 
-	double get_terrestrial_time() const {
+	int64_t get_terrestrial_time() const {
 		return jd_tt;
 	}
 
@@ -343,29 +345,35 @@ inline time_data::time_data()
 
 }
 
+inline time_data::time_data(int64_t _jd_ut) :
+	jd_ut{date{_jd_ut}.nsec}
+{
+	_init_jd_tt();
+}
+
+inline time_data::time_data(date _jd_ut) :
+	jd_ut{_jd_ut.nsec}
+{
+	_init_jd_tt();
+}
+
 inline time_data::time_data(double _jd_ut) :
-	jd_ut{_jd_ut}
+	jd_ut{date{_jd_ut}.nsec}
 {
 	_init_jd_tt();
 }
 
 inline time_data::time_data(double _jd_ut, double _jd_tt) :
-	jd_ut{_jd_ut},
-	jd_tt{_jd_tt}
+	jd_ut{date{_jd_ut}.nsec},
+	jd_tt{date{_jd_tt}.nsec}
 {
 
 }
 
 inline time_data::time_data(ymdh const & p_ymdh) :
-	jd_ut{julian(p_ymdh)}
+	jd_ut{date{p_ymdh}}
 {
 	_init_jd_tt();
-}
-
-inline time_data::time_data(ymdh const & p_ymdh, double jd_tt) :
-	time_data{julian(p_ymdh), jd_tt}
-{
-
 }
 
 

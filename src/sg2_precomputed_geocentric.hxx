@@ -21,16 +21,25 @@
 #ifndef SG2_PRECOMPUTED_GEOCENTRIC_H_
 #define SG2_PRECOMPUTED_GEOCENTRIC_H_
 
+#include <cstdint>
+
 #ifdef  __cplusplus
 extern "C"
 {
 #endif
 
-static const double SG2_precomputed_geocentric_epsilon_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_geocentric_epsilon_dj = 3.0000000000000000e+001;
+// offset = 1979-12-02T00:00
+static const int64_t
+SG2_precomputed_geocentric_epsilon_j0 = 312940800000000000; //< nano second since 1970-01-01T00:00
+static const int64_t
+SG2_precomputed_geocentric_epsilon_dj =   2592000000000000; //< 30 days in nano seconds
 static const unsigned long SG2_precomputed_geocentric_epsilon_nj = 623;
-static const double SG2_precomputed_geocentric_Delta_psi_j0 = 2.4442095000000000e+006;
-static const double SG2_precomputed_geocentric_Delta_psi_dj = 3.0000000000000000e+001;
+
+// offset = 1979-12-02T00:00
+static const int64_t
+SG2_precomputed_geocentric_Delta_psi_j0 = 312940800000000000; //< nano second since 1970-01-01T00:00
+static const int64_t
+SG2_precomputed_geocentric_Delta_psi_dj = 2592000000000000; //< 30 days in nano seconds
 static const unsigned long SG2_precomputed_geocentric_Delta_psi_nj = 623;
 
 /*
