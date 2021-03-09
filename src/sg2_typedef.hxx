@@ -42,9 +42,9 @@ constexpr inline double RAD(double DEG) {
 }
 
 /* Top of atmosphere broadband irradiance on normal incidence (W/m2) */
-static double const SOLAR_CONSTANT = 1362.0;
+static constexpr double const SOLAR_CONSTANT = 1362.0;
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
-static double const AU = 149597870691.0; /* +/- 6 m (McCarthy et Petit, 2003) */
+static constexpr double const AU = 149597870691.0; /* +/- 6 m (McCarthy et Petit, 2003) */
 
 inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
 inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
