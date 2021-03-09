@@ -8,7 +8,6 @@ lib_LTLIBRARIES = libsg2.la
 include_HEADERS = \
 	sg2.hxx \
 	sg2_math.hxx \
-	sg2_angle.hxx \
 	sg2_typedef.hxx \
 	sg2_err.hxx \
 	sg2_date.hxx \
