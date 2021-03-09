@@ -24,7 +24,6 @@
 #include "sg2_typedef.hxx"
 #include "sg2_geocentric.hxx"
 #include "sg2_math.hxx"
-#include "sg2_angle.hxx"
 
 #include <cmath>
 #include <cstdlib>
@@ -53,7 +52,7 @@ struct ellps {
 
 struct geopoint_data {
 	ellps  ellipse;
-	angle  phi;        /* Latitude (rad) */
+	double  phi;        /* Latitude (rad) */
 	double lambda;     /* Longitude (rad) */
 	double h;          /* Altitude Above the Reference Ellipsoid */
 	double u;          ///< phi geocentric
@@ -72,7 +71,7 @@ struct geopoint_data {
 
 	auto operator=(geopoint_data const &) -> geopoint_data & = default;
 
-	angle const & get_phi() const {
+	double const & get_phi() const {
 		return phi;
 	}
 

@@ -81,12 +81,12 @@ int main(int argc, char ** argv) {
 	printf("Location related data\n");
 
 	printf("geopoint.lambda   = %f\n", geopoint.lambda);
-	printf("geopoint.phi      = %f\n", geopoint.phi.ang());
+	printf("geopoint.phi      = %f\n", geopoint.phi);
 	printf("geopoint.u        = %f\n", geopoint.u);
 	printf("geopoint.x        = %f\n", geopoint.x);
 	printf("geopoint.y        = %f\n", geopoint.y);
-	printf("geopoint.cos_phi  = %f\n", geopoint.phi.cos());
-	printf("geopoint.sin_phi  = %f\n", geopoint.phi.sin());
+	printf("geopoint.cos_phi  = %f\n", std::cos(geopoint.phi));
+	printf("geopoint.sin_phi  = %f\n", std::sin(geopoint.phi));
 
 	printf("Sun related data\n");
 
