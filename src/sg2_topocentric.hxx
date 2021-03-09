@@ -257,22 +257,15 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
 {
 	double xi = (gp.ellipse.a / AU);
 
-    double cos_phi_kp = gp.cos_phi_kp;
-    double sin_phi_kp = gp.sin_phi_kp;
-
-    double u_kp = gp.u;
-    double x_kp = gp.x;
-    double y_kp = gp.y;
-
     double omega_g_kp_kd = geoc.nu - geoc.r_alpha + gp.lambda;
     double cos_geoc_delta_kd = math::cos(geoc.delta);
 
-    double Delta_r_alpha_kp_kd = (-x_kp * math::sin(omega_g_kp_kd)
+    double Delta_r_alpha_kp_kd = (-gp.x * math::sin(omega_g_kp_kd)
             / cos_geoc_delta_kd * xi);
     r_alpha = geoc.r_alpha + Delta_r_alpha_kp_kd;
 
-    delta = geoc.delta + (x_kp * math::cos(omega_g_kp_kd) * math::sin(geoc.delta)
-                             - y_kp * cos_geoc_delta_kd) * xi;
+    delta = geoc.delta + (gp.x * math::cos(omega_g_kp_kd) * math::sin(geoc.delta)
+                             - gp.y * cos_geoc_delta_kd) * xi;
 
     omega = omega_g_kp_kd - Delta_r_alpha_kp_kd;
 
@@ -281,10 +274,10 @@ inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint
     double sin_delta_kp_kd = math::sin(delta);
     double tan_delta_kp_kd = sin_delta_kp_kd / cos_delta_kp_kd;
 
-    gamma_S0 = math::asin(sin_phi_kp * sin_delta_kp_kd
-                       + cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
+    gamma_S0 = math::asin(gp.sin_phi_kp * sin_delta_kp_kd
+                       + gp.cos_phi_kp * cos_delta_kp_kd * cos_omega_kp_kd);
 
-    alpha_S = math::atan2(math::sin(omega), cos_omega_kp_kd * sin_phi_kp - tan_delta_kp_kd * cos_phi_kp)
+    alpha_S = math::atan2(math::sin(omega), cos_omega_kp_kd * gp.sin_phi_kp - tan_delta_kp_kd * gp.cos_phi_kp)
                     + PI;
 
     if (gamma_S0 > 0.0) {
