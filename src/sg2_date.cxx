@@ -39,7 +39,7 @@ void time_data::_init_jd_tt() {
 		throw ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
 	}
 
-	jd_tt = jd_ut + static_cast<int64_t>(SG2_precomputed_delta_tt[idx] * 1000000000);
+	jd_tt = jd_ut + static_cast<int64_t>(SG2_precomputed_delta_tt[idx] * 1000000000.0);
 }
 
 

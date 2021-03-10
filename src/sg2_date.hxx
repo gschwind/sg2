@@ -117,7 +117,6 @@ struct ymdh {
 	ymdh();
 	ymdh(short year, short month, char day_of_month, double hour);
 	ymdh(double jd);
-	ymdh(time_data const & jd);
 	ymdh(date const & d);
 	ymdh(ydoyh const & p_ydoyh);
 
@@ -148,8 +147,8 @@ struct ydoyh {
 };
 
 struct time_data {
-	int64_t jd_ut;            //< UT in nano second since 1970-01-01T00:00
-	int64_t jd_tt;            //< Terrestrial Time in nano second since 1970-01-01T00:00
+	date jd_ut;            //< UT in nano second since 1970-01-01T00:00
+	date jd_tt;            //< Terrestrial Time in nano second since 1970-01-01T00:00
 
 	time_data();
 	time_data(int64_t _jd_ut);
@@ -260,12 +259,6 @@ inline ymdh::ymdh(double jd)
 	hour = (jd + 0.5 - floor(jd + 0.5)) * 24.0;
 }
 
-inline ymdh::ymdh(time_data const & jd) :
-	ymdh{jd.jd_ut}
-{
-
-}
-
 inline ymdh::ymdh(date const & d)
 {
 	int jd = d.nsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
@@ -346,32 +339,32 @@ inline time_data::time_data()
 }
 
 inline time_data::time_data(int64_t _jd_ut) :
-	jd_ut{date{_jd_ut}.nsec}
+	jd_ut{_jd_ut}
 {
 	_init_jd_tt();
 }
 
 inline time_data::time_data(date _jd_ut) :
-	jd_ut{_jd_ut.nsec}
+	jd_ut{_jd_ut}
 {
 	_init_jd_tt();
 }
 
 inline time_data::time_data(double _jd_ut) :
-	jd_ut{date{_jd_ut}.nsec}
+	jd_ut{_jd_ut}
 {
 	_init_jd_tt();
 }
 
 inline time_data::time_data(double _jd_ut, double _jd_tt) :
-	jd_ut{date{_jd_ut}.nsec},
-	jd_tt{date{_jd_tt}.nsec}
+	jd_ut{_jd_ut},
+	jd_tt{_jd_tt}
 {
 
 }
 
 inline time_data::time_data(ymdh const & p_ymdh) :
-	jd_ut{date{p_ymdh}}
+	jd_ut{p_ymdh}
 {
 	_init_jd_tt();
 }
