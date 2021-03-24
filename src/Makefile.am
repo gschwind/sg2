@@ -27,6 +27,8 @@ libsg2_la_SOURCES = \
 	sg2_topocentric.hxx \
 	sg2_sun_daily.cxx \
 	sg2_sun_daily.hxx \
+	sg2_data_handler.cxx \
+	sg2_data_handler.hxx \
 	sg2_precomputed_delta_tt.cxx \
 	sg2_precomputed_delta_tt.hxx \
 	sg2_precomputed_geocentric.cxx \
