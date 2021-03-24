@@ -22,6 +22,7 @@
 #include "sg2_err.hxx"
 #include "sg2_precomputed_geocentric.hxx"
 #include "sg2_precomputed_heliocentric.hxx"
+#include "sg2_data_handler.hxx"
 
 #include <tuple>
 
@@ -42,20 +43,23 @@ static std::tuple<double, double> _geocentric_compute_Delta_psi_and_epsilon(int6
 
 static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 {
-	int64_t x = (jd_tt - SG2_precomputed_heliocentric_R_j0)
-			/ SG2_precomputed_heliocentric_R_dj;
-	int64_t dx = (jd_tt - SG2_precomputed_heliocentric_R_j0)
-					% SG2_precomputed_heliocentric_R_dj;
+	int64_t x = (jd_tt/1000000000 - _geocentric_data.offset())
+			/ _geocentric_data.delta();
+	int64_t dx = (jd_tt/1000000000 - _geocentric_data.offset())
+					% _geocentric_data.delta();
 
-	if ((x < 0) || (x > SG2_precomputed_heliocentric_R_nj - 1)) {
+	if ((x < 0) || (x > _geocentric_data.count() - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	double alpha = static_cast<double>(dx)
-			/static_cast<double>(SG2_precomputed_heliocentric_R_dj);
-	double R = std::fma(alpha,(SG2_precomputed_heliocentric_R[x+1]-SG2_precomputed_heliocentric_R[x]),SG2_precomputed_heliocentric_R[x]);
-	double L = std::fma(alpha,(SG2_precomputed_heliocentric_L[x+1]-SG2_precomputed_heliocentric_L[x]),SG2_precomputed_heliocentric_L[x]);
-	return std::make_tuple(R, L);
+			/static_cast<double>(_geocentric_data.delta());
+
+	double sinL = std::fma(alpha,(_geocentric_data.sinL(x+1)-_geocentric_data.sinL(x)),_geocentric_data.sinL(x));
+	double cosL = std::fma(alpha,(_geocentric_data.cosL(x+1)-_geocentric_data.cosL(x)),_geocentric_data.cosL(x));
+	double R    = std::fma(alpha,(_geocentric_data.R   (x+1)-_geocentric_data.R   (x)),_geocentric_data.R   (x));
+
+	return std::make_tuple(R, math::atan2(sinL, cosL));
 }
 
 
