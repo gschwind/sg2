@@ -43,21 +43,21 @@ static std::tuple<double, double> _geocentric_compute_Delta_psi_and_epsilon(int6
 
 static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 {
-	int64_t x = (jd_tt/1000000000 - _geocentric_data.offset())
-			/ _geocentric_data.delta();
-	int64_t dx = (jd_tt/1000000000 - _geocentric_data.offset())
-					% _geocentric_data.delta();
+	int64_t x = (jd_tt/1000000000 - _geocentric_data_offset())
+			/ _geocentric_data_delta();
+	int64_t dx = (jd_tt/1000000000 - _geocentric_data_offset())
+					% _geocentric_data_delta();
 
-	if ((x < 0) || (x > _geocentric_data.count() - 1)) {
+	if ((x < 0) || (x > _geocentric_data_count() - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	double alpha = static_cast<double>(dx)
-			/static_cast<double>(_geocentric_data.delta());
+			/static_cast<double>(_geocentric_data_delta());
 
-	double sinL = std::fma(alpha,(_geocentric_data.sinL(x+1)-_geocentric_data.sinL(x)),_geocentric_data.sinL(x));
-	double cosL = std::fma(alpha,(_geocentric_data.cosL(x+1)-_geocentric_data.cosL(x)),_geocentric_data.cosL(x));
-	double R    = std::fma(alpha,(_geocentric_data.R   (x+1)-_geocentric_data.R   (x)),_geocentric_data.R   (x));
+	double sinL = std::fma(alpha,(_geocentric_data_sinL(x+1)-_geocentric_data_sinL(x)),_geocentric_data_sinL(x));
+	double cosL = std::fma(alpha,(_geocentric_data_cosL(x+1)-_geocentric_data_cosL(x)),_geocentric_data_cosL(x));
+	double R    = std::fma(alpha,(_geocentric_data_R   (x+1)-_geocentric_data_R   (x)),_geocentric_data_R   (x));
 
 	return std::make_tuple(R, math::atan2(sinL, cosL));
 }

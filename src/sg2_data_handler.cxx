@@ -20,28 +20,9 @@
 
 #include "sg2_data_handler.hxx"
 
-#include <iostream>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
 namespace sg2 {
 
-data_handler::data_handler()
-{
-	int fd = open("resources/geocentric.data", O_RDONLY);
-	if (fd < 0)
-		throw std::runtime_error("cannot open file resources/geocentric.data");
-	struct stat st;
-	fstat(fd, &st);
-	data = mmap(0, ((st.st_size-1)/sysconf(_SC_PAGE_SIZE)+1)*sysconf(_SC_PAGE_SIZE), PROT_READ, MAP_PRIVATE, fd, 0);
-	close(fd);
-}
 
-data_handler _geocentric_data;
 
 } // namespace sg2
 
