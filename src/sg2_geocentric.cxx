@@ -21,7 +21,6 @@
 #include "sg2_geocentric.hxx"
 #include "sg2_err.hxx"
 #include "sg2_precomputed_geocentric.hxx"
-#include "sg2_precomputed_heliocentric.hxx"
 #include "sg2_data_handler.hxx"
 
 #include <tuple>
