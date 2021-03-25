@@ -63,9 +63,12 @@ int main(int argc, char ** argv) {
 	 * Computing solar system state.
 	 **/
 
+	sg2::ymdhmsn date_ut(xjd.jd_ut);
+	sg2::ymdhmsn date_tt(xjd.jd_tt);
+
 	printf("Time related data (i.e. solar system geometry)\n");
-	printf("jd.jd_ut           = %f\n", xjd.jd_ut);
-	printf("jd.jd_tt           = %f\n", xjd.jd_tt);
+	printf("jd.jd_ut           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", date_ut.year, date_ut.month, date_ut.day_of_month, date_ut.hour, date_ut.min, date_ut.sec+date_ut.nsec*1e-9);
+	printf("jd.jd_tt           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", date_tt.year, date_tt.month, date_tt.day_of_month, date_tt.hour, date_tt.min, date_tt.sec+date_tt.nsec*1e-9);
 
 	printf("helioc.R           = %f\n", geoc.R);
 	printf("helioc.L           = %f\n", geoc.L);
