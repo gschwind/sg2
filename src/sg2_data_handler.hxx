@@ -25,9 +25,8 @@
 
 extern "C" {
 
-extern char _binary____resources_geocentric_data_end;
-extern int _binary____resources_geocentric_data_size;
-extern char _binary____resources_geocentric_data_start;
+extern char _sg2_geocentric_data;
+extern int _sg2_geocentric_data_sz;
 
 }
 
@@ -35,27 +34,27 @@ namespace sg2 {
 
 
 inline int64_t const & _geocentric_data_offset() {
-	return reinterpret_cast<int64_t*>(&_binary____resources_geocentric_data_start)[0];
+	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[0];
 }
 
 inline int64_t const & _geocentric_data_delta() {
-	return reinterpret_cast<int64_t*>(&_binary____resources_geocentric_data_start)[1];
+	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[1];
 }
 
 inline int64_t const & _geocentric_data_count() {
-	return reinterpret_cast<int64_t*>(&_binary____resources_geocentric_data_start)[2];
+	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[2];
 }
 
 inline double const & _geocentric_data_sinL(int l) {
-	return reinterpret_cast<double*>(&_binary____resources_geocentric_data_start)[3+l*3+0];
+	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+0];
 }
 
 inline double const & _geocentric_data_cosL(int l) {
-	return reinterpret_cast<double*>(&_binary____resources_geocentric_data_start)[3+l*3+1];
+	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+1];
 }
 
 inline double const & _geocentric_data_R(int l) {
-	return reinterpret_cast<double*>(&_binary____resources_geocentric_data_start)[3+l*3+2];
+	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+2];
 }
 
 

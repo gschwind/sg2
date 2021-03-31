@@ -15,6 +15,7 @@ AC_CONFIG_SRCDIR([src/sg2.cxx])
 AC_PROG_CXX
 AC_PROG_LIBTOOL
 AC_PROG_INSTALL
+AM_PROG_AS
 
 # check for c++11
 AX_CXX_COMPILE_STDCXX_11(noext, mandatory)
