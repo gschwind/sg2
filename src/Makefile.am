@@ -1,4 +1,4 @@
-bin_PROGRAMS = query_sg2 benchmark_libsg2
+bin_PROGRAMS = query_sg2 benchmark_libsg2 sg2_convert_date
 
 AM_CXXFLAGS = \
 	@VDT_DEFINE@ \
@@ -42,3 +42,6 @@ benchmark_libsg2_LDADD = @VDT_LIBS@ libsg2.la
 benchmark_libsg2_SOURCES = \
 	benchmark_libsg2.cxx
 
+sg2_convert_date_LDADD = @VDT_LIBS@ libsg2.la
+sg2_convert_date_SOURCES = \
+	sg2_convert_date.cxx
