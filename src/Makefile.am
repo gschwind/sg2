@@ -4,6 +4,9 @@ AM_CXXFLAGS = \
 	@VDT_DEFINE@ \
 	@VDT_CFLAGS@
 
+AM_CCASFLAGS = \
+	-I$(srcdir)
+
 lib_LTLIBRARIES = libsg2.la
 include_HEADERS = \
 	sg2.hxx \
@@ -15,7 +18,6 @@ include_HEADERS = \
 	sg2_topocentric.hxx \
 	sg2_sun_daily.hxx
 
-libsg2_la_LIBADD = geocentric_data.o
 libsg2_la_LDFLAGS = -version-info 2:0:0
 libsg2_la_SOURCES = \
 	sg2.cxx \
@@ -47,7 +49,4 @@ benchmark_libsg2_SOURCES = \
 sg2_convert_date_LDADD = @VDT_LIBS@ libsg2.la
 sg2_convert_date_SOURCES = \
 	sg2_convert_date.cxx
-
-geocentric_data.o: ../resources/geocentric.data
-	ld -r -b binary -o $@ $^
 
