@@ -22,6 +22,7 @@
 #include "sg2_err.hxx"
 #include "sg2_precomputed_geocentric.hxx"
 #include "sg2_data_handler.hxx"
+#include "sg2_utils.hxx"
 
 #include <tuple>
 
@@ -71,7 +72,8 @@ geocentric_data::geocentric_data(time_data const & jd)
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(jd.jd_tt);
 
-	std::tie(Delta_psi, epsilon) = _geocentric_compute_Delta_psi_and_epsilon(jd.jd_tt);
+	Delta_psi = approx_Dpsi.compute(julian{date{jd.jd_tt}}.jd);
+	epsilon = approx_epsilon.compute(julian{date{jd.jd_tt}}.jd);
 
 	Theta_a = L + PI + Delta_psi
 			+ SG2_precomputed_geocentric_Delta_tau;
