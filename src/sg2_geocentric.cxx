@@ -89,7 +89,7 @@ geocentric_data::geocentric_data(time_data const & jd)
 	nu0_kd = approx_nu0.compute(julian{date{jd.jd_ut}}.jd);
 
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
-	M_kd = 1.720279169744191e-002 * julian{date{jd.jd_tt}}.jd - 4.204914238795757e+004;
+	M_kd = approx_M_0.compute(julian{date{jd.jd_tt}}.jd);
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;
