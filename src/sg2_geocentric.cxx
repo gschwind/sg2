@@ -86,7 +86,8 @@ geocentric_data::geocentric_data(time_data const & jd)
 	delta = math::asin(sin_Theta_a_kd * math::sin(epsilon));
 
 	// TODO: convert to nano second
-	nu0_kd = 6.300388099 * julian{date{jd.jd_ut}}.jd - 1.539965571482657e+007;
+	nu0_kd = approx_nu0.compute(julian{date{jd.jd_ut}}.jd);
+
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
 	M_kd = 1.720279169744191e-002 * julian{date{jd.jd_tt}}.jd - 4.204914238795757e+004;
 
