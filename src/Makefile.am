@@ -34,8 +34,6 @@ libsg2_la_SOURCES = \
 	sg2_data_handler.hxx \
 	sg2_precomputed_delta_tt.cxx \
 	sg2_precomputed_delta_tt.hxx \
-	sg2_precomputed_geocentric.cxx \
-	sg2_precomputed_geocentric.hxx \
 	sg2_utils.cxx \
 	sg2_utils.hxx \
 	sg2_geocentric_data.s

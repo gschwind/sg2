@@ -83,6 +83,8 @@ extern sinusoidal_approx<0> approx_nu0;
 extern sinusoidal_approx<0> approx_M_0;
 extern polynomial_approx<5, 6> approx_deltat_msc;
 
+static double const Delta_tau = -9.9337353631981704e-005;
+
 } // namespace sg2
 
 

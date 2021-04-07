@@ -20,26 +20,12 @@
 
 #include "sg2_geocentric.hxx"
 #include "sg2_err.hxx"
-#include "sg2_precomputed_geocentric.hxx"
 #include "sg2_data_handler.hxx"
 #include "sg2_utils.hxx"
 
 #include <tuple>
 
 namespace sg2 {
-
-static std::tuple<double, double> _geocentric_compute_Delta_psi_and_epsilon(int64_t jd_tt)
-{
-	int64_t idx0 = (jd_tt - SG2_precomputed_geocentric_Delta_psi_j0
-			+ (SG2_precomputed_geocentric_Delta_psi_dj/2))
-			/ SG2_precomputed_geocentric_Delta_psi_dj;
-	if ((idx0 < 0) || (idx0 > SG2_precomputed_geocentric_Delta_psi_nj)) {
-		throw ERR_GEOCENTRIC_SET_GEOC_OUTOFPERIOD;
-	}
-	double Delta_psi = SG2_precomputed_geocentric_Delta_psi[idx0];
-	double epsilon = SG2_precomputed_geocentric_epsilon[idx0];
-	return std::make_tuple(Delta_psi, epsilon);
-}
 
 static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 {
@@ -76,7 +62,7 @@ geocentric_data::geocentric_data(time_data const & jd)
 	epsilon = approx_epsilon.compute(julian{date{jd.jd_tt}}.jd);
 
 	Theta_a = L + PI + Delta_psi
-			+ SG2_precomputed_geocentric_Delta_tau;
+			+ Delta_tau;
 
 	sin_Theta_a_kd = math::sin(Theta_a);
 	cos_epsilon_kd = math::cos(epsilon);
