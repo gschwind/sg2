@@ -36,6 +36,8 @@ libsg2_la_SOURCES = \
 	sg2_precomputed_delta_tt.hxx \
 	sg2_precomputed_geocentric.cxx \
 	sg2_precomputed_geocentric.hxx \
+	sg2_utils.cxx \
+	sg2_utils.hxx \
 	sg2_geocentric_data.s
 
 query_sg2_LDADD = @VDT_LIBS@ libsg2.la
