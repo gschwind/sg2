@@ -1,0 +1,12 @@
+Build for window require building the following file from linux:
+
+resources/sg2_geocentric_data.obj
+
+On window the solution is to use WSL or copy the file from linux after
+generating the file.
+
+The file can be generated with :
+
+gcc -c -Iresources/ -o resources/sg2_geocentric_data.o src/sg2_geocentric_data.s
+objcopy --output-target pe-x86-64 resources/sg2_geocentric_data.o resources/sg2_geocentric_data.obj
+
