@@ -35,8 +35,11 @@ using namespace std;
 
 /** DO not export this template if C++ is not above C++11 **/
 
+#ifdef SG2_WIN32
+static double golden_ratio = 1.6180339887498949025257388711906969547272;
+#else
 static double constexpr golden_ratio = (1.0 + std::sqrt(5))/2.0;
-
+#endif
 
 /**
  * Implement the golden-section search
