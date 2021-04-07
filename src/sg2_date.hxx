@@ -152,10 +152,13 @@ struct time_data {
 
 	time_data();
 	time_data(int64_t _jd_ut);
+	time_data(int64_t _jd_ut, int64_t _jd_tt);
 	time_data(date _jd_ut);
+	time_data(date _jd_ut, date _jd_tt);
 	time_data(double _jd_ut);
 	time_data(double _jd_ut, double _jd_tt);
 	time_data(ymdh const & p_ymdh);
+	time_data(ymdh const & _jd_ut, ymdh const & _jd_tt);
 
 	time_data(time_data const &) = default;
 	auto operator=(time_data const &) -> time_data & = default;
@@ -344,10 +347,24 @@ inline time_data::time_data(int64_t _jd_ut) :
 	_init_jd_tt();
 }
 
+inline time_data::time_data(int64_t _jd_ut, int64_t _jd_tt) :
+	jd_ut{_jd_ut},
+	jd_tt{_jd_tt}
+{
+
+}
+
 inline time_data::time_data(date _jd_ut) :
 	jd_ut{_jd_ut}
 {
 	_init_jd_tt();
+}
+
+inline time_data::time_data(date _jd_ut, date _jd_tt) :
+	jd_ut{_jd_ut},
+	jd_tt{_jd_tt}
+{
+
 }
 
 inline time_data::time_data(double _jd_ut) :
@@ -367,6 +384,13 @@ inline time_data::time_data(ymdh const & p_ymdh) :
 	jd_ut{p_ymdh}
 {
 	_init_jd_tt();
+}
+
+inline time_data::time_data(ymdh const & _jd_ut, ymdh const & _jd_tt) :
+	jd_ut{_jd_ut},
+	jd_tt{_jd_tt}
+{
+
 }
 
 
