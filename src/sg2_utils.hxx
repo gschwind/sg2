@@ -24,6 +24,8 @@
 #include "sg2_typedef.hxx"
 #include "sg2_math.hxx"
 
+#include <array>
+
 namespace sg2 {
 
 template<int const N>
@@ -31,9 +33,9 @@ struct sinusoidal_approx {
 	double j0;
 	double a;
 	double b;
-	double a0[N];
-	double ro[N];
-	double phi[N];
+	array<double, N> a0;
+	array<double, N> ro;
+	array<double, N> phi;
 
 	double compute(double jd) const {
 		double jc = jd - j0;
