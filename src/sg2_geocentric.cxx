@@ -29,17 +29,15 @@ namespace sg2 {
 
 static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 {
-	int64_t x = (jd_tt/1000000000 - _geocentric_data_offset())
-			/ _geocentric_data_delta();
-	int64_t dx = (jd_tt/1000000000 - _geocentric_data_offset())
-					% _geocentric_data_delta();
+	int64_t x  = (jd_tt - _geocentric_data_offset()*1000000000) / (_geocentric_data_delta()*1000000000);
+	int64_t dx = (jd_tt - _geocentric_data_offset()*1000000000)	% (_geocentric_data_delta()*1000000000);
 
 	if ((x < 0) || (x > _geocentric_data_count() - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	double alpha = static_cast<double>(dx)
-			/static_cast<double>(_geocentric_data_delta());
+			/static_cast<double>(_geocentric_data_delta()*1000000000);
 
 	double sinL = std::fma(alpha,(_geocentric_data_sinL(x+1)-_geocentric_data_sinL(x)),_geocentric_data_sinL(x));
 	double cosL = std::fma(alpha,(_geocentric_data_cosL(x+1)-_geocentric_data_cosL(x)),_geocentric_data_cosL(x));
