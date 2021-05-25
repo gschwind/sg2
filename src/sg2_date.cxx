@@ -31,7 +31,7 @@ namespace sg2 {
 
 void time_data::_init_jd_tt() {
 	// round((jd_ut-SG2_precomputed_delta_tt_j0)/SG2_precomputed_delta_tt_dj)
-	int idx = (jd_ut - SG2_precomputed_delta_tt_j0
+	int idx = (jd_ut.nsec - SG2_precomputed_delta_tt_j0
 			+ (SG2_precomputed_delta_tt_dj/2))
 			/ SG2_precomputed_delta_tt_dj;
 
