@@ -25,21 +25,13 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-#include "sg2_precomputed_delta_tt.hxx"
+#include "sg2_utils.hxx"
 
 namespace sg2 {
 
 void time_data::_init_jd_tt() {
-	// round((jd_ut-SG2_precomputed_delta_tt_j0)/SG2_precomputed_delta_tt_dj)
-	int idx = (jd_ut.nsec - SG2_precomputed_delta_tt_j0
-			+ (SG2_precomputed_delta_tt_dj/2))
-			/ SG2_precomputed_delta_tt_dj;
-
-	if ((idx < 0) || (idx > SG2_precomputed_delta_tt_nj)) {
-		throw ERR_DATE_JD_SET_JD_TT_OUTOFPERIOD;
-	}
-
-	jd_tt = jd_ut + static_cast<int64_t>(SG2_precomputed_delta_tt[idx] * 1000000000.0);
+	ymdh x(jd_ut);
+	jd_tt.nsec = jd_ut.nsec + static_cast<int64_t>(approx_deltat_msc.compute(x.year)*1e9);
 }
 
 
