@@ -11,6 +11,7 @@ EXTRA_DIST = \
 	third-parties/python-bind-helper/python-bind-helper.hxx \
 	setup.py \
 	build-wheel.sh \
+	build-win-wheels.ps1 \
 	dev-requirements.txt\
 	README.linux \
 	README.win 
