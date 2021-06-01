@@ -27,6 +27,8 @@
 #include "sg2_topocentric.hxx"
 #include "sg2_sun_daily.hxx"
 
+#include <tuple>
+
 namespace sg2 {
 
 struct geopoint_snap_data {
@@ -35,6 +37,9 @@ struct geopoint_snap_data {
 	geocentric_data geoc;
 	topocentric_data topoc;
 };
+
+
+std::tuple<date, date, date> sunrise(date const &, geopoint_data const &);
 
 }
 
