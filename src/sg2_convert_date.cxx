@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
 	}
 
 	printf("jd ............ %f\n", jd.jd);
-	printf("nsec .......... %ld\n", d.nsec);
+	printf("msec .......... %ld\n", d.msec);
 	printf("ymdh .......... %04d-%02d-%02d %f\n", ymdh.year, ymdh.month, ymdh.day_of_month, ymdh.hour);
 	printf("ymdhmsn ....... %04d-%02d-%02dT%02d:%02d:%02d.%09d\n", ymdhmsn.year, ymdhmsn.month, ymdhmsn.day_of_month, ymdhmsn.hour, ymdhmsn.min, ymdhmsn.sec, ymdhmsn.nsec);
 	printf("ymdh .......... %04d-%03d %f\n", ydoyh.year, ydoyh.day_of_year, ydoyh.hour);

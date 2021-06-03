@@ -27,17 +27,17 @@
 
 namespace sg2 {
 
-static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
+static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt)
 {
-	int64_t x  = (jd_tt - _geocentric_data_offset()*1000000000) / (_geocentric_data_delta()*1000000000);
-	int64_t dx = (jd_tt - _geocentric_data_offset()*1000000000)	% (_geocentric_data_delta()*1000000000);
+	int64_t x  = (tt.msec - _geocentric_data_offset()*1000) / (_geocentric_data_delta()*1000);
+	int64_t dx = (tt.msec - _geocentric_data_offset()*1000)	% (_geocentric_data_delta()*1000);
 
 	if ((x < 0) || (x > _geocentric_data_count() - 1)) {
 		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
 	}
 
 	double alpha = static_cast<double>(dx)
-			/static_cast<double>(_geocentric_data_delta()*1000000000);
+			/static_cast<double>(_geocentric_data_delta()*1000);
 
 	double sinL = std::fma(alpha,(_geocentric_data_sinL(x+1)-_geocentric_data_sinL(x)),_geocentric_data_sinL(x));
 	double cosL = std::fma(alpha,(_geocentric_data_cosL(x+1)-_geocentric_data_cosL(x)),_geocentric_data_cosL(x));
@@ -49,7 +49,7 @@ static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 geocentric_data::geocentric_data(date const & ut) :
 	ut{ut}
 {
-	tt.nsec = ut.nsec + static_cast<int64_t>(approx_deltat_msc.compute(ymdh{ut}.year)*1e9);
+	tt.msec = ut.msec + static_cast<int64_t>(approx_deltat_msc.compute(ymdh{ut}.year)*1e3);
 	_init_all();
 }
 

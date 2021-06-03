@@ -82,10 +82,10 @@ inline void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
 }
 
 struct date {
-	int64_t nsec; // nanosecond since 1970
+	int64_t msec; // millisecond since 1970
 
 	date();
-	date(int64_t nsec);
+	date(int64_t msec);
 	date(double jd);
 	date(ymdh const & d);
 	date(ydoyh const & d);
@@ -151,14 +151,14 @@ inline date::date()
 
 }
 
-inline date::date(int64_t nsec) :
-	nsec{nsec}
+inline date::date(int64_t msec) :
+	msec{msec}
 {
 
 }
 
 inline date::date(double jd) :
-	nsec((jd-EPOCH_JD)*24.0*60.0*60.0*1e9)
+	msec((jd-EPOCH_JD)*24.0*60.0*60.0*1e3)
 {
 
 }
@@ -166,7 +166,7 @@ inline date::date(double jd) :
 inline date::date(ymdh const & d)
 {
 	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
-	nsec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000000000LL) + d.hour*60.0*60.0*1e9;
+	msec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000LL) + d.hour*60.0*60.0*1e3;
 }
 
 inline date::date(ydoyh const & d) :
@@ -177,7 +177,7 @@ inline date::date(ydoyh const & d) :
 
 inline date::operator int64_t() const
 {
-	return nsec;
+	return msec;
 }
 
 inline julian::julian()
@@ -204,7 +204,7 @@ inline julian::julian(ydoyh const & d) :
 }
 
 inline julian::julian(date const nsec) :
-	jd{nsec/(24.0*60.0*60.0*1e9)+EPOCH_JD}
+	jd{nsec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
 {
 }
 
@@ -235,9 +235,9 @@ inline ymdh::ymdh(double jd)
 
 inline ymdh::ymdh(date const & d)
 {
-	int jd = d.nsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
+	int jd = d.msec / (1e3 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
 	_julian_day_to_ymd(jd, year, month, day_of_month);
-	hour = static_cast<double>(d.nsec % 1000000000LL)/(60.0*60.0*1e9);
+	hour = static_cast<double>(d.msec % 1000LL)/(60.0*60.0*1e3);
 }
 
 inline ymdh::ymdh(ydoyh const & p_ydoyh)
@@ -271,20 +271,20 @@ inline ymdhmsn::ymdhmsn()
 
 inline ymdhmsn::ymdhmsn(date const date)
 {
-	int64_t xnsec = date.nsec;
+	int64_t xnsec = date.msec;
 
 	// Find the nearest integer jd.
-	int jd = xnsec / (1e9 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
+	int jd = xnsec / (1e3 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
 	_julian_day_to_ymd(jd, year, month, day_of_month);
 
 	/* in this order we avoid a lot of modulo */
-	xnsec %= (1000000000LL * 60LL * 60LL * 24LL);
-	hour = xnsec / (1000000000LL * 60LL * 60LL);
-	xnsec -= hour * (1000000000LL * 60LL * 60LL);
-	min = xnsec / (1000000000LL * 60LL);
-	xnsec -= min * (1000000000LL * 60LL);
-	sec = xnsec / (1000000000LL);
-	xnsec -= sec * (1000000000LL);
+	xnsec %= (1000LL * 60LL * 60LL * 24LL);
+	hour = xnsec / (1000LL * 60LL * 60LL);
+	xnsec -= hour * (1000LL * 60LL * 60LL);
+	min = xnsec / (1000LL * 60LL);
+	xnsec -= min * (1000LL * 60LL);
+	sec = xnsec / (1000LL);
+	xnsec -= sec * (1000LL);
 	nsec = (int)xnsec;
 
 }

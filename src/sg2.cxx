@@ -37,10 +37,10 @@ inline static double _clam(double x) {
 std::tuple<date, date, date> sunrise(date const & d, geopoint_data const & gp)
 {
 	// round nearest day a 0 UT
-	date d0{(d.nsec/86400000000000l)*86400000000000l};
+	date d0{(d.msec/86400000)*86400000};
 
-	date dp{d0.nsec-86400000000000};
-	date dn{d0.nsec+86400000000000};
+	date dp{d0.msec-86400000};
+	date dn{d0.msec+86400000};
 
 	{
 		sg2::ymdhmsn d(d0);
@@ -93,9 +93,9 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint_data const & gp)
 	double v1 = geoc_d0.nu + RAD(360.985647)*m1;
 	double v2 = geoc_d0.nu + RAD(360.985647)*m2;
 
-	double n0 = m0 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
-	double n1 = m1 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
-	double n2 = m2 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
+	double n0 = m0 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
+	double n1 = m1 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
+	double n2 = m2 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
 
 	double a0 = geoc_d0.r_alpha-geoc_dp.r_alpha;
 	double a1 = geoc_d0.delta-geoc_dp.delta;
@@ -128,9 +128,9 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint_data const & gp)
 	double R = m1 + (h1+RAD(0.8333))/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
 	double S = m2 + (h2+RAD(0.8333))/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
 
-	return {geoc_d0.ut.nsec+static_cast<int64_t>(R*86400e9),
-			geoc_d0.ut.nsec+static_cast<int64_t>(T*86400e9),
-			geoc_d0.ut.nsec+static_cast<int64_t>(S*86400e9)};
+	return {geoc_d0.ut.msec+static_cast<int64_t>(R*86400e3),
+			geoc_d0.ut.msec+static_cast<int64_t>(T*86400e3),
+			geoc_d0.ut.msec+static_cast<int64_t>(S*86400e3)};
 
 }
 
