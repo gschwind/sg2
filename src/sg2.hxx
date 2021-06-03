@@ -32,7 +32,6 @@
 namespace sg2 {
 
 struct geopoint_snap_data {
-	time_data time;
 	geopoint_data geopoint;
 	geocentric_data geoc;
 	topocentric_data topoc;

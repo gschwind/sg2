@@ -146,35 +146,6 @@ struct ydoyh {
 
 };
 
-struct time_data {
-	date jd_ut;            //< UT in nano second since 1970-01-01T00:00
-	date jd_tt;            //< Terrestrial Time in nano second since 1970-01-01T00:00
-
-	time_data();
-	time_data(int64_t _jd_ut);
-	time_data(int64_t _jd_ut, int64_t _jd_tt);
-	time_data(date _jd_ut);
-	time_data(date _jd_ut, date _jd_tt);
-	time_data(double _jd_ut);
-	time_data(double _jd_ut, double _jd_tt);
-	time_data(ymdh const & p_ymdh);
-	time_data(ymdh const & _jd_ut, ymdh const & _jd_tt);
-
-	time_data(time_data const &) = default;
-	auto operator=(time_data const &) -> time_data & = default;
-
-	int64_t get_universal_time() const {
-		return jd_ut;
-	}
-
-	int64_t get_terrestrial_time() const {
-		return jd_tt;
-	}
-
-	void _init_jd_tt();
-
-};
-
 inline date::date()
 {
 
@@ -334,63 +305,6 @@ inline ydoyh::ydoyh(ymdh const & p_ymdh)
 	this->day_of_year = (short) floor(275.0 * ((double) p_ymdh.month) / 9.0)
 			- K * ((double) (p_ymdh.month > 2)) + ((double) p_ymdh.day_of_month)
 			- 30.0;
-}
-
-inline time_data::time_data()
-{
-
-}
-
-inline time_data::time_data(int64_t _jd_ut) :
-	jd_ut{_jd_ut}
-{
-	_init_jd_tt();
-}
-
-inline time_data::time_data(int64_t _jd_ut, int64_t _jd_tt) :
-	jd_ut{_jd_ut},
-	jd_tt{_jd_tt}
-{
-
-}
-
-inline time_data::time_data(date _jd_ut) :
-	jd_ut{_jd_ut}
-{
-	_init_jd_tt();
-}
-
-inline time_data::time_data(date _jd_ut, date _jd_tt) :
-	jd_ut{_jd_ut},
-	jd_tt{_jd_tt}
-{
-
-}
-
-inline time_data::time_data(double _jd_ut) :
-	jd_ut{_jd_ut}
-{
-	_init_jd_tt();
-}
-
-inline time_data::time_data(double _jd_ut, double _jd_tt) :
-	jd_ut{_jd_ut},
-	jd_tt{_jd_tt}
-{
-
-}
-
-inline time_data::time_data(ymdh const & p_ymdh) :
-	jd_ut{p_ymdh}
-{
-	_init_jd_tt();
-}
-
-inline time_data::time_data(ymdh const & _jd_ut, ymdh const & _jd_tt) :
-	jd_ut{_jd_ut},
-	jd_tt{_jd_tt}
-{
-
 }
 
 

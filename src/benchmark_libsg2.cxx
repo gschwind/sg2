@@ -50,11 +50,10 @@ int main(int argc, char ** argv) {
 	std::vector<double> out(jd_count);
 	for (int i = 0; i < jd_count; ++i) {
 		double jd = jd_begin + i * 1.0/24.0/60.0;
-		sg2::time_data xjd{jd};
 		/** location related data **/
 		sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
 		/** time related data **/
-		sg2::geocentric_data geoc{xjd};
+		sg2::geocentric_data geoc{sg2::date{sg2::julian{jd}}};
 		/** local-time related data **/
 		sg2::topocentric_data topoc{geoc, geopoint};
 		out[i] = topoc.gamma_S0;

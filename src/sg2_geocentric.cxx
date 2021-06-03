@@ -46,18 +46,31 @@ static std::tuple<double, double> _heliocentric_compute_R_and_L(int64_t jd_tt)
 	return std::make_tuple(R, math::atan2(sinL, cosL));
 }
 
+geocentric_data::geocentric_data(date const & ut) :
+	ut{ut}
+{
+	tt.nsec = ut.nsec + static_cast<int64_t>(approx_deltat_msc.compute(ymdh{ut}.year)*1e9);
+	_init_all();
+}
 
-geocentric_data::geocentric_data(time_data const & jd)
+geocentric_data::geocentric_data(date const & ut, date const & tt) :
+		ut{ut},
+		tt{tt}
+{
+	_init_all();
+}
+
+void geocentric_data::_init_all()
 {
 	short idx0;
 	int kd;
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
 
-	std::tie(R, L) = _heliocentric_compute_R_and_L(jd.jd_tt);
+	std::tie(R, L) = _heliocentric_compute_R_and_L(tt);
 
-	Delta_psi = approx_Dpsi.compute(julian{date{jd.jd_tt}}.jd);
-	epsilon = approx_epsilon.compute(julian{date{jd.jd_tt}}.jd);
+	Delta_psi = approx_Dpsi.compute(julian{tt}.jd);
+	epsilon = approx_epsilon.compute(julian{tt}.jd);
 
 	Theta_a = L + PI + Delta_psi
 			+ Delta_tau;
@@ -70,10 +83,10 @@ geocentric_data::geocentric_data(time_data const & jd)
 	delta = math::asin(sin_Theta_a_kd * math::sin(epsilon));
 
 	// The compiler look smart enough to merge conversions to jd with computation.
-	nu0_kd = approx_nu0.compute(julian{date{jd.jd_ut}}.jd);
+	nu0_kd = approx_nu0.compute(julian{ut}.jd);
 
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
-	M_kd = approx_M_0.compute(julian{date{jd.jd_tt}}.jd);
+	M_kd = approx_M_0.compute(julian{tt}.jd);
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;

@@ -41,13 +41,13 @@ int main(int argc, char ** argv) {
 	double alt = atof(argv[3]);
 	double jd = atof(argv[4]);
 
-	sg2::time_data xjd{jd};
+	sg2::julian xjd{jd};
 
 	/** location related data **/
 	sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
 
 	/** time related data **/
-	sg2::geocentric_data geoc{xjd};
+	sg2::geocentric_data geoc{sg2::date{xjd}};
 
 	/** local-time related data **/
 	sg2::topocentric_data topoc{geoc, geopoint};
@@ -63,8 +63,10 @@ int main(int argc, char ** argv) {
 	 * Computing solar system state.
 	 **/
 
-	sg2::ymdhmsn date_ut(xjd.jd_ut);
-	sg2::ymdhmsn date_tt(xjd.jd_tt);
+	sg2::ymdhmsn date_ut(geoc.ut);
+	sg2::ymdhmsn date_tt(geoc.tt);
+
+	auto sunrise = sg2::sunrise(geoc.ut, geopoint);
 
 	printf("Time related data (i.e. solar system geometry)\n");
 	printf("jd.jd_ut           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", date_ut.year, date_ut.month, date_ut.day_of_month, date_ut.hour, date_ut.min, date_ut.sec+date_ut.nsec*1e-9);
@@ -102,7 +104,7 @@ int main(int argc, char ** argv) {
 	printf("topoc.toa_ni      = %f\n", topoc.toa_ni);
 
 	printf("Extra data\n");
-	double x = (xjd.jd_ut + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
+	double x = (xjd.jd + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
 
 	printf("sun_rise          = %f\n", day.get_sun_rise_time());
@@ -110,6 +112,37 @@ int main(int argc, char ** argv) {
 	printf("sun_zenit         = %f\n", day.get_sun_zenit_time());
 	printf("sun_begin_of_day  = %f\n", day.get_sun_begin_of_day_time());
 	printf("sun_end_of_day    = %f\n", day.get_sun_end_of_day_time());
+
+	{
+		sg2::ymdhmsn d(day.get_sun_rise_time());
+		printf("sun_rise3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
+
+	{
+		sg2::ymdhmsn d(day.get_sun_set_time());
+		printf("sun_set3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
+
+	{
+		sg2::ymdhmsn d(day.get_sun_zenit_time());
+		printf("sun_zenit3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
+
+
+	{
+		sg2::ymdhmsn d(std::get<0>(sunrise));
+		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
+
+	{
+		sg2::ymdhmsn d(std::get<2>(sunrise));
+		printf("sun_set2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
+
+	{
+		sg2::ymdhmsn d(std::get<1>(sunrise));
+		printf("sun_zenit2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
+	}
 
 	return 0;
 

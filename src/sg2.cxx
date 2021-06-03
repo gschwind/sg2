@@ -34,25 +34,25 @@ inline static double _clam(double x) {
 	return x - std::floor(x);
 }
 
-std::tuple<date, date, date> sunrise(date const & date, geopoint_data const & gp)
+std::tuple<date, date, date> sunrise(date const & d, geopoint_data const & gp)
 {
 	// round nearest day a 0 UT
-	time_data d0{(date.nsec/86400000000000l)*86400000000000l};
+	date d0{(d.nsec/86400000000000l)*86400000000000l};
 
-	time_data dp{d0.jd_ut.nsec-86400000000000};
-	time_data dn{d0.jd_ut.nsec+86400000000000};
+	date dp{d0.nsec-86400000000000};
+	date dn{d0.nsec+86400000000000};
 
 	{
-		sg2::ymdhmsn d(d0.jd_ut);
+		sg2::ymdhmsn d(d0);
 		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
 	}
 	{
-		sg2::ymdhmsn d(dp.jd_ut);
+		sg2::ymdhmsn d(dp);
 		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
 	}
 
 	{
-		sg2::ymdhmsn d(dn.jd_ut);
+		sg2::ymdhmsn d(dn);
 		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
 	}
 
@@ -69,7 +69,7 @@ std::tuple<date, date, date> sunrise(date const & date, geopoint_data const & gp
 	// Eq A4
 	double x0 = (sin(RAD(-0.8333))-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
 	if (x0 > 1.0 || x0 < -1.0) {
-		return {d0.jd_ut, d0.jd_ut, d0.jd_ut};
+		return {d0, d0, d0};
 	}
 	double H0 = acos(x0);
 
@@ -93,9 +93,9 @@ std::tuple<date, date, date> sunrise(date const & date, geopoint_data const & gp
 	double v1 = geoc_d0.nu + RAD(360.985647)*m1;
 	double v2 = geoc_d0.nu + RAD(360.985647)*m2;
 
-	double n0 = m0 + static_cast<double>(d0.jd_tt.nsec-d0.jd_ut.nsec)/(86400*1e9);
-	double n1 = m1 + static_cast<double>(d0.jd_tt.nsec-d0.jd_ut.nsec)/(86400*1e9);
-	double n2 = m2 + static_cast<double>(d0.jd_tt.nsec-d0.jd_ut.nsec)/(86400*1e9);
+	double n0 = m0 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
+	double n1 = m1 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
+	double n2 = m2 + (geoc_d0.tt.nsec-geoc_d0.ut.nsec)/(86400e9);
 
 	double a0 = geoc_d0.r_alpha-geoc_dp.r_alpha;
 	double a1 = geoc_d0.delta-geoc_dp.delta;
@@ -128,9 +128,9 @@ std::tuple<date, date, date> sunrise(date const & date, geopoint_data const & gp
 	double R = m1 + (h1+RAD(0.8333))/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
 	double S = m2 + (h2+RAD(0.8333))/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
 
-	return {d0.jd_ut.nsec+static_cast<int64_t>(R*86400000000000),
-			d0.jd_ut.nsec+static_cast<int64_t>(T*86400000000000),
-			d0.jd_ut.nsec+static_cast<int64_t>(S*86400000000000)};
+	return {geoc_d0.ut.nsec+static_cast<int64_t>(R*86400e9),
+			geoc_d0.ut.nsec+static_cast<int64_t>(T*86400e9),
+			geoc_d0.ut.nsec+static_cast<int64_t>(S*86400e9)};
 
 }
 

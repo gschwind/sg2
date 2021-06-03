@@ -31,6 +31,8 @@ namespace sg2 {
 
 /* Geocentric coordinates */
 struct geocentric_data {
+	date ut;           /* Universal Time */
+	date tt;           /* Terrestrial Time */
 	double R;          /* Radius Sun-Earth (ua) */
 	double L;          /* Heliocentric Earth true longitude (rad) */
 	double Delta_psi;  /* Nutation in Geocentric Sun longitude (rad) */
@@ -40,12 +42,15 @@ struct geocentric_data {
 	double delta;      /* Geocentric declination (rad) */
 	double nu;         /* Apparent sideral time (rad) */
 	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
-	geocentric_data() { }
+
+	geocentric_data(date const & ut);
+	geocentric_data(date const & ut, date const & tt);
+
 	geocentric_data(geocentric_data const &) = default;
-	geocentric_data(time_data const & jd);
 
 	auto operator=(geocentric_data const &) -> geocentric_data & = default;
 
+	void _init_all();
 
 	double get_sun_earth_radius() const {
 		return R;

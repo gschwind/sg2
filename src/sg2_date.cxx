@@ -29,10 +29,5 @@
 
 namespace sg2 {
 
-void time_data::_init_jd_tt() {
-	ymdh x(jd_ut);
-	jd_tt.nsec = jd_ut.nsec + static_cast<int64_t>(approx_deltat_msc.compute(x.year)*1e9);
-}
-
 
 }
