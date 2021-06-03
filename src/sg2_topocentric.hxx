@@ -23,6 +23,7 @@
 
 #include "sg2_typedef.hxx"
 #include "sg2_geocentric.hxx"
+#include "sg2_geopoint.hxx"
 #include "sg2_math.hxx"
 
 #include <cmath>
@@ -31,70 +32,6 @@
 #include <cstring>
 
 namespace sg2 {
-
-extern ellps const ELLPS_WGS84;
-extern ellps const ELLPS_RGF83;
-extern ellps const ELLPS_NTF;
-extern ellps const ELLPS_AA;
-extern ellps const ELLPS_SPA;
-extern ellps const ELLPS_NGP;
-extern ellps const ELLPS_SPHERE;
-
-struct ellps {
-	double a; /* Axis a (m) */
-	double f; /* Flatness (-)*/
-
-	ellps() { }
-	ellps(ellps const &) = default;
-	ellps(double a, double f);
-
-};
-
-struct geopoint_data {
-	ellps  ellipse;
-	double  phi;        /* Latitude (rad) */
-	double lambda;     /* Longitude (rad) */
-	double h;          /* Altitude Above the Reference Ellipsoid */
-	double u;          ///< phi geocentric
-	double x;
-	double y;
-
-	double cos_phi_kp; ///< Usefull cache
-	double sin_phi_kp; ///< Usefull cache
-
-	geopoint_data() { }
-	geopoint_data(geopoint_data const &) = default;
-
-	/**
-	 * @input lat: latitude in degrees
-	 * @input lon: longitude in degrees
-	 * @input h: altitude in meters
-	 **/
-	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPS_WGS84);
-
-	auto operator=(geopoint_data const &) -> geopoint_data & = default;
-
-	double const & get_phi() const {
-		return phi;
-	}
-
-	double get_lambda() const {
-		return lambda;
-	}
-
-	double get_u() const {
-		return u;
-	}
-
-	double get_x() const {
-		return x;
-	}
-
-	double get_y() const {
-		return y;
-	}
-
-};
 
 enum correction_refraction_e {
 	REFRACTION_NONE = 0,
@@ -156,34 +93,7 @@ struct topocentric_data {
 
 };
 
-inline ellps::ellps(double a, double f) :
-		a{a},
-		f{f}
-{
 
-}
-
-inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps const & ellipse) :
-	ellipse{ellipse},
-	lambda{RAD(lon)},
-	phi{RAD(lat)},
-	h{h}
-{
-
-	double a = ellipse.a;
-	double app = 1.0 - ellipse.f;
-
-	cos_phi_kp = math::cos(phi);
-	sin_phi_kp = math::sin(phi);
-	double tan_phi_kp = math::tan(phi);
-
-	double h_a_kp = h / a;
-	double u_kp = math::atan(app * tan_phi_kp);
-	x = math::cos(u_kp) + h_a_kp * cos_phi_kp;
-	y = app * math::sin(u_kp) + h_a_kp * sin_phi_kp;
-	u = u_kp;
-
-}
 
 inline static double _topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T)
 {

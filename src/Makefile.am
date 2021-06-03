@@ -24,6 +24,8 @@ libsg2_la_SOURCES = \
 	sg2.hxx \
 	sg2_date.cxx \
 	sg2_date.hxx \
+	sg2_geopoint.cxx \
+	sg2_geopoint.hxx \
 	sg2_geocentric.cxx \
 	sg2_geocentric.hxx \
 	sg2_topocentric.cxx \
