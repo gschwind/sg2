@@ -55,6 +55,7 @@ struct geopoint_data {
 	double cos_phi_kp; ///< Usefull cache
 	double sin_phi_kp; ///< Usefull cache
 
+	geopoint_data() = default;
 	geopoint_data(geopoint_data const &) = default;
 
 	/**

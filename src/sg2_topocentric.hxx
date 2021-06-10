@@ -48,7 +48,7 @@ struct topocentric_data {
 	double toa_ni;   /* irradiation at top of atmosphere normal incidence (W/m2) */
 	double toa_hi;   /* irradiation at top of atmosphere horizontal incidence (W/m2) */
 
-	topocentric_data() { }
+	topocentric_data() = default;
 	topocentric_data(topocentric_data const &) = default;
 	topocentric_data(geocentric_data const & geoc, geopoint_data const & gp);
 

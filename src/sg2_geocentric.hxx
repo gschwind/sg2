@@ -43,6 +43,7 @@ struct geocentric_data {
 	double nu;         /* Apparent sideral time (rad) */
 	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
 
+	geocentric_data() = default;
 	geocentric_data(date const & ut);
 	geocentric_data(date const & ut, date const & tt);
 
