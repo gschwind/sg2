@@ -31,13 +31,6 @@
 
 namespace sg2 {
 
-struct geopoint_snap_data {
-	geopoint_data geopoint;
-	geocentric_data geoc;
-	topocentric_data topoc;
-};
-
-
 std::tuple<date, date, date> sunrise(date const &, geopoint_data const &);
 
 }

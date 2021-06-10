@@ -58,7 +58,6 @@ struct ellps;
 struct geopoint_data;
 struct geocentric_data;
 struct topocentric_data;
-struct geopoint_snap_data;
 
 } // namespace sg2
 
