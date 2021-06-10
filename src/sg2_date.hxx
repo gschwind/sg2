@@ -95,7 +95,7 @@ struct date {
 };
 
 struct julian {
-	double jd; // julian date in factionnal days
+	double value; // julian date in factionnal days
 
 	julian();
 	julian(double jd);
@@ -186,7 +186,7 @@ inline julian::julian()
 }
 
 inline julian::julian(double jd) :
-	jd{jd}
+	value{jd}
 {
 
 }
@@ -194,7 +194,7 @@ inline julian::julian(double jd) :
 inline julian::julian(ymdh const & d)
 {
 	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
-	jd = xjd - 0.5 + d.hour / 24.0;
+	value = xjd - 0.5 + d.hour / 24.0;
 }
 
 inline julian::julian(ydoyh const & d) :
@@ -204,13 +204,13 @@ inline julian::julian(ydoyh const & d) :
 }
 
 inline julian::julian(date const nsec) :
-	jd{nsec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
+	value{nsec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
 {
 }
 
 inline julian::operator double() const
 {
-	return jd;
+	return value;
 }
 
 inline ymdh::ymdh() // do not initialize member for performance.

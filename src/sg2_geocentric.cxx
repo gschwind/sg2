@@ -69,8 +69,8 @@ void geocentric_data::_init_all()
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(tt);
 
-	Delta_psi = approx_Dpsi.compute(julian{tt}.jd);
-	epsilon = approx_epsilon.compute(julian{tt}.jd);
+	Delta_psi = approx_Dpsi.compute(julian{tt}.value);
+	epsilon = approx_epsilon.compute(julian{tt}.value);
 
 	Theta_a = L + PI + Delta_psi
 			+ Delta_tau;
@@ -83,10 +83,10 @@ void geocentric_data::_init_all()
 	delta = math::asin(sin_Theta_a_kd * math::sin(epsilon));
 
 	// The compiler look smart enough to merge conversions to jd with computation.
-	nu0_kd = approx_nu0.compute(julian{ut}.jd);
+	nu0_kd = approx_nu0.compute(julian{ut}.value);
 
 	Delta_psi_cos_epsilon_kd = Delta_psi * cos_epsilon_kd;
-	M_kd = approx_M_0.compute(julian{tt}.jd);
+	M_kd = approx_M_0.compute(julian{tt}.value);
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;

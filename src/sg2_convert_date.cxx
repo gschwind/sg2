@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
 		ydoyh = sg2::ydoyh{ymdh};
 	}
 
-	printf("jd ............ %f\n", jd.jd);
+	printf("jd ............ %f\n", jd.value);
 	printf("msec .......... %ld\n", d.msec);
 	printf("ymdh .......... %04d-%02d-%02d %f\n", ymdh.year, ymdh.month, ymdh.day_of_month, ymdh.hour);
 	printf("ymdhmsn ....... %04d-%02d-%02dT%02d:%02d:%02d.%09d\n", ymdhmsn.year, ymdhmsn.month, ymdhmsn.day_of_month, ymdhmsn.hour, ymdhmsn.min, ymdhmsn.sec, ymdhmsn.nsec);

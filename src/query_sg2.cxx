@@ -104,7 +104,7 @@ int main(int argc, char ** argv) {
 	printf("topoc.toa_ni      = %f\n", topoc.toa_ni);
 
 	printf("Extra data\n");
-	double x = (xjd.jd + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
+	double x = (xjd.value + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
 
 	printf("sun_rise          = %f\n", day.get_sun_rise_time());
