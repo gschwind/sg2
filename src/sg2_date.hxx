@@ -90,8 +90,6 @@ struct date {
 	date(ymdh const & d);
 	date(ydoyh const & d);
 
-	operator int64_t() const;
-
 };
 
 struct julian {
@@ -175,11 +173,6 @@ inline date::date(ydoyh const & d) :
 
 }
 
-inline date::operator int64_t() const
-{
-	return msec;
-}
-
 inline julian::julian()
 {
 
@@ -203,8 +196,8 @@ inline julian::julian(ydoyh const & d) :
 
 }
 
-inline julian::julian(date const nsec) :
-	value{nsec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
+inline julian::julian(date const d) :
+	value{d.msec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
 {
 }
 
