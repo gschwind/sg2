@@ -28,7 +28,7 @@
 
 namespace sg2 {
 
-sun_daily_data::sun_daily_data(geopoint_data const & p) :
+sun_daily_data::sun_daily_data(geopoint const & p) :
 	_p(p),
 	_sun_rise_time(NAN),
 	_sun_set_time(NAN),

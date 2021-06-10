@@ -55,7 +55,7 @@ struct ymdh;
 struct ydoyh;
 struct ellps;
 
-struct geopoint_data;
+struct geopoint;
 struct geocentric_data;
 struct topocentric_data;
 

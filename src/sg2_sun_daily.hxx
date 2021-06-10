@@ -113,7 +113,7 @@ double hc_find_zero(F func, double const EPS, double left_bound, double right_bo
 }
 
 class sun_daily_data {
-	geopoint_data const & _p;
+	geopoint const & _p;
 	double _sun_rise_time;
 	double _sun_set_time;
 	double _sun_zenit_time;
@@ -121,7 +121,7 @@ class sun_daily_data {
 	double _sun_end_of_day_time;
 
 public:
-	sun_daily_data(geopoint_data const & p);
+	sun_daily_data(geopoint const & p);
 	void update(double jd);
 
 	double get_sun_rise_time() {

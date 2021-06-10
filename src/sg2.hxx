@@ -31,7 +31,7 @@
 
 namespace sg2 {
 
-std::tuple<date, date, date> sunrise(date const &, geopoint_data const &);
+std::tuple<date, date, date> sunrise(date const &, geopoint const &);
 
 }
 

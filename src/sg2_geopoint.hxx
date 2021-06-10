@@ -43,7 +43,7 @@ struct ellps {
 
 };
 
-struct geopoint_data {
+struct geopoint {
 	ellps  ellipse;
 	double  phi;        /* Latitude (rad) */
 	double lambda;     /* Longitude (rad) */
@@ -55,17 +55,17 @@ struct geopoint_data {
 	double cos_phi_kp; ///< Usefull cache
 	double sin_phi_kp; ///< Usefull cache
 
-	geopoint_data() = default;
-	geopoint_data(geopoint_data const &) = default;
+	geopoint() = default;
+	geopoint(geopoint const &) = default;
 
 	/**
 	 * @input lat: latitude in degrees
 	 * @input lon: longitude in degrees
 	 * @input h: altitude in meters
 	 **/
-	geopoint_data(double lon, double lat, double h, ellps const & p_data_ellps = ELLPS_WGS84);
+	geopoint(double lon, double lat, double h, ellps const & p_data_ellps = ELLPS_WGS84);
 
-	auto operator=(geopoint_data const &) -> geopoint_data & = default;
+	auto operator=(geopoint const &) -> geopoint & = default;
 
 	double const & get_phi() const {
 		return phi;
@@ -96,7 +96,7 @@ inline ellps::ellps(double a, double f) :
 
 }
 
-inline geopoint_data::geopoint_data(double lon, double lat, double h, ellps const & ellipse) :
+inline geopoint::geopoint(double lon, double lat, double h, ellps const & ellipse) :
 	ellipse{ellipse},
 	lambda{RAD(lon)},
 	phi{RAD(lat)},

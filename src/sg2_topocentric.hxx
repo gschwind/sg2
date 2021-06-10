@@ -50,7 +50,7 @@ struct topocentric_data {
 
 	topocentric_data() = default;
 	topocentric_data(topocentric_data const &) = default;
-	topocentric_data(geocentric_data const & geoc, geopoint_data const & gp);
+	topocentric_data(geocentric_data const & geoc, geopoint const & gp);
 
 	auto operator=(topocentric_data const &) -> topocentric_data & = default;
 
@@ -163,7 +163,7 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 	}
 }
 
-inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint_data const & gp)
+inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint const & gp)
 {
 	double xi = (gp.ellipse.a / AU);
 

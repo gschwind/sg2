@@ -34,7 +34,7 @@ inline static double _clam(double x) {
 	return x - std::floor(x);
 }
 
-std::tuple<date, date, date> sunrise(date const & d, geopoint_data const & gp)
+std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 {
 	// round nearest day a 0 UT
 	date d0{(d.msec/86400000)*86400000};

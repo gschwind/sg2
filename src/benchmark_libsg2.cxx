@@ -51,7 +51,7 @@ int main(int argc, char ** argv) {
 	for (int i = 0; i < jd_count; ++i) {
 		double jd = jd_begin + i * 1.0/24.0/60.0;
 		/** location related data **/
-		sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
+		sg2::geopoint geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
 		/** time related data **/
 		sg2::geocentric_data geoc{sg2::date{jd}};
 		/** local-time related data **/
