@@ -100,9 +100,6 @@ struct julian {
 	julian(ymdh const & d);
 	julian(ydoyh const & d);
 	julian(date const nsec);
-
-	operator double() const;
-
 };
 
 /* Date YMD + H en heure décimale UT */
@@ -199,11 +196,6 @@ inline julian::julian(ydoyh const & d) :
 inline julian::julian(date const d) :
 	value{d.msec/(24.0*60.0*60.0*1e3)+EPOCH_JD}
 {
-}
-
-inline julian::operator double() const
-{
-	return value;
 }
 
 inline ymdh::ymdh() // do not initialize member for performance.

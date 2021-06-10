@@ -44,8 +44,8 @@ int main(int argc, char ** argv)
 		}
 
 		jd = sg2::julian{atof(argv[2])};
-		d = sg2::date{jd};
-		ymdh = sg2::ymdh{jd};
+		d = sg2::date{jd.value};
+		ymdh = sg2::ymdh{jd.value};
 		ymdhmsn = sg2::ymdhmsn{d};
 		ydoyh = sg2::ydoyh{ymdh};
 	}
@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 
 		d = sg2::date{static_cast<int64_t>(atoll(argv[2]))};
 		jd = sg2::julian{d};
-		ymdh = sg2::ymdh{jd};
+		ymdh = sg2::ymdh{jd.value};
 		ymdhmsn = sg2::ymdhmsn{d};
 		ydoyh = sg2::ydoyh{ymdh};
 	}

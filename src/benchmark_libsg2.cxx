@@ -53,7 +53,7 @@ int main(int argc, char ** argv) {
 		/** location related data **/
 		sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
 		/** time related data **/
-		sg2::geocentric_data geoc{sg2::date{sg2::julian{jd}}};
+		sg2::geocentric_data geoc{sg2::date{jd}};
 		/** local-time related data **/
 		sg2::topocentric_data topoc{geoc, geopoint};
 		out[i] = topoc.gamma_S0;

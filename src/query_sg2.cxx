@@ -47,7 +47,7 @@ int main(int argc, char ** argv) {
 	sg2::geopoint_data geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
 
 	/** time related data **/
-	sg2::geocentric_data geoc{sg2::date{xjd}};
+	sg2::geocentric_data geoc{sg2::date{xjd.value}};
 
 	/** local-time related data **/
 	sg2::topocentric_data topoc{geoc, geopoint};
