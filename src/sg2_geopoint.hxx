@@ -38,6 +38,7 @@ struct ellps {
 	double a; /* Axis a (m) */
 	double f; /* Flatness (-)*/
 
+	ellps() = default;
 	ellps(ellps const &) = default;
 	ellps(double a, double f);
 
