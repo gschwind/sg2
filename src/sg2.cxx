@@ -36,26 +36,13 @@ inline static double _clam(double x) {
 
 std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 {
+	static const double sun_rise_gamma = RAD(-0.8333);
+
 	// round nearest day a 0 UT
 	date d0{(d.msec/86400000)*86400000};
 
 	date dp{d0.msec-86400000};
 	date dn{d0.msec+86400000};
-
-	{
-		sg2::ymdhmsn d(d0);
-		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-	{
-		sg2::ymdhmsn d(dp);
-		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
-	{
-		sg2::ymdhmsn d(dn);
-		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
 
 	geocentric_data geoc_dp{dp};
 	geocentric_data geoc_d0{d0};
@@ -67,7 +54,7 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 	double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_dn.nu)/2.0/PI;
 
 	// Eq A4
-	double x0 = (sin(RAD(-0.8333))-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
+	double x0 = (sin(sun_rise_gamma)-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
 	if (x0 > 1.0 || x0 < -1.0) {
 		return {d0, d0, d0};
 	}
@@ -77,17 +64,9 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 	double m1 = m0-H0/2.0/PI;
 	double m2 = m0+H0/2.0/PI;
 
-	std::cout << "m0=" << m0 << std::endl;
-	std::cout << "m1=" << m1 << std::endl;
-	std::cout << "m2=" << m2 << std::endl;
-
 	m0 = _clam(m0);
 	m1 = _clam(m1);
 	m2 = _clam(m2);
-
-	std::cout << "m0=" << m0 << std::endl;
-	std::cout << "m1=" << m1 << std::endl;
-	std::cout << "m2=" << m2 << std::endl;
 
 	double v0 = geoc_d0.nu + RAD(360.985647)*m0;
 	double v1 = geoc_d0.nu + RAD(360.985647)*m1;
@@ -125,8 +104,8 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 
 	double T = m0 - Hp0/2.0/PI;
 
-	double R = m1 + (h1+RAD(0.8333))/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
-	double S = m2 + (h2+RAD(0.8333))/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
+	double R = m1 + (h1-sun_rise_gamma)/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
+	double S = m2 + (h2-sun_rise_gamma)/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
 
 	return {geoc_d0.ut.msec+static_cast<int64_t>(R*86400e3),
 			geoc_d0.ut.msec+static_cast<int64_t>(T*86400e3),
