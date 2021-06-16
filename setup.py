@@ -69,7 +69,7 @@ module = Extension('sg2', **params)
 
 setup(
     name = 'sg2',
-    version = '1.0.0',
+    version = '2.0.5',
     author = ['Benoit Gshwind', 'Philippe Blanc'],
     author_email = [
         'benoit.gschwind@mines-paristech.fr',
