@@ -36,8 +36,8 @@ inline static double _clam(double x) {
 
 std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 {
-	static const double sun_rise_gamma = RAD(-0.8333);
-
+//	static const double sun_rise_gamma = RAD(-0.8333);
+	static const double sun_rise_gamma = RAD(0.0);
 	// round nearest day a 0 UT
 	date d0{(d.msec/86400000)*86400000};
 
