@@ -94,8 +94,7 @@ struct topocentric_data {
 };
 
 
-
-inline static double _topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T)
+inline double topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T)
 {
 	double const gamma_S0_seuil = -0.010035643198967;
 	double const R = 0.029614018235657;
@@ -115,7 +114,8 @@ inline static double _topocentric_correction_refraction_SAE(double const gamma_S
 
 }
 
-inline static double _topocentric_correction_refraction_ZIM(double const gamma_S0, double const P, double const T)
+
+inline double topocentric_correction_refraction_ZIM(double const gamma_S0, double const P, double const T)
 {
 	static const double gamma_S0_seuil = -0.010035643198967;
 	static const double R = 0.029614018235657;
@@ -149,10 +149,10 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 {
 	switch (method) {
 	case REFRACTION_SAE:
-		return _topocentric_correction_refraction_SAE(gamma_S0, P, T);
+		return topocentric_correction_refraction_SAE(gamma_S0, P, T);
 		break;
 	case REFRACTION_ZIM:
-		return _topocentric_correction_refraction_ZIM(gamma_S0, P, T);
+		return topocentric_correction_refraction_ZIM(gamma_S0, P, T);
 		break;
 	case REFRACTION_NONE:
 		return gamma_S0;
