@@ -129,7 +129,7 @@ struct ymdhmsn {
 	int hour;
 	int min;
 	int sec;
-	int nsec;
+	int msec;
 
 	ymdhmsn();
 	ymdhmsn(date const date);
@@ -277,14 +277,14 @@ inline ymdhmsn::ymdhmsn(date const date)
 	xnsec -= min * (1000LL * 60LL);
 	sec = xnsec / (1000LL);
 	xnsec -= sec * (1000LL);
-	nsec = (int)xnsec;
+	msec = (int)xnsec;
 
 }
 
 inline ymdhmsn::operator std::string() const
 {
 	std::array<char, 32> buf;
-	snprintf(&buf[0], buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%09d", year, month, day_of_month, hour, min, sec, nsec);
+	snprintf(&buf[0], buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%03d", year, month, day_of_month, hour, min, sec, msec);
 	return std::string{&buf[0]};
 }
 
