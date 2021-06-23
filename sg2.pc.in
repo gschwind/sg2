@@ -3,8 +3,8 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: Solar Geometry 2 library v2.0.0
-Description: Solar Geometry 2 library v2.0.0
+Name: Solar Geometry 2 library v@PACKAGE_VERSION@
+Description: Solar Geometry 2 library v@PACKAGE_VERSION@
 Requires:
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lsg2
