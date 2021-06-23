@@ -95,6 +95,8 @@ struct date {
 	date(ymdh const & d);
 	date(ydoyh const & d);
 
+	operator std::string() const;
+
 };
 
 struct julian {
@@ -175,6 +177,11 @@ inline date::date(ydoyh const & d) :
 	date{ymdh{d}}
 {
 
+}
+
+inline date::operator std::string() const
+{
+	return static_cast<std::string>(ymdhmsn{*this});
 }
 
 inline julian::julian()

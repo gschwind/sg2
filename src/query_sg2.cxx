@@ -57,8 +57,8 @@ int main(int argc, char ** argv) {
 	auto sunrise = sg2::sunrise(geoc.ut, geopoint);
 
 	printf("Time related data (i.e. solar system geometry)\n");
-	printf("geoc.ut            = %s\n", static_cast<std::string>(sg2::ymdhmsn{geoc.ut}).c_str());
-	printf("geoc.tt            = %s\n", static_cast<std::string>(sg2::ymdhmsn{geoc.tt}).c_str());
+	printf("geoc.ut            = %s\n", static_cast<std::string>(geoc.ut).c_str());
+	printf("geoc.tt            = %s\n", static_cast<std::string>(geoc.tt).c_str());
 
 	printf("helioc.R           = %f\n", geoc.R);
 	printf("helioc.L           = %f\n", geoc.L);
@@ -95,9 +95,9 @@ int main(int argc, char ** argv) {
 	double x = (xjd.value + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
 
-	printf("sun_rise          = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<0>(sunrise)}).c_str());
-	printf("sun_transite      = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<1>(sunrise)}).c_str());
-	printf("sun_set           = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<2>(sunrise)}).c_str());
+	printf("sun_rise          = %s\n", static_cast<std::string>(std::get<0>(sunrise)).c_str());
+	printf("sun_transite      = %s\n", static_cast<std::string>(std::get<1>(sunrise)).c_str());
+	printf("sun_set           = %s\n", static_cast<std::string>(std::get<2>(sunrise)).c_str());
 
 	return 0;
 
