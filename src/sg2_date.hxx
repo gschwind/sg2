@@ -32,6 +32,9 @@
 #include <cstdio>
 #include <cstring>
 
+#include <string>
+#include <array>
+
 
 namespace sg2 {
 
@@ -130,6 +133,8 @@ struct ymdhmsn {
 
 	ymdhmsn();
 	ymdhmsn(date const date);
+
+	operator std::string() const;
 
 };
 
@@ -274,6 +279,13 @@ inline ymdhmsn::ymdhmsn(date const date)
 	xnsec -= sec * (1000LL);
 	nsec = (int)xnsec;
 
+}
+
+inline ymdhmsn::operator std::string() const
+{
+	std::array<char, 32> buf;
+	snprintf(&buf[0], buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%09d", year, month, day_of_month, hour, min, sec, nsec);
+	return std::string{&buf[0]};
 }
 
 inline ydoyh::ydoyh()
