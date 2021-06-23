@@ -54,14 +54,11 @@ int main(int argc, char ** argv) {
 	 * Computing solar system state.
 	 **/
 
-	sg2::ymdhmsn date_ut(geoc.ut);
-	sg2::ymdhmsn date_tt(geoc.tt);
-
 	auto sunrise = sg2::sunrise(geoc.ut, geopoint);
 
 	printf("Time related data (i.e. solar system geometry)\n");
-	printf("jd.jd_ut           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", date_ut.year, date_ut.month, date_ut.day_of_month, date_ut.hour, date_ut.min, date_ut.sec+date_ut.nsec*1e-9);
-	printf("jd.jd_tt           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", date_tt.year, date_tt.month, date_tt.day_of_month, date_tt.hour, date_tt.min, date_tt.sec+date_tt.nsec*1e-9);
+	printf("geoc.ut            = %s\n", static_cast<std::string>(sg2::ymdhmsn{geoc.ut}).c_str());
+	printf("geoc.tt            = %s\n", static_cast<std::string>(sg2::ymdhmsn{geoc.tt}).c_str());
 
 	printf("helioc.R           = %f\n", geoc.R);
 	printf("helioc.L           = %f\n", geoc.L);
@@ -98,20 +95,9 @@ int main(int argc, char ** argv) {
 	double x = (xjd.value + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
 
-	{
-		sg2::ymdhmsn d(std::get<0>(sunrise));
-		printf("sun_rise2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
-	{
-		sg2::ymdhmsn d(std::get<2>(sunrise));
-		printf("sun_set2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
-	{
-		sg2::ymdhmsn d(std::get<1>(sunrise));
-		printf("sun_zenit2           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
+	printf("sun_rise          = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<0>(sunrise)}).c_str());
+	printf("sun_transite      = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<1>(sunrise)}).c_str());
+	printf("sun_set           = %s\n", static_cast<std::string>(sg2::ymdhmsn{std::get<2>(sunrise)}).c_str());
 
 	return 0;
 
