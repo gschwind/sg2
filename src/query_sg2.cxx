@@ -60,8 +60,8 @@ int main(int argc, char ** argv) {
 	printf("geoc.ut            = %s\n", static_cast<std::string>(geoc.ut).c_str());
 	printf("geoc.tt            = %s\n", static_cast<std::string>(geoc.tt).c_str());
 
-	printf("helioc.R           = %f\n", geoc.R);
-	printf("helioc.L           = %f\n", geoc.L);
+	printf("geoc.R             = %f\n", geoc.R);
+	printf("geoc.L             = %f\n", geoc.L);
 
 	printf("geoc.delta         = %f\n", geoc.delta);
 	printf("geoc.EOT           = %f\n", geoc.EOT);
@@ -78,8 +78,6 @@ int main(int argc, char ** argv) {
 	printf("geopoint.u        = %f\n", geopoint.u);
 	printf("geopoint.x        = %f\n", geopoint.x);
 	printf("geopoint.y        = %f\n", geopoint.y);
-	printf("geopoint.cos_phi  = %f\n", std::cos(geopoint.phi));
-	printf("geopoint.sin_phi  = %f\n", std::sin(geopoint.phi));
 
 	printf("Sun related data\n");
 
