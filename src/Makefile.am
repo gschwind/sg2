@@ -1,4 +1,4 @@
-bin_PROGRAMS = query_sg2 benchmark_libsg2 sg2_convert_date
+bin_PROGRAMS = sg2_query benchmark_libsg2 sg2_convert_date
 
 AM_CXXFLAGS = \
 	@VDT_DEFINE@ \
@@ -35,9 +35,9 @@ libsg2_la_SOURCES = \
 	sg2_utils.hxx \
 	sg2_geocentric_data.s
 
-query_sg2_LDADD = @VDT_LIBS@ libsg2.la
-query_sg2_SOURCES = \
-	query_sg2.cxx
+sg2_query_LDADD = @VDT_LIBS@ libsg2.la
+sg2_query_SOURCES = \
+	sg2_query.cxx
 
 benchmark_libsg2_LDADD = @VDT_LIBS@ libsg2.la
 benchmark_libsg2_SOURCES = \
