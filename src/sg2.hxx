@@ -27,7 +27,6 @@
 #include "sg2_date.hxx"
 #include "sg2_geocentric.hxx"
 #include "sg2_topocentric.hxx"
-#include "sg2_sun_daily.hxx"
 
 #include <tuple>
 

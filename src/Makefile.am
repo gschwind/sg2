@@ -15,8 +15,7 @@ include_HEADERS = \
 	sg2_err.hxx \
 	sg2_date.hxx \
 	sg2_geocentric.hxx \
-	sg2_topocentric.hxx \
-	sg2_sun_daily.hxx
+	sg2_topocentric.hxx
 
 libsg2_la_LDFLAGS = -version-info 2:0:0
 libsg2_la_SOURCES = \
@@ -30,8 +29,6 @@ libsg2_la_SOURCES = \
 	sg2_geocentric.hxx \
 	sg2_topocentric.cxx \
 	sg2_topocentric.hxx \
-	sg2_sun_daily.cxx \
-	sg2_sun_daily.hxx \
 	sg2_data_handler.cxx \
 	sg2_data_handler.hxx \
 	sg2_utils.cxx \

@@ -19,11 +19,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <sg2_sun_daily.hxx>
+#include <sg2.hxx>
 #include <cstdio>
 #include <cstdlib>
-
-
 
 void usage(void) {
 	printf("usage: test_sg2 <lat> <lon> <alt> <jd>\n");
@@ -51,13 +49,6 @@ int main(int argc, char ** argv) {
 
 	/** local-time related data **/
 	sg2::topocentric_data topoc{geoc, geopoint};
-
-	sg2::sun_daily_data day{geopoint};
-	try {
-		day.update(floor(jd+0.5));
-	} catch (...) {
-		printf("fail to compute daily value\n");
-	}
 
 	/**
 	 * Computing solar system state.
@@ -106,28 +97,6 @@ int main(int argc, char ** argv) {
 	printf("Extra data\n");
 	double x = (xjd.value + (lon/360.0) - (topoc.omega/(M_PI*2.0)));
 	printf("tst-tu            = %f\n", (x-floor(x+0.5)));
-
-	printf("sun_rise          = %f\n", day.get_sun_rise_time());
-	printf("sun_set           = %f\n", day.get_sun_set_time());
-	printf("sun_zenit         = %f\n", day.get_sun_zenit_time());
-	printf("sun_begin_of_day  = %f\n", day.get_sun_begin_of_day_time());
-	printf("sun_end_of_day    = %f\n", day.get_sun_end_of_day_time());
-
-	{
-		sg2::ymdhmsn d(day.get_sun_rise_time());
-		printf("sun_rise3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
-	{
-		sg2::ymdhmsn d(day.get_sun_set_time());
-		printf("sun_set3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
-	{
-		sg2::ymdhmsn d(day.get_sun_zenit_time());
-		printf("sun_zenit3           = %04d-%02d-%02dT%02d:%02d:%06.3f\n", d.year, d.month, d.day_of_month, d.hour, d.min, d.sec+d.nsec*1e-9);
-	}
-
 
 	{
 		sg2::ymdhmsn d(std::get<0>(sunrise));
