@@ -50,15 +50,15 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 	geocentric_data geoc_d0{d0};
 	geocentric_data geoc_dn{dn};
 
-	geoc_d0.nu = (geoc_d0.nu/2.0/PI-std::floor(geoc_d0.nu/2.0/PI))*PI*2.0;
-
 	// Eq A3
 	double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_d0.nu)/2.0/PI;
 
 	// Eq A4
 	double x0 = (sin(sun_rise_gamma)-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
 	if (x0 > 1.0 || x0 < -1.0) {
-		return {d0, d0, d0};
+		return {date{std::numeric_limits<int64_t>::min()},
+				date{std::numeric_limits<int64_t>::min()},
+				date{std::numeric_limits<int64_t>::min()}};
 	}
 	double H0 = acos(x0);
 
@@ -79,32 +79,37 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 	double n2 = m2 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
 
 	double a0 = geoc_d0.r_alpha-geoc_dp.r_alpha;
+
+	if (a0 < 0.0)
+		a0 += 2.0*PI;
+
 	double a1 = geoc_d0.delta-geoc_dp.delta;
 	double b0 = geoc_dn.r_alpha-geoc_d0.r_alpha;
+
+	if (b0 < 0.0)
+		b0 += 2.0*PI;
+
 	double b1 = geoc_dn.delta-geoc_d0.delta;
 	double c0 = b0 - a0;
 	double c1 = b1 - a1;
 
 	double r_alpha_p0 = geoc_d0.r_alpha + n0*(a0+b0+c0*n0)/2.0;
-	double delta_p0 = geoc_d0.delta + n0*(a1+b1+c1*n0)/2.0;
 	double r_alpha_p1 = geoc_d0.r_alpha + n1*(a0+b0+c0*n1)/2.0;
-	double delta_p1 = geoc_d0.delta + n1*(a1+b1+c1*n1)/2.0;
 	double r_alpha_p2 = geoc_d0.r_alpha + n2*(a0+b0+c0*n2)/2.0;
-	double delta_p2 = geoc_d0.delta + n2*(a1+b1+c1*n2)/2.0;
+
+	double delta_p0 =   geoc_d0.delta   + n0*(a1+b1+c1*n0)/2.0;
+	double delta_p1 =   geoc_d0.delta   + n1*(a1+b1+c1*n1)/2.0;
+	double delta_p2 =   geoc_d0.delta   + n2*(a1+b1+c1*n2)/2.0;
 
 	double Hp0 = v0 + gp.lambda - r_alpha_p0;
 	double Hp1 = v1 + gp.lambda - r_alpha_p1;
 	double Hp2 = v2 + gp.lambda - r_alpha_p2;
 
-	Hp0 = ((Hp0+PI)/2.0/PI-std::floor((Hp0+PI)/2.0/PI))*PI*2.0-PI;
-	Hp1 = ((Hp1+PI)/2.0/PI-std::floor((Hp1+PI)/2.0/PI))*PI*2.0-PI;
-	Hp2 = ((Hp2+PI)/2.0/PI-std::floor((Hp2+PI)/2.0/PI))*PI*2.0-PI;
-
 	double h0 = asin(sin(gp.phi)*sin(delta_p0)+cos(gp.phi)*cos(delta_p0)*cos(Hp0));
 	double h1 = asin(sin(gp.phi)*sin(delta_p1)+cos(gp.phi)*cos(delta_p1)*cos(Hp1));
 	double h2 = asin(sin(gp.phi)*sin(delta_p2)+cos(gp.phi)*cos(delta_p2)*cos(Hp2));
 
-	double T = m0 - Hp0/2.0/PI;
+	double T = m0 - _clam(Hp0/2.0/PI+0.5)-0.5;
 
 	double R = m1 + (h1-sun_rise_gamma)/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
 	double S = m2 + (h2-sun_rise_gamma)/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
