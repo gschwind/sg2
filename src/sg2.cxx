@@ -53,7 +53,7 @@ std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 	geoc_d0.nu = (geoc_d0.nu/2.0/PI-std::floor(geoc_d0.nu/2.0/PI))*PI*2.0;
 
 	// Eq A3
-	double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_dn.nu)/2.0/PI;
+	double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_d0.nu)/2.0/PI;
 
 	// Eq A4
 	double x0 = (sin(sun_rise_gamma)-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
