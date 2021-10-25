@@ -931,6 +931,37 @@ static struct PyModuleDef moduledef = {
 };
 
 
+static string const _doc_ymdh_to_jd =
+"Convert date in year-month-day_of_month-hours from to julian date\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"\n"
+"y : 1D array\n"
+"	The list year numbers\n"
+"\n"
+"m : 1D array\n"
+"	The list of month number in [1,12]\n"
+"\n"
+"d : 1D array\n"
+"	The list of day of month in [1,31]\n"
+"\n"
+"h : 1D array\n"
+"	array of decimal hour within the day, ex. 12:30 is 12.5\n"
+"\n"
+"Returns\n"
+"-------\n"
+"\n"
+"julian_days : 1D array\n"
+" List of julian day\n"
+"\n"
+"\n"
+"Notes\n"
+"-----\n"
+"\n"
+"Inputs array must have the same size\n"
+;
+
 PyMODINIT_FUNC
 PyInit_sg2(void)
 {
@@ -964,7 +995,7 @@ PyInit_sg2(void)
 	PyModule_AddIntConstant(m, "NGP", 5);;
 	PyModule_AddIntConstant(m, "SPHERE", 6);
 
- 	static python_bind_helper::build_ufunc<decltype(_pysg2_ymdh_to_jd), _pysg2_ymdh_to_jd> ufunc_ymdh_to_jd("ymdh_to_jd");
+ 	static python_bind_helper::build_ufunc<decltype(_pysg2_ymdh_to_jd), _pysg2_ymdh_to_jd> ufunc_ymdh_to_jd("ymdh_to_jd", _doc_ymdh_to_jd);
 	ufunc_ymdh_to_jd.register_to(m);
 	static python_bind_helper::build_ufunc<decltype(_pysg2_jd_to_ymdh), _pysg2_jd_to_ymdh> ufunc_jd_to_ymdh("jd_to_ymdh");
 	ufunc_jd_to_ymdh.register_to(m);
