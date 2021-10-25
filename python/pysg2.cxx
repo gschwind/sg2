@@ -962,6 +962,32 @@ static string const _doc_ymdh_to_jd =
 "Inputs array must have the same size\n"
 ;
 
+static string const _doc_jd_to_ymdh =
+"Convert julian day to year-month-day_of_month-hours form\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"\n"
+"julian_days : 1D array of double\n"
+"	List of julian days to convert\n"
+"\n"
+"Returns\n"
+"-------\n"
+"\n"
+"y : 1D array\n"
+"	Array of year number\n"
+"\n"
+"m : 1D array\n"
+"	Array of month number in [1,12]\n"
+"\n"
+"\n"
+"d : 1D array\n"
+"	Array of day of month in [1,31]\n"
+"\n"
+"h : 1D array\n"
+"	Array of decimal hour within the day, ex. 12:30 is 12.5\n"
+;
+
 PyMODINIT_FUNC
 PyInit_sg2(void)
 {
@@ -997,7 +1023,7 @@ PyInit_sg2(void)
 
  	static python_bind_helper::build_ufunc<decltype(_pysg2_ymdh_to_jd), _pysg2_ymdh_to_jd> ufunc_ymdh_to_jd("ymdh_to_jd", _doc_ymdh_to_jd);
 	ufunc_ymdh_to_jd.register_to(m);
-	static python_bind_helper::build_ufunc<decltype(_pysg2_jd_to_ymdh), _pysg2_jd_to_ymdh> ufunc_jd_to_ymdh("jd_to_ymdh");
+	static python_bind_helper::build_ufunc<decltype(_pysg2_jd_to_ymdh), _pysg2_jd_to_ymdh> ufunc_jd_to_ymdh("jd_to_ymdh", _doc_jd_to_ymdh);
 	ufunc_jd_to_ymdh.register_to(m);
 	static python_bind_helper::build_ufunc<decltype(sg2::topocentric_correction_refraction_SAE), sg2::topocentric_correction_refraction_SAE> ufunc_topocentric_correction_refraction_SAE("topocentric_correction_refraction_SAE");
 	ufunc_topocentric_correction_refraction_SAE.register_to(m);
