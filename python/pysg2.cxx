@@ -703,6 +703,25 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	}
 }
 
+static char const _doc_sun_rise[] =
+"Compute time of sun rise, sun set and sun transit.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"\n"
+"geopoint : 2D array of double\n"
+"	(N,3) of double each row is lon in degrees, lat in degrees, altitude in metter.\n"
+"\n"
+"timespamp : 1D array of double, 1D array of numpy.datetime64\n"
+"	List of requested timestamp in ut\n"
+"\n"
+"Returns\n"
+"-------\n"
+"\n"
+"output : 3D array of datetime64[ms]\n"
+"	(N,M,3) datetime64[ms] with repectively sun rise, sun transit and sun set\n"
+"	in ut.\n"
+;
 
 static PyObject * py_sun_rise(PyObject * self, PyObject * args)
 {
@@ -879,7 +898,7 @@ static PyObject * py_sun_rise(PyObject * self, PyObject * args)
 static PyMethodDef methods[] =
 {
 	{"sun_position", py_sun_position, METH_VARARGS, _doc_sun_position},
-	TPL_FUNCTION(sun_rise),
+	{"sun_rise", py_sun_rise, METH_VARARGS, _doc_sun_rise},
 	{NULL, NULL, 0, NULL}
 };
 
