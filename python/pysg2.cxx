@@ -988,6 +988,28 @@ static string const _doc_jd_to_ymdh =
 "	Array of decimal hour within the day, ex. 12:30 is 12.5\n"
 ;
 
+static string const _doc_topocentric_correction_refraction_SAE =
+"Compute the atmosphere refraction using SAE correction\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"\n"
+"gamma_S0 : 1D array of double\n"
+"	Array of gamma_S0 (solar elevation with no refraction correction), in radians\n"
+"\n"
+"P : 1D array of double\n"
+"	Array of pressure in Pa\n"
+"\n"
+"T : 1D array of double\n"
+"	Array of temperature in degrees Celsus\n"
+"\n"
+"Returns\n"
+"-------\n"
+"\n"
+"gamma : 1D array of double\n"
+"	Array of corrected solar elevation\n"
+;
+
 PyMODINIT_FUNC
 PyInit_sg2(void)
 {
@@ -1025,7 +1047,7 @@ PyInit_sg2(void)
 	ufunc_ymdh_to_jd.register_to(m);
 	static python_bind_helper::build_ufunc<decltype(_pysg2_jd_to_ymdh), _pysg2_jd_to_ymdh> ufunc_jd_to_ymdh("jd_to_ymdh", _doc_jd_to_ymdh);
 	ufunc_jd_to_ymdh.register_to(m);
-	static python_bind_helper::build_ufunc<decltype(sg2::topocentric_correction_refraction_SAE), sg2::topocentric_correction_refraction_SAE> ufunc_topocentric_correction_refraction_SAE("topocentric_correction_refraction_SAE");
+	static python_bind_helper::build_ufunc<decltype(sg2::topocentric_correction_refraction_SAE), sg2::topocentric_correction_refraction_SAE> ufunc_topocentric_correction_refraction_SAE("topocentric_correction_refraction_SAE", _doc_topocentric_correction_refraction_SAE);
 	ufunc_topocentric_correction_refraction_SAE.register_to(m);
 	static python_bind_helper::build_ufunc<decltype(sg2::topocentric_correction_refraction_ZIM), sg2::topocentric_correction_refraction_ZIM> ufunc_topocentric_correction_refraction_ZIM("topocentric_correction_refraction_ZIM");
 	ufunc_topocentric_correction_refraction_ZIM.register_to(m);
