@@ -21,20 +21,6 @@
 #ifndef SG2_ERR_H_
 #define SG2_ERR_H_
 
-#ifdef _MINGW_
-#include <windows.h>
-#endif
-
-#ifdef EXPORT
-#undef EXPORT
-#endif
-
-#ifdef _VISUAL_
-#define EXPORT _declspec (dllexport)
-#else
-#define EXPORT
-#endif
-
 #define SG2_ERR_DATE_CREATE_JD_MALLOC_1 -100
 #define SG2_ERR_DATE_CREATE_JD_MALLOC_2 -101
 #define SG2_ERR_DATE_CREATE_JD_MALLOC_3 -102

@@ -21,51 +21,6 @@
 #ifndef SG2_H_
 #define SG2_H_
 
-#ifdef _WIN32
-#pragma once
-
-// Modifiez les définitions suivantes si vous devez cibler une plate-forme avant celles spécifiées ci-dessous.
-// Reportez-vous à MSDN pour obtenir les dernières informations sur les valeurs correspondantes pour les différentes plates-formes.
-#ifndef WINVER				// Autorise l'utilisation des fonctionnalités spécifiques à Windows XP ou version ultérieure.
-#define WINVER 0x0501		// Attribuez la valeur appropriée à cet élément pour cibler d'autres versions de Windows.
-#endif
-
-#ifndef _WIN32_WINNT		// Autorise l'utilisation des fonctionnalités spécifiques à Windows XP ou version ultérieure.
-#define _WIN32_WINNT 0x0501	// Attribuez la valeur appropriée à cet élément pour cibler d'autres versions de Windows.
-#endif
-
-#ifndef _WIN32_WINDOWS		// Autorise l'utilisation des fonctionnalités spécifiques à Windows 98 ou version ultérieure.
-#define _WIN32_WINDOWS 0x0410 // Attribuez la valeur appropriée à cet élément pour cibler Windows Me ou version ultérieure.
-#endif
-
-#ifndef _WIN32_IE			// Autorise l'utilisation des fonctionnalités spécifiques à Internet Explorer 6.0 ou version ultérieure.
-#define _WIN32_IE 0x0600	// Attribuez la valeur appropriée à cet élément pour cibler d'autres versions d'Internet Explorer.
-#endif
-
-#define WIN32_LEAN_AND_MEAN		// Exclure les en-têtes Windows rarement utilisés
-
-// Fichiers d'en-tête Windows :
-#include <windows.h>
-#endif
-
-#ifdef _MINGW_
-#include <windows.h>
-#endif
-
-#ifdef EXPORT
-#undef EXPORT
-#endif
-
-#ifdef PUBLIC
-#undef PUBLIC
-#endif
-
-#ifdef _WIN32
-#define EXPORT _declspec (dllexport)
-#else
-#define EXPORT
-#endif
-
 #ifdef  __cplusplus
 extern "C"
 {
@@ -80,24 +35,24 @@ extern "C"
 
 #include <stdio.h>
 
-EXPORT S_SG2_SUNPOS *sg2_create_sunpos(unsigned long np, unsigned long nd,
+S_SG2_SUNPOS *sg2_create_sunpos(unsigned long np, unsigned long nd,
 		int *p_err);
 
-EXPORT void sg2_delete_sunpos(S_SG2_SUNPOS *p_sunpos, int *p_err);
+void sg2_delete_sunpos(S_SG2_SUNPOS *p_sunpos, int *p_err);
 
-EXPORT S_SG2_TABTILT *sg2_create_tabtilt(unsigned long na, int *p_err);
+S_SG2_TABTILT *sg2_create_tabtilt(unsigned long na, int *p_err);
 
-EXPORT void sg2_set_tabtilt(double *p_azimuth, double *p_slope,
+void sg2_set_tabtilt(double *p_azimuth, double *p_slope,
 		S_SG2_TABTILT *p_tilt, int *p_err);
 
-EXPORT void sg2_delete_tabtilt(S_SG2_TABTILT *p_tilt, int *p_err);
+void sg2_delete_tabtilt(S_SG2_TABTILT *p_tilt, int *p_err);
 
-EXPORT S_SG2_TOA_IRRAD *sg2_create_toa_irrad(unsigned long na,
+S_SG2_TOA_IRRAD *sg2_create_toa_irrad(unsigned long na,
 		unsigned long np, unsigned long nd, int *p_err);
 
-EXPORT void sg2_delete_toa_irrad(S_SG2_TOA_IRRAD *p_toa_irrad, int *p_err);
+void sg2_delete_toa_irrad(S_SG2_TOA_IRRAD *p_toa_irrad, int *p_err);
 
-EXPORT void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
+void sg2_set_sunpos(double *p_lon, double *p_lat, double *p_elevation,
 		SG2_ELLPSTYPE ellpstype, double *p_data_ellps, double *p_jd_ut,
 		double *p_delta_tt, SG2_CORRECTION_REFRACTION method,
 		double *data_corr, S_SG2_SUNPOS *p_sunpos, int *p_err);
