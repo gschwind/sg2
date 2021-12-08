@@ -1,7 +1,7 @@
 /*
- * Copyright 2017 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
- * Copyright 2017 ARMINES
- * Copyright 2017 MINES ParisTech
+ * Copyright 2011-2021 MINES ParisTech
+ * Copyright 2011 Philippe Blanc <philippe.blanc@mines-paristech.fr>
+ * Copyright 2014-2021 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
  *
  * This file is part of libsg2.
  *
