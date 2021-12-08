@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 MINES ParisTech
- * Copyright 2014 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
+ * Copyright 2014-2021 MINES ParisTech
+ * Copyright 2014-2021 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
  *
  * This file is part of libsg2.
  *
