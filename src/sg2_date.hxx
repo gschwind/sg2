@@ -236,7 +236,7 @@ inline ymdh::ymdh(date const & d)
 {
 	int jd = d.msec / (1e3 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
 	_julian_day_to_ymd(jd, year, month, day_of_month);
-	hour = static_cast<double>(d.msec % 1000LL)/(60.0*60.0*1e3);
+	hour = static_cast<double>(d.msec % (1000LL*60LL*60LL*24LL))/(60.0*60.0*1e3);
 }
 
 inline ymdh::ymdh(ydoyh const & p_ydoyh)
