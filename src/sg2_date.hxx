@@ -38,7 +38,7 @@
 
 namespace sg2 {
 
-/** 1970-01-01T12:00 **/
+/** 1970-01-01T00:00 **/
 static double const EPOCH_JD = 2440587.5;
 
 inline int _date_leapyear(int year) {
