@@ -170,7 +170,7 @@ inline date::date(double jd) :
 inline date::date(ymdh const & d)
 {
 	int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
-	msec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000LL) + d.hour*60.0*60.0*1e3;
+	msec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000LL) + (d.hour-12.0)*60.0*60.0*1e3;
 }
 
 inline date::date(ydoyh const & d) :
