@@ -51,7 +51,7 @@ int main(int argc, char ** argv)
 		ydoyh = sg2::ydoyh{ymdh};
 	}
 
-	if (strcmp("--nsec", argv[1]) == 0) {
+	if (strcmp("--msec", argv[1]) == 0) {
 		if (argc != 3) {
 			printf("invalid arguments\n");
 			return 1;
