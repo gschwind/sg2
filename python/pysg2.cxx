@@ -95,10 +95,10 @@ static double _pysg2_ymdh_to_jd(int year, int month, int day_of_month, double ho
 }
 
 // return year, month, day and microseconds
-static tuple<int, int, int, int> _pysg2_jd_to_ymdh(double jd)
+static tuple<int, int, int, double> _pysg2_jd_to_ymdh(double jd)
 {
 	sg2::ymdh date(jd);
-	return tuple<int, int, int, int>{date.year, date.month, date.day_of_month, static_cast<int>(date.hour*60.0*1000000.0+0.5)};
+	return tuple<int, int, int, double>{date.year, date.month, date.day_of_month, date.hour};
 }
 
 static PyArray_Descr * create_datetime64_ms_dtype()
