@@ -88,7 +88,7 @@ inline static T & PyArray_Get(PyArrayObject * arr, int i, int j, int k)
 	return *reinterpret_cast<T*>(PyArray_GETPTR3(arr, i, j, k));
 }
 
-static double _pysg2_ymdh_to_jd(int year, int month, int day_of_month, double hours)
+static double _pysg2_ymdh_to_jd(int64_t year, int64_t month, int64_t day_of_month, double hours)
 {
 	sg2::ymdh date(year, month, day_of_month, hours);
 	return sg2::julian(date).value;
