@@ -553,6 +553,7 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 
 	if (PyArray_ISINTEGER(reinterpret_cast<PyArrayObject*>(arr1))) {
 		// Expected in millisecond.
+		fprintf(stderr, "Warning: using integer array as input will be interpreted as datetime64[ms]\n");
 		auto tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_INT64), NPY_ARRAY_IN_ARRAY));
 		std::swap(arr1, tmp);
 		Py_XDECREF(tmp);
