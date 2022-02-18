@@ -274,19 +274,27 @@ struct _generic_handler {
 		if (iter == nullptr)
 			return;
 		for(auto obj = PyIter_Next(iter); obj != nullptr; obj = PyIter_Next(iter)) {
-			if(!PyUnicode_Check(obj))
+			if(!PyUnicode_Check(obj)) {
+				Py_DECREF(obj);
 				continue;
+			}
 			auto str = PyUnicode_AsUTF8(obj);
-			if (str == nullptr)
+			if (str == nullptr) {
+				Py_DECREF(obj);
 				continue;
+			}
 			cmatch cm;
-			if (!regex_match(str, cm, r))
+			if (!regex_match(str, cm, r)) {
+				Py_DECREF(obj);
 				continue;
+			}
 			auto x = m.find(cm[1]);
 			if (x != m.end()) {
 				ref.emplace_back(_map_data<_type>{x->first,nullptr,x->second});
 			}
+			Py_DECREF(obj);
 		}
+		Py_DECREF(iter);
 	}
 
 	void apply(_type const & d, int n)
@@ -687,9 +695,23 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 
 	auto ms = reinterpret_cast<module_state*>(PyModule_GetState(self));
 	PyObject * dict = PyObject_CallObject(ms->ns, NULL);
-	PyObject_SetAttrString(dict, "geoc", geocx.as_object(self));
-	PyObject_SetAttrString(dict, "gp", gpx.as_object(self));
-	PyObject_SetAttrString(dict, "topoc", topocx.as_object(self));
+	{
+		auto obj = geocx.as_object(self);
+		PyObject_SetAttrString(dict, "geoc", obj);
+		Py_DECREF(obj);
+	}
+
+	{
+		auto obj = gpx.as_object(self);
+		PyObject_SetAttrString(dict, "gp", obj);
+		Py_DECREF(obj);
+	}
+
+	{
+		auto obj = topocx.as_object(self);
+		PyObject_SetAttrString(dict, "topoc", obj);
+		Py_DECREF(obj);
+	}
 
 	Py_XDECREF(arr0); /* release reference to this arr0 */
 	Py_XDECREF(arr1);
