@@ -104,7 +104,8 @@ static tuple<int, int, int, double> _pysg2_jd_to_ymdh(double jd)
 static PyArray_Descr * create_datetime64_ms_dtype()
 {
 	// Extrapolated from numpy sources
-	PyArray_Descr * dtype = PyArray_DescrFromType(NPY_DATETIME);
+	PyArray_Descr * dtype = PyArray_DescrNewFromType(NPY_DATETIME);
+	// TODO: Check for NULL ptr.
 	reinterpret_cast<PyArray_DatetimeDTypeMetaData *>(dtype->c_metadata)->meta.base = NPY_FR_ms;
 	return dtype;
 }
