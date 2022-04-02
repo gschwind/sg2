@@ -124,7 +124,6 @@ inline double topocentric_correction_refraction_ZIM(double const gamma_S0, doubl
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
 	double tan_gamma_S0 = math::tan(gamma_S0);
-	double gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
 	unsigned long k;
 
 	K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
@@ -132,14 +131,11 @@ inline double topocentric_correction_refraction_ZIM(double const gamma_S0, doubl
 	if (gamma_S0 <= -0.010036) {
 		return gamma_S0 + (-20.774 / tan_gamma_S0) * K;
 	} else if (gamma_S0 <= 0.087266) {
-		gamma_S0_2 = gamma_S0 * gamma_S0;
-		gamma_S0_3 = gamma_S0_2 * gamma_S0;
-		gamma_S0_4 = gamma_S0_4 * gamma_S0;
 		return gamma_S0
-				+ (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * gamma_S0_2
-				+ -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4) * K;
+				+ (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * ipow<2>(gamma_S0)
+				+ -2.405683e6 * ipow<3>(gamma_S0) + 7.66231727e6 * ipow<4>(gamma_S0)) * K;
 	} else if (gamma_S0 <= 1.483529864195180) {
-		return gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0) + 0.000086 / pow(tan_gamma_S0, 5.0));
+		return gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07 / ipow<3>(tan_gamma_S0) + 0.000086 / ipow<5>(tan_gamma_S0));
 	} else {
 		return NAN;
 	}
