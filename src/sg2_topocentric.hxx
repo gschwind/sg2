@@ -123,7 +123,7 @@ inline double topocentric_correction_refraction_ZIM(double const gamma_S0, doubl
 	static const double R = 0.029614018235657;
 	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
-	double tan_gamma_S0 = 0.0;
+	double tan_gamma_S0 = math::tan(gamma_S0);
 	double gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
 	unsigned long k;
 
