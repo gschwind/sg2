@@ -23,6 +23,8 @@
 #ifndef SRC_SG2_MATH_HXX_
 #define SRC_SG2_MATH_HXX_
 
+#include <tuple>
+
 namespace sg2 {
 
 template<int N, bool ODD>
@@ -64,6 +66,28 @@ inline constexpr double ipow(double const x)
 	return _ipow<N,N%2!=0>::get(x);
 }
 
+template<int N, typename ... ARGS>
+struct _polyval {
+	static inline constexpr double get(double x, std::tuple<ARGS...> const & t)
+	{
+		return x*_polyval<N-1, ARGS...>::get(x, t)+std::get<N>(t);
+	}
+};
+
+template<typename ... ARGS>
+struct _polyval<0, ARGS...> {
+	static inline constexpr double get(double x, std::tuple<ARGS...> const & t)
+	{
+		return std::get<0>(t);
+	}
+};
+
+
+template<typename ... ARGS>
+inline constexpr double polyval(double x, ARGS ... args)
+{
+	return _polyval<sizeof...(ARGS)-1, ARGS...>::get(x, std::tuple<ARGS...>{args...});
+}
 
 } // namespace sg2
 
