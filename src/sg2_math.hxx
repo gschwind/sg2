@@ -23,6 +23,50 @@
 #ifndef SRC_SG2_MATH_HXX_
 #define SRC_SG2_MATH_HXX_
 
+namespace sg2 {
+
+template<int N, bool ODD>
+struct _ipow;
+
+template<int N>
+struct _ipow<N, true> {
+	static inline constexpr double get(double const x) {
+		return _ipow<N-1, false>::get(x)*x;
+	}
+};
+
+template<int N>
+struct _ipow<N, false> {
+	static inline constexpr double get(double const x) {
+		return _ipow<N/2,(N/2)%2!=0>::get(x)*_ipow<N/2,(N/2)%2!=0>::get(x);
+	}
+};
+
+template<>
+struct _ipow<2, false> {
+	static inline constexpr double get(double const x) {
+		return x*x;
+	}
+};
+
+
+template<>
+struct _ipow<1, true> {
+	static inline constexpr double get(double const x) {
+		return x;
+	}
+};
+
+
+template<int N>
+inline constexpr double ipow(double const x)
+{
+	return _ipow<N,N%2!=0>::get(x);
+}
+
+
+} // namespace sg2
+
 #ifndef SG2_HAVE_VDT
 
 #include <cmath>
