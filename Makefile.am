@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src matlab
 
 ACLOCAL_AMFLAGS = -I m4 
 

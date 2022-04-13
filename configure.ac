@@ -27,9 +27,15 @@ AC_ARG_ENABLE(vdt, [AS_HELP_STRING([--enable-vdt], [Use VDT library for fast tri
 	AC_SUBST(VDT_LIBS)
 ])
 
+AC_ARG_ENABLE(matlab, [AS_HELP_STRING([--enable-matlab], [Generate matlab mex files])], [
+	dnl TODO Check mex executable.
+	AC_SUBST(MATLAB_MEX, [sg2_sun_position.mexa64])
+])
+
 AC_CONFIG_FILES([
   Makefile
   src/Makefile
+  matlab/Makefile
   sg2.pc
 ])
 AC_OUTPUT
