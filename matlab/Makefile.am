@@ -1,6 +1,7 @@
 
 EXTRA_DIST = \
-	sg2_sun_position.cxx
+	sg2_sun_position.cxx \
+	sg2_ymdh_to_jd.cxx
 
 all: @MATLAB_MEX@
 
@@ -9,4 +10,5 @@ all: @MATLAB_MEX@
 
 clean:
 	rm -f sg2_sun_position.mexa64
+	rm -f sg2_ymdh_to_jd.mexa64
 
