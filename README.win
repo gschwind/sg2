@@ -10,3 +10,17 @@ The file can be generated with :
 gcc -c -Iresources/ -o resources/sg2_geocentric_data.o src/sg2_geocentric_data.s
 objcopy --output-target pe-x86-64 resources/sg2_geocentric_data.o resources/sg2_geocentric_data.obj
 
+
+Matlab build
+============
+
+Start with:
+mex -setup
+To ensure that a compiler is properly setup then:
+
+mex -v -output matlab/sg2_sun_position.mexa64 matlab/sg2_sun_position.cxx -O -Isrc/ src/sg2.cxx src/sg2_date.cxx src/sg2_utils.cxx src/sg2_geocentric.cxx src/sg2_geopoint.cxx src/sg2_topocentric.cxx src/sg2_data_handler.cxx resources/sg2_geocentric_data.obj
+mex -v -output matlab/sg2_sun_rise.mexa64 matlab/sg2_sun_rise.cxx -O -Isrc/ src/sg2.cxx src/sg2_date.cxx src/sg2_utils.cxx src/sg2_geocentric.cxx src/sg2_geopoint.cxx src/sg2_topocentric.cxx src/sg2_data_handler.cxx resources/sg2_geocentric_data.obj
+mex -v -output matlab/sg2_topocentric_correction_refraction_ZIM.mexa64 matlab/sg2_topocentric_correction_refraction_ZIM.cxx -O -Isrc/ src/sg2.cxx src/sg2_date.cxx src/sg2_utils.cxx src/sg2_geocentric.cxx src/sg2_geopoint.cxx src/sg2_topocentric.cxx src/sg2_data_handler.cxx resources/sg2_geocentric_data.obj
+mex -v -output matlab/sg2_topocentric_correction_refraction_SAE.mexa64 matlab/sg2_topocentric_correction_refraction_SAE.cxx -O -Isrc/ src/sg2.cxx src/sg2_date.cxx src/sg2_utils.cxx src/sg2_geocentric.cxx src/sg2_geopoint.cxx src/sg2_topocentric.cxx src/sg2_data_handler.cxx resources/sg2_geocentric_data.obj
+
+
