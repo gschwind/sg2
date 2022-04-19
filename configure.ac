@@ -28,7 +28,11 @@ AC_ARG_ENABLE(vdt, [AS_HELP_STRING([--enable-vdt], [Use VDT library for fast tri
 ])
 
 AC_ARG_ENABLE(matlab, [AS_HELP_STRING([--enable-matlab], [Generate matlab mex files])], [
-	dnl TODO Check mex executable.
+	AC_PATH_PROG(MEX, [mex])
+	if test -z "$ac_cv_path_MEX"; then
+		AC_MSG_ERROR([mex executable not found.])
+	fi
+	AC_SUBST(MEX)
 	AC_SUBST(MATLAB_MEX, ["sg2_sun_position.mexa64 sg2_ymdh_to_jd.mexa64 sg2_jd_to_ymdh.mexa64 sg2_topocentric_correction_refraction_ZIM.mexa64 sg2_topocentric_correction_refraction_SAE.mexa64"])
 ])
 

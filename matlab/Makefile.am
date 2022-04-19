@@ -9,7 +9,7 @@ EXTRA_DIST = \
 all: @MATLAB_MEX@
 
 %.mexa64: %.cxx
-	mex -output $@ $^ -O -v -I$(top_srcdir)/src $(top_builddir)/src/.libs/libsg2.a
+	@MEX@ -output $@ $^ -O -v -I$(top_srcdir)/src $(top_builddir)/src/.libs/libsg2.a
 
 clean:
 	rm -f sg2_sun_position.mexa64
