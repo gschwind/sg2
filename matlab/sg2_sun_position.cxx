@@ -157,6 +157,18 @@ struct _generic_handler {
 			if (!regex_match(fields_value, cm, r)) {
 				continue;
 			}
+
+			// If the field is all, insert all known fields.
+			if (cm[1] == "all") {
+				for (auto & x: m) {
+					if (inserted.count(x.first) == 0) {
+						inserted.insert(x.first);
+						ref.emplace_back(_map_data<_type>{x.first, x.second->create(n_row, n_col), x.second});
+					}
+				}
+				continue;
+			}
+
 			auto x = m.find(cm[1]);
 			if (x != m.end() && inserted.count(x->first) == 0) {
 				inserted.insert(x->first);
