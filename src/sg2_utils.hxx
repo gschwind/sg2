@@ -57,15 +57,15 @@ struct polynomial_approx {
 		double poly_coeff[S];
 	} data[nP];
 
-	double compute(int y) const {
+	int64_t compute(double y) const {
 		if (y < data[0].year_interval[0])
-			return NAN;
+			return numeric_limits<int64_t>::min();
 
 		int i;
 		for (i = 0;; ++i) {
 			if (i >= nP)
-				return NAN;
-			if (y>=data[i].year_interval[1])
+				return numeric_limits<int64_t>::min();
+			if (y<data[i].year_interval[1])
 				break;
 		}
 
@@ -75,7 +75,7 @@ struct polynomial_approx {
 		for (int k = 0; k < S; ++k) {
 			s = s * x + data[i].poly_coeff[k];
 		}
-		return s;
+		return static_cast<int64_t>(s*1e3);
 	}
 
 };

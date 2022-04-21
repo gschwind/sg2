@@ -51,7 +51,15 @@ static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt)
 geocentric_data::geocentric_data(date const & ut) :
 	ut{ut}
 {
-	tt.msec = ut.msec + static_cast<int64_t>(approx_deltat_msc.compute(ymdh{ut}.year)*1e3);
+	ymdh d{ut};
+	date d0{ymdh(d.year, 1, 1, 0.0)};
+	double year = d.year+(ut.msec - d0.msec)/((_date_leapyear(d.year)?366.0:365.0)*24*60*60*1e3);
+	int64_t delta_tt = approx_deltat_msc.compute(year);
+	if (delta_tt == numeric_limits<int16_t>::min()) {
+		tt.msec = numeric_limits<int16_t>::min();
+	} else {
+		tt.msec = ut.msec + delta_tt;
+	}
 	_init_all();
 }
 
