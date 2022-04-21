@@ -35,6 +35,7 @@
 #include <functional>
 #include <unordered_map>
 #include <regex>
+#include <unordered_set>
 
 using namespace sg2;
 using namespace std;
@@ -271,6 +272,8 @@ struct _generic_handler {
 
 	void _construct(PyObject * fields, unordered_map<string, _map_api<_type> * > const & m, regex & r)
 	{
+		unordered_set<string> inserted;
+
 		PyObject * iter = PyObject_GetIter(fields);
 		if (iter == nullptr)
 			return;
@@ -290,7 +293,8 @@ struct _generic_handler {
 				continue;
 			}
 			auto x = m.find(cm[1]);
-			if (x != m.end()) {
+			if (x != m.end() && inserted.count(x->first) == 0) {
+				inserted.insert(x->first);
 				ref.emplace_back(_map_data<_type>{x->first,nullptr,x->second});
 			}
 			Py_DECREF(obj);
