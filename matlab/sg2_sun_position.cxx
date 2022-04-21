@@ -28,6 +28,7 @@
 #include <unordered_map>
 #include <string>
 #include <regex>
+#include <unordered_set>
 
 using namespace std;
 
@@ -146,7 +147,7 @@ struct _generic_handler {
 
 	void _construct(mxArray const * fields, unordered_map<string, _map_api<_type> * > const & m, regex & r, int n_row, int n_col)
 	{
-
+		unordered_set<string> inserted;
 		int nfields = mxGetN(fields);
 		for (int i = 0; i < nfields; ++i) {
 			mxArray * cell = mxGetCell(fields, i);
@@ -157,7 +158,8 @@ struct _generic_handler {
 				continue;
 			}
 			auto x = m.find(cm[1]);
-			if (x != m.end()) {
+			if (x != m.end() && inserted.count(x->first) == 0) {
+				inserted.insert(x->first);
 				ref.emplace_back(_map_data<_type>{x->first, x->second->create(n_row, n_col), x->second});
 			}
 		}
