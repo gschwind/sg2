@@ -292,6 +292,19 @@ struct _generic_handler {
 				Py_DECREF(obj);
 				continue;
 			}
+
+			// If the field is all, insert all known fields.
+			if (cm[1] == "all") {
+				for (auto & x: m) {
+					if (inserted.count(x.first) == 0) {
+						inserted.insert(x.first);
+						ref.emplace_back(_map_data<_type>{x.first, nullptr, x.second});
+					}
+				}
+				Py_DECREF(obj);
+				continue;
+			}
+
 			auto x = m.find(cm[1]);
 			if (x != m.end() && inserted.count(x->first) == 0) {
 				inserted.insert(x->first);
