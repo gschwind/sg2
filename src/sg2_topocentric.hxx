@@ -129,7 +129,7 @@ inline double topocentric_correction_refraction_ZIM(double const gamma_S0, doubl
 	K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
 
 	if (gamma_S0 <= -0.010036) {
-		return gamma_S0 + (-20.774 / tan_gamma_S0) * K;
+		return gamma_S0 + K * (-20.774 / tan_gamma_S0);
 	} else if (gamma_S0 <= 0.087266) {
 		return gamma_S0 + K * polyval(gamma_S0, 7.66231727e6, -2.405683e6, 3.394422e5, -2.969067e4, 1735.0);
 	} else if (gamma_S0 <= 1.483529864195180) {
