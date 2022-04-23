@@ -41,7 +41,7 @@ include_HEADERS = \
 #
 # [1] https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 #
-libsg2_la_LDFLAGS = -version-info 2:0:0
+libsg2_la_LDFLAGS = -version-info 3:0:0
 libsg2_la_SOURCES = \
 	sg2.cxx \
 	sg2.hxx \
