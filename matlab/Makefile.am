@@ -1,5 +1,6 @@
 
 EXTRA_DIST = \
+	sg2_ms_to_jd.m \
 	sg2_jd_to_ms.m \
 	sg2_jd_to_ymdh.m \
 	sg2_sun_position.m \
