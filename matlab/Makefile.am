@@ -6,7 +6,6 @@ EXTRA_DIST = \
 	sg2_topocentric_correction_refraction_ZIM.m \
 	sg2_ymdh_to_jd.m \
 	sg2_sun_position.cxx \
-	sg2_jd_to_ymdh.cxx \
 	sg2_topocentric_correction_refraction_ZIM.cxx \
 	sg2_topocentric_correction_refraction_SAE.cxx \
 	sg2_sun_rise.cxx
@@ -18,7 +17,6 @@ all: @MATLAB_MEX@
 
 clean:
 	rm -f sg2_sun_position.mexa64
-	rm -f sg2_jd_to_ymdh.mexa64
 	rm -f sg2_topocentric_correction_refraction_ZIM.mexa64
 	rm -f sg2_topocentric_correction_refraction_SAE.mexa64
 	rm -f sg2_sun_rise.mexa64
