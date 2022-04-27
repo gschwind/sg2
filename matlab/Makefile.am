@@ -1,5 +1,6 @@
 
 EXTRA_DIST = \
+	sg2_jd_to_ms.m \
 	sg2_jd_to_ymdh.m \
 	sg2_sun_position.m \
 	sg2_topocentric_correction_refraction_SAE.m \
