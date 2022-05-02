@@ -31,8 +31,8 @@ namespace sg2 {
 
 using namespace std;
 
-static constexpr double const PI = 3.1415926535897931;
-static constexpr double const D_PI = 6.2831853071795862;
+static constexpr double const PI = 3.1415926535897932384626433832795028841971;
+static constexpr double const D_PI = PI*2.0;
 
 constexpr inline double DEG(double RAD) {
 	return RAD*180.0/PI;
