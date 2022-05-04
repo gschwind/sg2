@@ -98,11 +98,17 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 
 	for (int i = 0; i < np; ++i) {
 		for (int j = 0; j < nt; ++j) {
-			sg2::date sunrise, transit, sunset;
-			std::tie(sunrise, transit, sunset) = sg2::sunrise(time[j], geopoint_list[i]);
-			out[i + dims[0]*j + dims[0]*dims[1]*0] = sunrise.msec;
-			out[i + dims[0]*j + dims[0]*dims[1]*1] = transit.msec;
-			out[i + dims[0]*j + dims[0]*dims[1]*2] = sunset.msec;
+			try {
+				sg2::date sunrise, transit, sunset;
+				std::tie(sunrise, transit, sunset) = sg2::sunrise(time[j], geopoint_list[i]);
+				out[i + dims[0]*j + dims[0]*dims[1]*0] = sunrise.msec;
+				out[i + dims[0]*j + dims[0]*dims[1]*1] = transit.msec;
+				out[i + dims[0]*j + dims[0]*dims[1]*2] = sunset.msec;
+			} catch (...) {
+				out[i + dims[0]*j + dims[0]*dims[1]*0] = std::numeric_limits<int64_t>::max();
+				out[i + dims[0]*j + dims[0]*dims[1]*1] = std::numeric_limits<int64_t>::max();
+				out[i + dims[0]*j + dims[0]*dims[1]*2] = std::numeric_limits<int64_t>::max();
+			}
 		}
 	}
 
