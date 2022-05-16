@@ -97,7 +97,18 @@ struct date {
 
 	operator std::string() const;
 
+	bool operator ==(date const & x) const;
+	bool operator <=(date const & x) const;
+	bool operator >=(date const & x) const;
+	bool operator <(date const & x) const;
+	bool operator >(date const & x) const;
+
+	bool isnat() const;
+
 };
+
+// not a time constant
+static date const nat;
 
 struct julian {
 	double value; // julian date in factionnal days
@@ -150,7 +161,8 @@ struct ydoyh {
 
 };
 
-inline date::date()
+inline date::date() :
+		msec{std::numeric_limits<int64_t>::min()}
 {
 
 }
@@ -162,7 +174,7 @@ inline date::date(int64_t msec) :
 }
 
 inline date::date(double jd) :
-	msec((jd-EPOCH_JD)*24.0*60.0*60.0*1e3)
+	msec(std::isfinite(jd)?std::round((jd-EPOCH_JD)*(24.0*60.0*60.0*1e3)):nat.msec)
 {
 
 }
@@ -182,6 +194,51 @@ inline date::date(ydoyh const & d) :
 inline date::operator std::string() const
 {
 	return static_cast<std::string>(ymdhmsn{*this});
+}
+
+inline bool date::operator ==(date const & x) const
+{
+	// NAT always equal to nothing else
+	if (this->isnat() || x.isnat())
+		return false;
+	return this->msec == x.msec;
+}
+
+inline bool date::operator <=(date const & x) const
+{
+	// NAT always equal to nothing else
+	if (this->isnat() || x.isnat())
+		return false;
+	return this->msec <= x.msec;
+}
+
+inline bool date::operator >=(date const & x) const
+{
+	// NAT always equal to nothing else
+	if (this->isnat() || x.isnat())
+		return false;
+	return this->msec >= x.msec;
+}
+
+inline bool date::operator <(date const & x) const
+{
+	// NAT always equal to nothing else
+	if (this->isnat() || x.isnat())
+		return false;
+	return this->msec < x.msec;
+}
+
+inline bool date::operator >(date const & x) const
+{
+	// NAT always equal to nothing else
+	if (this->isnat() || x.isnat())
+		return false;
+	return this->msec > x.msec;
+}
+
+inline bool date::isnat() const
+{
+	return msec == nat.msec;
 }
 
 inline julian::julian()
