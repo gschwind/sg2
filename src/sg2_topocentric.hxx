@@ -161,7 +161,7 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint const & gp)
 {
 
-	if (geoc.ut.isnat()) {
+	if (!std::isfinite(geoc.R)) {
 		r_alpha = std::numeric_limits<double>::quiet_NaN();
 		delta = std::numeric_limits<double>::quiet_NaN();
 		omega = std::numeric_limits<double>::quiet_NaN();
