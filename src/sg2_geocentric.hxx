@@ -54,6 +54,7 @@ struct geocentric_data {
 	auto operator=(geocentric_data const &) -> geocentric_data & = default;
 
 	void _init_all();
+	void _nan_all();
 
 	double get_sun_earth_radius() const {
 		return R;

@@ -82,30 +82,14 @@ void geocentric_data::_init_all()
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
 
 	if (ut.isnat()) {
-		R = std::numeric_limits<double>::quiet_NaN();
-		L = std::numeric_limits<double>::quiet_NaN();
-		Delta_psi = std::numeric_limits<double>::quiet_NaN();
-		epsilon = std::numeric_limits<double>::quiet_NaN();
-		Theta_a = std::numeric_limits<double>::quiet_NaN();
-		r_alpha = std::numeric_limits<double>::quiet_NaN();
-		delta = std::numeric_limits<double>::quiet_NaN();
-		nu = std::numeric_limits<double>::quiet_NaN();
-		EOT = std::numeric_limits<double>::quiet_NaN();
+		_nan_all();
 		return;
 	}
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(tt);
 
 	if (!std::isfinite(R) || !std::isfinite(L)) {
-		R = std::numeric_limits<double>::quiet_NaN();
-		L = std::numeric_limits<double>::quiet_NaN();
-		Delta_psi = std::numeric_limits<double>::quiet_NaN();
-		epsilon = std::numeric_limits<double>::quiet_NaN();
-		Theta_a = std::numeric_limits<double>::quiet_NaN();
-		r_alpha = std::numeric_limits<double>::quiet_NaN();
-		delta = std::numeric_limits<double>::quiet_NaN();
-		nu = std::numeric_limits<double>::quiet_NaN();
-		EOT = std::numeric_limits<double>::quiet_NaN();
+		_nan_all();
 		return;
 	}
 
@@ -130,6 +114,19 @@ void geocentric_data::_init_all()
 
 	nu = nu0_kd + Delta_psi_cos_epsilon_kd;
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;
+}
+
+void geocentric_data::_nan_all()
+{
+	R = std::numeric_limits<double>::quiet_NaN();
+	L = std::numeric_limits<double>::quiet_NaN();
+	Delta_psi = std::numeric_limits<double>::quiet_NaN();
+	epsilon = std::numeric_limits<double>::quiet_NaN();
+	Theta_a = std::numeric_limits<double>::quiet_NaN();
+	r_alpha = std::numeric_limits<double>::quiet_NaN();
+	delta = std::numeric_limits<double>::quiet_NaN();
+	nu = std::numeric_limits<double>::quiet_NaN();
+	EOT = std::numeric_limits<double>::quiet_NaN();
 }
 
 } // namespace sg2
