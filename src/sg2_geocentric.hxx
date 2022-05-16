@@ -46,49 +46,49 @@ struct geocentric_data {
 	double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
 
 	geocentric_data() = default;
-	explicit geocentric_data(date const & ut);
-	geocentric_data(date const & ut, date const & tt);
+	explicit geocentric_data(date const & ut) noexcept;
+	geocentric_data(date const & ut, date const & tt) noexcept;
 
 	geocentric_data(geocentric_data const &) = default;
 
 	auto operator=(geocentric_data const &) -> geocentric_data & = default;
 
-	void _init_all();
-	void _nan_all();
+	void _init_all() noexcept;
+	void _nan_all() noexcept;
 
-	double get_sun_earth_radius() const {
+	double get_sun_earth_radius() const noexcept {
 		return R;
 	}
 
-	double get_heliocentric_true_longitude() const {
+	double get_heliocentric_true_longitude() const noexcept {
 		return L;
 	}
 
-	double get_delta_psi() const {
+	double get_delta_psi() const noexcept {
 		return Delta_psi;
 	}
 
-	double get_earth_true_obliquity() const {
+	double get_earth_true_obliquity() const noexcept {
 		return epsilon;
 	}
 
-	double get_geocentric_true_longitude() const {
+	double get_geocentric_true_longitude() const noexcept {
 		return Theta_a;
 	}
 
-	double get_geocentric_right_ascension() const {
+	double get_geocentric_right_ascension() const noexcept {
 		return r_alpha;
 	}
 
-	double get_geocentric_declination() const {
+	double get_geocentric_declination() const noexcept {
 		return delta;
 	}
 
-	double get_apparent_sideral_time() const {
+	double get_apparent_sideral_time() const noexcept {
 		return nu;
 	}
 
-	double get_mst_solar_time_difference() const {
+	double get_mst_solar_time_difference() const noexcept {
 		return EOT;
 	}
 

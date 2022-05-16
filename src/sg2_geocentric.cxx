@@ -48,7 +48,7 @@ static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt) n
 	return std::make_tuple(R, math::atan2(sinL, cosL));
 }
 
-geocentric_data::geocentric_data(date const & ut) :
+geocentric_data::geocentric_data(date const & ut) noexcept :
 	ut{ut}
 {
 	if (ut.isnat()) {
@@ -67,14 +67,14 @@ geocentric_data::geocentric_data(date const & ut) :
 	_init_all();
 }
 
-geocentric_data::geocentric_data(date const & ut, date const & tt) :
+geocentric_data::geocentric_data(date const & ut, date const & tt) noexcept :
 		ut{tt.isnat()?nat:ut},
 		tt{ut.isnat()?nat:tt}
 {
 	_init_all();
 }
 
-void geocentric_data::_init_all()
+void geocentric_data::_init_all() noexcept
 {
 	short idx0;
 	int kd;
@@ -116,7 +116,7 @@ void geocentric_data::_init_all()
 	EOT = M_kd - 0.0001 - r_alpha + Delta_psi_cos_epsilon_kd;
 }
 
-void geocentric_data::_nan_all()
+void geocentric_data::_nan_all() noexcept
 {
 	R = std::numeric_limits<double>::quiet_NaN();
 	L = std::numeric_limits<double>::quiet_NaN();
