@@ -96,6 +96,19 @@ void geocentric_data::_init_all()
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(tt);
 
+	if (!std::isfinite(R) || !std::isfinite(L)) {
+		R = std::numeric_limits<double>::quiet_NaN();
+		L = std::numeric_limits<double>::quiet_NaN();
+		Delta_psi = std::numeric_limits<double>::quiet_NaN();
+		epsilon = std::numeric_limits<double>::quiet_NaN();
+		Theta_a = std::numeric_limits<double>::quiet_NaN();
+		r_alpha = std::numeric_limits<double>::quiet_NaN();
+		delta = std::numeric_limits<double>::quiet_NaN();
+		nu = std::numeric_limits<double>::quiet_NaN();
+		EOT = std::numeric_limits<double>::quiet_NaN();
+		return;
+	}
+
 	Delta_psi = approx_Dpsi.compute(julian{tt}.value);
 	epsilon = approx_epsilon.compute(julian{tt}.value);
 
