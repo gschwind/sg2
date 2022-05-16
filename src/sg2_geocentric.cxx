@@ -51,21 +51,25 @@ static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt)
 geocentric_data::geocentric_data(date const & ut) :
 	ut{ut}
 {
-	ymdh d{ut};
-	date d0{ymdh(d.year, 1, 1, 0.0)};
-	double year = d.year+(ut.msec - d0.msec)/((_date_leapyear(d.year)?366.0:365.0)*24*60*60*1e3);
-	int64_t delta_tt = approx_deltat_msc.compute(year);
-	if (delta_tt == numeric_limits<int16_t>::min()) {
-		tt.msec = numeric_limits<int16_t>::min();
+	if (ut.isnat()) {
+		tt = nat;
 	} else {
-		tt.msec = ut.msec + delta_tt;
+		ymdh d{ut};
+		date d0{ymdh(d.year, 1, 1, 0.0)};
+		double year = d.year+(ut.msec - d0.msec)/((_date_leapyear(d.year)?366.0:365.0)*24*60*60*1e3);
+		int64_t delta_tt = approx_deltat_msc.compute(year);
+		if (delta_tt == numeric_limits<int16_t>::min()) {
+			tt.msec = numeric_limits<int16_t>::min();
+		} else {
+			tt.msec = ut.msec + delta_tt;
+		}
 	}
 	_init_all();
 }
 
 geocentric_data::geocentric_data(date const & ut, date const & tt) :
-		ut{ut},
-		tt{tt}
+		ut{tt.isnat()?nat:ut},
+		tt{ut.isnat()?nat:tt}
 {
 	_init_all();
 }
@@ -76,6 +80,19 @@ void geocentric_data::_init_all()
 	int kd;
 	double sin_Theta_a_kd, cos_epsilon_kd;
 	double nu0_kd, Delta_psi_cos_epsilon_kd, M_kd;
+
+	if (ut.isnat()) {
+		R = std::numeric_limits<double>::quiet_NaN();
+		L = std::numeric_limits<double>::quiet_NaN();
+		Delta_psi = std::numeric_limits<double>::quiet_NaN();
+		epsilon = std::numeric_limits<double>::quiet_NaN();
+		Theta_a = std::numeric_limits<double>::quiet_NaN();
+		r_alpha = std::numeric_limits<double>::quiet_NaN();
+		delta = std::numeric_limits<double>::quiet_NaN();
+		nu = std::numeric_limits<double>::quiet_NaN();
+		EOT = std::numeric_limits<double>::quiet_NaN();
+		return;
+	}
 
 	std::tie(R, L) = _heliocentric_compute_R_and_L(tt);
 
