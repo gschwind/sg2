@@ -29,13 +29,13 @@
 
 namespace sg2 {
 
-static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt)
+static std::tuple<double, double> _heliocentric_compute_R_and_L(date const tt) noexcept
 {
 	int64_t x  = (tt.msec - _geocentric_data_offset()*1000) / (_geocentric_data_delta()*1000);
 	int64_t dx = (tt.msec - _geocentric_data_offset()*1000)	% (_geocentric_data_delta()*1000);
 
 	if ((x < 0) || (x > _geocentric_data_count() - 1)) {
-		throw ERR_HELIOCENTRIC_SET_HELIOC_OUTOFPERIOD;
+		return std::make_tuple(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
 	}
 
 	double alpha = static_cast<double>(dx)
