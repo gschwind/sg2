@@ -160,6 +160,18 @@ inline double topocentric_data::topocentric_correction_refraction(double const P
 
 inline topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint const & gp)
 {
+
+	if (geoc.ut.isnat()) {
+		r_alpha = std::numeric_limits<double>::quiet_NaN();
+		delta = std::numeric_limits<double>::quiet_NaN();
+		omega = std::numeric_limits<double>::quiet_NaN();
+		gamma_S0 = std::numeric_limits<double>::quiet_NaN();
+		alpha_S = std::numeric_limits<double>::quiet_NaN();
+		toa_ni = std::numeric_limits<double>::quiet_NaN();
+		toa_hi = std::numeric_limits<double>::quiet_NaN();
+		return;
+	}
+
 	double xi = (gp.ellipse.a / AU);
 
     double omega_g_kp_kd = geoc.nu - geoc.r_alpha + gp.lambda;
