@@ -89,7 +89,11 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 		double lon = arr0[i + np*0];
 		double lat = arr0[i + np*1];
 		double alt = arr0[i + np*2];
+#ifndef USE_SPA_ELLPS
 		geopoint_list[i] = sg2::geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
+#else
+		geopoint_list[i] = sg2::geopoint{lon, lat, alt, sg2::ELLPS_SPA};
+#endif
 	}
 
 	mwSize const dims[3] = {np, nt, 3};
