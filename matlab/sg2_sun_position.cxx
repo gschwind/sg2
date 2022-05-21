@@ -419,7 +419,11 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 			double lon = arr0.get<mxDouble>(i, 0);
 			double lat = arr0.get<mxDouble>(i, 1);
 			double alt = arr0.get<mxDouble>(i, 2);
+#ifndef USE_SPA_ELLPS
 			geopoint_list[i] = sg2::geopoint{lon, lat, alt, sg2::ELLPS_WGS84};
+#else
+			geopoint_list[i] = sg2::geopoint{lon, lat, alt, sg2::ELLPS_SPA};
+#endif
 			gpx.apply(0, i, geopoint_list[i]);
 		}
 	}
