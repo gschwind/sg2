@@ -11,16 +11,16 @@
 # docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
 #
 
-mkdir -p /io/_build_wheel
-cd /io/_build_wheel
-../configure --with-pic CXXFLAGS="-O3" CFLAGS="-O3"
+tar -xzf /io/sg2-2.3.0.tar.gz -C /tmp/
+cd /tmp/sg2-2.3.0
+./configure --with-pic CXXFLAGS="-O3" CFLAGS="-O3"
 make clean
 make
 make install
 cd -
 
 # Cleanup
-rm -rf /io/_build_wheel
+rm -rf /tmp/sg2-2.3.0
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
