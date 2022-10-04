@@ -70,7 +70,7 @@ module = Extension('sg2', **params)
 setup(
     name = 'sg2',
     version = '2.3.0',
-    author = ', '.join(['Benoit Gshwind', 'Philippe Blanc']),
+    author = ', '.join(['Benoit Gshwind', 'Philippe Blanc', 'MINES ParisTech']),
     author_email = ', '.join([
         'benoit.gschwind@mines-paristech.fr',
         'philippe.blanc@mines-paristech.fr'
