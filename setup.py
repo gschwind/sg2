@@ -91,7 +91,7 @@ setup(
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    url = "http://TODO",
+    url = "https://www.oie.minesparis.psl.eu/Valorisation/Outils/Solar-Geometry/",
     license = 'GNU Lesser General Public License v3 (LGPLv3)',
     description = 'Solar Geometry 2 library',
     ext_modules = [module]
