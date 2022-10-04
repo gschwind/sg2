@@ -48,8 +48,7 @@ else:
 
     # This section try to find the required
     # static libraries
-    if "--static" in sys.argv:
-        sys.argv.remove("--static")
+    if "--no-static" not in sys.argv:
         new_libraries = []
         for l in params["libraries"]:
             static_lib_found = False
@@ -63,6 +62,8 @@ else:
                 new_libraries.append(l)
 
         params["libraries"] = new_libraries
+    else:
+        sys.argv.remove("--no-static")
 
 
 module = Extension('sg2', **params)
