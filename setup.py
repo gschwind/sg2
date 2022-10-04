@@ -84,7 +84,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: LGPLv3',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Programming Language :: C++',
@@ -92,7 +92,7 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
     url = "http://TODO",
-    license = 'LGPLv3',
+    license = 'GNU Lesser General Public License v3 (LGPLv3)',
     description = 'Solar Geometry 2 library',
     ext_modules = [module]
 )
