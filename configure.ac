@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 AC_PREREQ([2.69])
-AC_INIT([sg2], [2.3.0])
+AC_INIT([sg2], [2.3.1])
 AC_CONFIG_MACRO_DIR([m4])
 AM_MAINTAINER_MODE([disable])
 
