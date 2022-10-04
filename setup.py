@@ -70,11 +70,11 @@ module = Extension('sg2', **params)
 setup(
     name = 'sg2',
     version = '2.3.0',
-    author = ['Benoit Gshwind', 'Philippe Blanc'],
-    author_email = [
+    author = ', '.join(['Benoit Gshwind', 'Philippe Blanc']),
+    author_email = ', '.join([
         'benoit.gschwind@mines-paristech.fr',
         'philippe.blanc@mines-paristech.fr'
-    ],
+    ]),
     maintainer = 'Benoit Gshwind',
     maintainer_email = 'benoit.gschwind@mines-paristech.fr',
     python_requires = ">=3.6",
