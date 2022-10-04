@@ -93,6 +93,10 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
     url = "https://www.oie.minesparis.psl.eu/Valorisation/Outils/Solar-Geometry/",
+    project_urls={
+        "Bug Tracker": "https://github.com/gschwind/sg2/issues",
+        "Source Code": "https://github.com/gschwind/sg2"
+    },
     license = 'GNU Lesser General Public License v3 (LGPLv3)',
     description = 'Solar Geometry 2 library',
     platforms=["Windows", "Linux"],
