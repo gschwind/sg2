@@ -71,12 +71,12 @@ module = Extension('sg2', **params)
 setup(
     name = 'sg2',
     version = '2.3.0',
-    author = ', '.join(['Benoit Gshwind', 'Philippe Blanc', 'MINES ParisTech']),
+    author = ', '.join(['Benoît Gschwind', 'Philippe Blanc', 'MINES ParisTech']),
     author_email = ', '.join([
         'benoit.gschwind@mines-paristech.fr',
         'philippe.blanc@mines-paristech.fr'
     ]),
-    maintainer = 'Benoit Gshwind',
+    maintainer = 'Benoît Gschwind',
     maintainer_email = 'benoit.gschwind@mines-paristech.fr',
     python_requires = ">=3.6",
     setup_requires = ["numpy>={}".format(numpy.__version__)],
