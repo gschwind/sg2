@@ -42,4 +42,5 @@ AC_CONFIG_FILES([
   matlab/Makefile
   sg2.pc
 ])
+AC_CONFIG_FILES([build-wheel.sh], [chmod +x build-wheel.sh])
 AC_OUTPUT

@@ -13,8 +13,8 @@
 
 
 # Install sg2 system wide
-tar -xzf /io/sg2-2.3.1.tar.gz -C /tmp/
-cd /tmp/sg2-2.3.1
+tar -xzf /io/sg2-@PACKAGE_VERSION@.tar.gz -C /tmp/
+cd /tmp/sg2-@PACKAGE_VERSION@
 ./configure --with-pic CXXFLAGS="-O3" CFLAGS="-O3"
 make clean
 make
@@ -22,17 +22,17 @@ make install
 cd -
 
 # Cleanup
-rm -rf /tmp/sg2-2.3.1
+rm -rf /tmp/sg2-@PACKAGE_VERSION@
 
 # Create user en for pip
 useradd -m user
-cp /io/sg2-2.3.1.tar.gz /home/user/sg2-2.3.1.tar.gz
-chown user /home/user/sg2-2.3.1.tar.gz
+cp /io/sg2-@PACKAGE_VERSION@.tar.gz /home/user/sg2-@PACKAGE_VERSION@.tar.gz
+chown user /home/user/sg2-@PACKAGE_VERSION@.tar.gz
 
 tee /home/user/script.sh <<"EOF"
 export PATH=$PATH:/home/user/.local/bin
-tar -xzf sg2-2.3.1.tar.gz
-cd sg2-2.3.1
+tar -xzf sg2-@PACKAGE_VERSION@.tar.gz
+cd sg2-@PACKAGE_VERSION@
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
