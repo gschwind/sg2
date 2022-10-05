@@ -11,7 +11,6 @@
 # docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
 #
 
-
 # Install sg2 system wide
 tar -xzf /io/sg2-@PACKAGE_VERSION@.tar.gz -C /tmp/
 cd /tmp/sg2-@PACKAGE_VERSION@
@@ -30,6 +29,16 @@ cp /io/sg2-@PACKAGE_VERSION@.tar.gz /home/user/sg2-@PACKAGE_VERSION@.tar.gz
 chown user /home/user/sg2-@PACKAGE_VERSION@.tar.gz
 
 tee /home/user/script.sh <<"EOF"
+
+function repair_wheel {
+    wheel="$1"
+    if ! auditwheel show "$wheel"; then
+        echo "Skipping non-platform wheel $wheel"
+    else
+        auditwheel repair "$wheel" --plat "$AUDITWHEEL_PLAT" -w /io/wheelhouse/
+    fi
+}
+
 export PATH=$PATH:/home/user/.local/bin
 tar -xzf sg2-@PACKAGE_VERSION@.tar.gz
 cd sg2-@PACKAGE_VERSION@
@@ -39,6 +48,13 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" install -r /io/dev-requirements.txt
     "${PYBIN}/pip" wheel . --no-deps -w /home/user/wheelhouse/
 done
+
+if [ -n "$AUDITWHEEL_PLAT" ]; then
+    for whl in /home/user/wheelhouse/*.whl; do
+        repair_wheel "$whl"
+    done
+fi
+
 EOF
 
 chown user /home/user/script.sh
