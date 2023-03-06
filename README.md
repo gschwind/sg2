@@ -13,7 +13,7 @@ Solar Geometry 2 is released under [LGPLv3](https://www.gnu.org/licenses/lgpl-3.
 We provide wheel binary package that can be installed using pip:
 
 ```
-pip install sg2 -f https://pip.oie-lab.net/python/
+pip install sg2
 ```
 
 To compile it see README.linux or README.win.
