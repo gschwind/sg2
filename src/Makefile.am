@@ -14,6 +14,7 @@ include_HEADERS = \
 	sg2_typedef.hxx \
 	sg2_err.hxx \
 	sg2_date.hxx \
+	sg2_geopoint.hxx \
 	sg2_geocentric.hxx \
 	sg2_topocentric.hxx
 
