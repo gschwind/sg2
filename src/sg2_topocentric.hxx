@@ -116,9 +116,6 @@ inline double topocentric_correction_refraction_SAE(double const gamma_S0, doubl
 
 inline double topocentric_correction_refraction_ZIM(double const gamma_S0, double const P, double const T)
 {
-	static const double gamma_S0_seuil = -0.010035643198967;
-	static const double R = 0.029614018235657;
-	/*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
 	double K;
 	double tan_gamma_S0 = math::tan(gamma_S0);
 
