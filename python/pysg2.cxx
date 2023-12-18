@@ -545,15 +545,7 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	PyObject * arg2 = NULL;
 	int arg3 = 0;
 
-	double lon;
-	double lat;
-	double alt;
-
-	int err = 0;
-	int i, j;
 	int warning_count = 0;
-	npy_intp out_dims[3];
-	PyArrayObject * out_arr;
 	vector<sg2::geocentric_data> geoc_list;
 	vector<sg2::geopoint> geopoint_list;
 	int nd0, nd1, np, nt;
