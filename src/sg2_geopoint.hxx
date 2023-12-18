@@ -101,8 +101,8 @@ inline ellps::ellps(double a, double f) :
 
 inline geopoint::geopoint(double lon, double lat, double h, ellps const & ellipse) :
 	ellipse{ellipse},
-	lambda{RAD(lon)},
 	phi{RAD(lat)},
+	lambda{RAD(lon)},
 	h{h}
 {
 
