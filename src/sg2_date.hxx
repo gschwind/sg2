@@ -358,7 +358,6 @@ inline ydoyh::ydoyh()
 
 inline ydoyh::ydoyh(ymdh const & p_ymdh)
 {
-	int k;
 	double K;
 
 	K = 2 - _date_leapyear(p_ymdh.year);
