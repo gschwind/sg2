@@ -48,8 +48,7 @@ inline int _date_leapyear(int year) {
 /* return the julian day at 12h */
 inline int _ymd_to_julian_day(int year, int month, int day)
 {
-	int k;
-	double Y, M, D, H;
+	double Y, M, D;
 
 	Y = year;
 	M = month;
