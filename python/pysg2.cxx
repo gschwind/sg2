@@ -766,15 +766,7 @@ static PyObject * py_sun_rise(PyObject * self, PyObject * args)
 	PyObject * arg0 = NULL;
 	PyObject * arg1 = NULL;
 
-
-	double lon;
-	double lat;
-	double alt;
-
-	int err = 0;
-	int i, j;
 	int warning_count = 0;
-	npy_intp out_dims[3];
 	PyArrayObject * out_arr;
 	int nd0, nd1, np, nt;
 
