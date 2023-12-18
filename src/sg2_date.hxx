@@ -65,7 +65,7 @@ inline int _ymd_to_julian_day(int year, int month, int day)
 
 inline void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
 {
-	double H, L, N, I, J, K;
+	double L, N, I, J, K;
 
 	L = jd + 68569.0;
 	N = floor(4 * L / 146097.0);
