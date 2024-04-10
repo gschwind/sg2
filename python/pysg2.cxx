@@ -586,6 +586,11 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		throw 0;
 	}
 
+	if ((nd1 == 2) && (PyArray_DIM(arr1, 1) != 2)) {
+		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,2)\n", PyArray_DIM(arr1, 1));
+		throw 0;
+	}
+
 	if (PyArray_DIM(arr0, 1) != 3) {
 		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,3)\n", PyArray_DIM(arr0, 1));
 		throw 0;
