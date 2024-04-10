@@ -559,52 +559,52 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	/* Get an array from any python object */
 	arr0 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OTF(i_array_geopoint, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY));
 	if (arr0 == NULL) {
-		set_python_exception("Invalid inputs arguments, the first arguments must be an array\n");
+		set_python_exception("Invalid inputs arguments, geopoints must be an array\n");
 		goto error;
 	}
 
 	arr1 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OF(i_array_timestamp, NPY_ARRAY_IN_ARRAY));
 	if (arr1 == NULL) {
-		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
+		set_python_exception("Invalid inputs arguments, timestamp must be an array\n");
 		goto error;
 	}
 
 	if(!PyList_Check(i_array_options)) {
-		set_python_exception("Invalid inputs arguments, the third arguments must be a list\n");
+		set_python_exception("Invalid inputs arguments, fields must be a list\n");
 		goto error;
 	}
 
 	nd0 = PyArray_NDIM(arr0);
 	if (nd0 != 2) {
-		set_python_exception("Input arguments rank is invalid, got %d expect 2\n", nd0);
+		set_python_exception("Invalid number of dimension for geopoints, got %d expect 2\n", nd0);
 		goto error;
 	}
 
 	nd1 = PyArray_NDIM(arr1);
 	if ((nd1 != 1) && (nd1 != 2)) {
-		set_python_exception("Input arguments rank is invalid, got %u expect 1 or 2 \n", nd1);
+		set_python_exception("Invalid number of dimension for timestamp, got %u expect 1 or 2 \n", nd1);
 		goto error;
 	}
 
 	if ((nd1 == 2) && (PyArray_DIM(arr1, 1) != 2)) {
-		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,2)\n", PyArray_DIM(arr1, 1));
+		set_python_exception("Invalid shape for timestamp, got (M,%lu) expect (M,2)\n", PyArray_DIM(arr1, 1));
 		goto error;
 	}
 
 	if (PyArray_DIM(arr0, 1) != 3) {
-		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,3)\n", PyArray_DIM(arr0, 1));
+		set_python_exception("Invalid shape for geopoints, got (N,%lu) expect (N,3)\n", PyArray_DIM(arr0, 1));
 		goto error;
 	}
 
 	np = PyArray_DIM(arr0, 0);
 	if (np <= 0) {
-		set_python_exception("Input arguments shape is invalid, got (N,3) expect (%lu,3)\n", PyArray_DIM(arr0, 0));
+		set_python_exception("Invalid shape for geopoints, got (%lu,3) expect (N,3) with N > 0\n", PyArray_DIM(arr0, 0));
 		goto error;
 	}
 
 	nt = PyArray_DIM(arr1, 0);
 	if (nt <= 0) {
-		set_python_exception("Input arguments shape is invalid, got (M,) expect (%lu,)\n", PyArray_DIM(arr0, 0));
+		set_python_exception("Invalid shape for timestamp, got (%lu,) expect (M,) with M > 0\n", PyArray_DIM(arr0, 0));
 		goto error;
 	}
 
@@ -631,12 +631,12 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		std::swap(arr1, tmp);
 		Py_XDECREF(tmp);
 	} else {
-		set_python_exception("Invalid inputs arguments, the second arguments must be an array of int or float\n");
+		set_python_exception("Invalid type for timestamp, timestamp must be an array of integer or floating point\n");
 		goto error;
 	}
 
 	if (arr1 == NULL) {
-		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
+		set_python_exception("Convertion of timestamp failled\n");
 		goto error;
 	}
 
