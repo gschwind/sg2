@@ -540,10 +540,10 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 
 	try {
 
-	PyObject * arg0 = NULL;
-	PyObject * arg1 = NULL;
-	PyObject * arg2 = NULL;
-	int arg3 = 0;
+	PyObject * i_array_geopoint = NULL;
+	PyObject * i_array_timestamp = NULL;
+	PyObject * i_array_options = NULL;
+	int i_elipsoid = 0;
 
 	int warning_count = 0;
 	vector<sg2::geocentric_data> geoc_list;
@@ -551,19 +551,19 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	int nd0, nd1, np, nt;
 
 	/* get args */
-	if (!PyArg_ParseTuple(args, "OOO|i", &arg0, &arg1, &arg2, &arg3)) {
+	if (!PyArg_ParseTuple(args, "OOO|i", &i_array_geopoint, &i_array_timestamp, &i_array_options, &i_elipsoid)) {
 		set_python_exception("Invalid inputs arguments, expect 3 arguments\n");
 		throw 0;
 	}
 
 	/* Get an array from any python object */
-	arr0 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OTF(arg0, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY));
+	arr0 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OTF(i_array_geopoint, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY));
 	if (arr0 == NULL) {
 		set_python_exception("Invalid inputs arguments, the first arguments must be an array\n");
 		throw 0;
 	}
 
-	arr1 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OF(arg1, NPY_ARRAY_IN_ARRAY));
+	arr1 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OF(i_array_timestamp, NPY_ARRAY_IN_ARRAY));
 	if (arr1 == NULL) {
 		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
 		throw 0;
@@ -601,7 +601,7 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		throw 0;
 	}
 
-	if(!PyList_Check(arg2)) {
+	if(!PyList_Check(i_array_options)) {
 		set_python_exception("Invalid inputs arguments, the third arguments must be a list\n");
 		throw 0;
 	}
@@ -635,9 +635,9 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		throw 0;
 	}
 
-	_geocentric geocx{arg2, nt};
-	_geopoint gpx{arg2, np};
-	_topoc topocx{arg2, np, nt};
+	_geocentric geocx{i_array_options, nt};
+	_geopoint gpx{i_array_options, np};
+	_topoc topocx{i_array_options, np, nt};
 
 	geoc_list.resize(nt);
 
@@ -679,7 +679,7 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		double lon = PyArray_Get<double>(arr0, i, 0);
 		double lat = PyArray_Get<double>(arr0, i, 1);
 		double alt = PyArray_Get<double>(arr0, i, 2);
-		geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el[arg3]};
+		geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el[i_elipsoid]};
 		gpx.apply(geopoint_list[i], i);
 	}
 
