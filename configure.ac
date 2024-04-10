@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-AC_PREREQ([2.69])
-AC_INIT([sg2], [2.3.1])
+AC_PREREQ([2.71])
+AC_INIT([sg2],[2.3.1])
 AC_CONFIG_MACRO_DIR([m4])
 AM_MAINTAINER_MODE([disable])
 
@@ -13,7 +13,6 @@ AC_CONFIG_SRCDIR([src/sg2.cxx])
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 AM_PROG_AS
 
