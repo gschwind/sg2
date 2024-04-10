@@ -553,59 +553,59 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	/* get args */
 	if (!PyArg_ParseTuple(args, "OOO|i", &i_array_geopoint, &i_array_timestamp, &i_array_options, &i_elipsoid)) {
 		set_python_exception("Invalid inputs arguments, expect 3 arguments\n");
-		throw 0;
+		goto error;
 	}
 
 	/* Get an array from any python object */
 	arr0 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OTF(i_array_geopoint, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY));
 	if (arr0 == NULL) {
 		set_python_exception("Invalid inputs arguments, the first arguments must be an array\n");
-		throw 0;
+		goto error;
 	}
 
 	arr1 = reinterpret_cast<PyArrayObject*>(PyArray_FROM_OF(i_array_timestamp, NPY_ARRAY_IN_ARRAY));
 	if (arr1 == NULL) {
 		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
-		throw 0;
+		goto error;
 	}
 
 	if(!PyList_Check(i_array_options)) {
 		set_python_exception("Invalid inputs arguments, the third arguments must be a list\n");
-		throw 0;
+		goto error;
 	}
 
 	nd0 = PyArray_NDIM(arr0);
 	if (nd0 != 2) {
 		set_python_exception("Input arguments rank is invalid, got %d expect 2\n", nd0);
-		throw 0;
+		goto error;
 	}
 
 	nd1 = PyArray_NDIM(arr1);
 	if ((nd1 != 1) && (nd1 != 2)) {
 		set_python_exception("Input arguments rank is invalid, got %u expect 1 or 2 \n", nd1);
-		throw 0;
+		goto error;
 	}
 
 	if ((nd1 == 2) && (PyArray_DIM(arr1, 1) != 2)) {
 		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,2)\n", PyArray_DIM(arr1, 1));
-		throw 0;
+		goto error;
 	}
 
 	if (PyArray_DIM(arr0, 1) != 3) {
 		set_python_exception("Input arguments shape is invalid, got (N,%lu) expect (N,3)\n", PyArray_DIM(arr0, 1));
-		throw 0;
+		goto error;
 	}
 
 	np = PyArray_DIM(arr0, 0);
 	if (np <= 0) {
 		set_python_exception("Input arguments shape is invalid, got (N,3) expect (%lu,3)\n", PyArray_DIM(arr0, 0));
-		throw 0;
+		goto error;
 	}
 
 	nt = PyArray_DIM(arr1, 0);
 	if (nt <= 0) {
 		set_python_exception("Input arguments shape is invalid, got (M,) expect (%lu,)\n", PyArray_DIM(arr0, 0));
-		throw 0;
+		goto error;
 	}
 
 	if (PyArray_ISINTEGER(reinterpret_cast<PyArrayObject*>(arr1))) {
@@ -632,105 +632,115 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		Py_XDECREF(tmp);
 	} else {
 		set_python_exception("Invalid inputs arguments, the second arguments must be an array of int or float\n");
-		throw 0;
+		goto error;
 	}
 
 	if (arr1 == NULL) {
 		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
-		throw 0;
+		goto error;
 	}
 
-	_geocentric geocx{i_array_options, nt};
-	_geopoint gpx{i_array_options, np};
-	_topoc topocx{i_array_options, np, nt};
+	{ // do the computation
 
-	geoc_list.resize(nt);
+		_geocentric geocx{i_array_options, nt};
+		_geopoint gpx{i_array_options, np};
+		_topoc topocx{i_array_options, np, nt};
 
-	if (PyArray_ISFLOAT(arr1)) {
-		if (nd1 == 1) {
-			for (int i = 0; i < nt; ++i) {
-				geoc_list[i] = sg2::geocentric_data{PyArray_Get<double>(arr1, i)};
-				geocx.apply(geoc_list[i], i);
+		geoc_list.resize(nt);
+
+		if (PyArray_ISFLOAT(arr1)) {
+			if (nd1 == 1) {
+				for (int i = 0; i < nt; ++i) {
+					geoc_list[i] = sg2::geocentric_data{PyArray_Get<double>(arr1, i)};
+					geocx.apply(geoc_list[i], i);
+				}
+			} else { // nd1 == 2
+				for (int i = 0; i < nt; ++i) {
+					geoc_list[i] = sg2::geocentric_data{
+						PyArray_Get<double>(arr1, i, 0),
+						PyArray_Get<double>(arr1, i, 1)
+					};
+					geocx.apply(geoc_list[i], i);
+				}
 			}
-		} else { // nd1 == 2
-			for (int i = 0; i < nt; ++i) {
-				geoc_list[i] = sg2::geocentric_data{
-					PyArray_Get<double>(arr1, i, 0),
-					PyArray_Get<double>(arr1, i, 1)
-				};
-				geocx.apply(geoc_list[i], i);
-			}
-		}
-	} else {
-		if (nd1 == 1) {
-			for (int i = 0; i < nt; ++i) {
-				geoc_list[i] = sg2::geocentric_data{PyArray_Get<int64_t>(arr1, i)};
-				geocx.apply(geoc_list[i], i);
-			}
-		} else { // nd1 == 2
-			for (int i = 0; i < nt; ++i) {
-				geoc_list[i] = sg2::geocentric_data{
-					PyArray_Get<int64_t>(arr1, i, 0),
-					PyArray_Get<int64_t>(arr1, i, 1)
-				};
-				geocx.apply(geoc_list[i], i);
-			}
-		}
-	}
-
-	geopoint_list.resize(np);
-
-	for (int i = 0; i < np; ++i) {
-		double lon = PyArray_Get<double>(arr0, i, 0);
-		double lat = PyArray_Get<double>(arr0, i, 1);
-		double alt = PyArray_Get<double>(arr0, i, 2);
-		geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el.at(i_elipsoid)};
-		gpx.apply(geopoint_list[i], i);
-	}
-
-	if (topocx.ref.size() > 0) {
-		for (int p = 0; p < np; ++p) {
-			for (int t = 0; t < nt; ++t) {
-				auto const & geoc = geoc_list[t];
-				auto const & geopoint = geopoint_list[p];
-				try {
-					sg2::topocentric_data topoc(geoc, geopoint);
-					topocx.apply(topoc, p, t);
-				} catch(int & e) {
-					topocx.clear(p, t);
-					warning_count += 1;
-					continue;
+		} else {
+			if (nd1 == 1) {
+				for (int i = 0; i < nt; ++i) {
+					geoc_list[i] = sg2::geocentric_data{PyArray_Get<int64_t>(arr1, i)};
+					geocx.apply(geoc_list[i], i);
+				}
+			} else { // nd1 == 2
+				for (int i = 0; i < nt; ++i) {
+					geoc_list[i] = sg2::geocentric_data{
+						PyArray_Get<int64_t>(arr1, i, 0),
+						PyArray_Get<int64_t>(arr1, i, 1)
+					};
+					geocx.apply(geoc_list[i], i);
 				}
 			}
 		}
+
+		geopoint_list.resize(np);
+
+		for (int i = 0; i < np; ++i) {
+			double lon = PyArray_Get<double>(arr0, i, 0);
+			double lat = PyArray_Get<double>(arr0, i, 1);
+			double alt = PyArray_Get<double>(arr0, i, 2);
+			geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el.at(i_elipsoid)};
+			gpx.apply(geopoint_list[i], i);
+		}
+
+		if (topocx.ref.size() > 0) {
+			for (int p = 0; p < np; ++p) {
+				for (int t = 0; t < nt; ++t) {
+					auto const & geoc = geoc_list[t];
+					auto const & geopoint = geopoint_list[p];
+					try {
+						sg2::topocentric_data topoc(geoc, geopoint);
+						topocx.apply(topoc, p, t);
+					} catch(int & e) {
+						topocx.clear(p, t);
+						warning_count += 1;
+						continue;
+					}
+				}
+			}
+		}
+
+		if(warning_count > 0)
+			fprintf(stderr, "Warning: %d invalid value(s) encountered\n", warning_count);
+
+		auto ms = reinterpret_cast<module_state*>(PyModule_GetState(self));
+		PyObject * dict = PyObject_CallObject(ms->ns, NULL);
+		{
+			auto obj = geocx.as_object(self);
+			PyObject_SetAttrString(dict, "geoc", obj);
+			Py_DECREF(obj);
+		}
+
+		{
+			auto obj = gpx.as_object(self);
+			PyObject_SetAttrString(dict, "gp", obj);
+			Py_DECREF(obj);
+		}
+
+		{
+			auto obj = topocx.as_object(self);
+			PyObject_SetAttrString(dict, "topoc", obj);
+			Py_DECREF(obj);
+		}
+
+		Py_XDECREF(arr0); /* release reference to this arr0 */
+		Py_XDECREF(arr1);
+		return dict;
 	}
 
-	if(warning_count > 0)
-		fprintf(stderr, "Warning: %d invalid value(s) encountered\n", warning_count);
-
-	auto ms = reinterpret_cast<module_state*>(PyModule_GetState(self));
-	PyObject * dict = PyObject_CallObject(ms->ns, NULL);
-	{
-		auto obj = geocx.as_object(self);
-		PyObject_SetAttrString(dict, "geoc", obj);
-		Py_DECREF(obj);
-	}
-
-	{
-		auto obj = gpx.as_object(self);
-		PyObject_SetAttrString(dict, "gp", obj);
-		Py_DECREF(obj);
-	}
-
-	{
-		auto obj = topocx.as_object(self);
-		PyObject_SetAttrString(dict, "topoc", obj);
-		Py_DECREF(obj);
-	}
-
-	Py_XDECREF(arr0); /* release reference to this arr0 */
-	Py_XDECREF(arr1);
-	return dict;
+error:
+	if (arr0)
+		Py_XDECREF(arr0);
+	if (arr1)
+		Py_XDECREF(arr1);
+	return NULL;
 
 	} catch (...) {
 		if(arr0)
