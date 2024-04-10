@@ -47,7 +47,7 @@ struct module_state {
 	PyObject * ns;
 };
 
-static sg2::ellps const * el[] = {
+static std::array<sg2::ellps const *, 7> el = {
 		&sg2::ELLPS_WGS84,
 		&sg2::ELLPS_RGF83,
 		&sg2::ELLPS_NTF,
