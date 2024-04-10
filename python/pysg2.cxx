@@ -569,38 +569,6 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		throw 0;
 	}
 
-	if (PyArray_ISINTEGER(reinterpret_cast<PyArrayObject*>(arr1))) {
-		// Expected in millisecond.
-		fprintf(stderr, "Warning: using integer array as input will be interpreted as datetime64[ms]\n");
-		auto tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_INT64), NPY_ARRAY_IN_ARRAY));
-		std::swap(arr1, tmp);
-		Py_XDECREF(tmp);
-	} else if (PyArray_ISFLOAT(reinterpret_cast<PyArrayObject*>(arr1))) {
-		auto tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_DOUBLE), NPY_ARRAY_IN_ARRAY));
-		std::swap(arr1, tmp);
-		Py_XDECREF(tmp);
-	} else if (PyArray_TYPE(arr1) == NPY_DATETIME) {
-		// Ensure datetime64[ns]
-		auto tmp = reinterpret_cast<PyArrayObject*>(PyObject_CallMethod(reinterpret_cast<PyObject*>(arr1), "astype", "(s)", "datetime64[ms]"));
-		std::swap(arr1, tmp);
-		Py_XDECREF(tmp);
-		// Ensure integer
-		tmp = reinterpret_cast<PyArrayObject*>(PyObject_CallMethod(reinterpret_cast<PyObject*>(arr1), "astype", "(s)", "i8"));
-		std::swap(arr1, tmp);
-		Py_XDECREF(tmp);
-		tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_INT64), NPY_ARRAY_IN_ARRAY));
-		std::swap(arr1, tmp);
-		Py_XDECREF(tmp);
-	} else {
-		set_python_exception("Invalid inputs arguments, the second arguments must be an array of int or float\n");
-		throw 0;
-	}
-
-	if (arr1 == NULL) {
-		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
-		throw 0;
-	}
-
 	if(!PyList_Check(i_array_options)) {
 		set_python_exception("Invalid inputs arguments, the third arguments must be a list\n");
 		throw 0;
@@ -632,6 +600,38 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 	nt = PyArray_DIM(arr1, 0);
 	if (nt <= 0) {
 		set_python_exception("Input arguments shape is invalid, got (M,) expect (%lu,)\n", PyArray_DIM(arr0, 0));
+		throw 0;
+	}
+
+	if (PyArray_ISINTEGER(reinterpret_cast<PyArrayObject*>(arr1))) {
+		// Expected in millisecond.
+		fprintf(stderr, "Warning: using integer array as input will be interpreted as datetime64[ms]\n");
+		auto tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_INT64), NPY_ARRAY_IN_ARRAY));
+		std::swap(arr1, tmp);
+		Py_XDECREF(tmp);
+	} else if (PyArray_ISFLOAT(reinterpret_cast<PyArrayObject*>(arr1))) {
+		auto tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_DOUBLE), NPY_ARRAY_IN_ARRAY));
+		std::swap(arr1, tmp);
+		Py_XDECREF(tmp);
+	} else if (PyArray_TYPE(arr1) == NPY_DATETIME) {
+		// Ensure datetime64[ns]
+		auto tmp = reinterpret_cast<PyArrayObject*>(PyObject_CallMethod(reinterpret_cast<PyObject*>(arr1), "astype", "(s)", "datetime64[ms]"));
+		std::swap(arr1, tmp);
+		Py_XDECREF(tmp);
+		// Ensure integer
+		tmp = reinterpret_cast<PyArrayObject*>(PyObject_CallMethod(reinterpret_cast<PyObject*>(arr1), "astype", "(s)", "i8"));
+		std::swap(arr1, tmp);
+		Py_XDECREF(tmp);
+		tmp = reinterpret_cast<PyArrayObject*>(PyArray_FromArray(arr1, PyArray_DescrFromType(NPY_INT64), NPY_ARRAY_IN_ARRAY));
+		std::swap(arr1, tmp);
+		Py_XDECREF(tmp);
+	} else {
+		set_python_exception("Invalid inputs arguments, the second arguments must be an array of int or float\n");
+		throw 0;
+	}
+
+	if (arr1 == NULL) {
+		set_python_exception("Invalid inputs arguments, the second arguments must be an array\n");
 		throw 0;
 	}
 
