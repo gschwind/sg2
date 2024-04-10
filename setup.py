@@ -70,7 +70,7 @@ module = Extension('sg2', **params)
 
 setup(
     name = 'sg2',
-    version = '2.3.1',
+    version = '2.3.2',
     author = ', '.join(['Benoît Gschwind', 'Philippe Blanc', 'MINES ParisTech']),
     author_email = ', '.join([
         'benoit.gschwind@mines-paristech.fr',
