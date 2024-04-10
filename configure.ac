@@ -6,7 +6,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_MAINTAINER_MODE([disable])
 
 LT_PREREQ([2.4.2])
-LT_INIT()
+LT_INIT([pic-only shared static])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_CONFIG_SRCDIR([src/sg2.cxx])
