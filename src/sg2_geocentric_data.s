@@ -33,3 +33,6 @@ _sg2_geocentric_data:
 _sg2_geocentric_data_sz:
 .int _sg2_geocentric_data_sz - _sg2_geocentric_data
 
+/* this object does not need executable stack */
+.section        .note.GNU-stack,"",@note
+
