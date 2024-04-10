@@ -679,7 +679,7 @@ static PyObject * py_sun_position(PyObject * self, PyObject * args)
 		double lon = PyArray_Get<double>(arr0, i, 0);
 		double lat = PyArray_Get<double>(arr0, i, 1);
 		double alt = PyArray_Get<double>(arr0, i, 2);
-		geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el[i_elipsoid]};
+		geopoint_list[i] = sg2::geopoint{lon, lat, alt, *el.at(i_elipsoid)};
 		gpx.apply(geopoint_list[i], i);
 	}
 
