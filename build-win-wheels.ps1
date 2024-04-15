@@ -1,24 +1,12 @@
-conda env remove -n dev-py36
-conda create -y -n dev-py36 python=3.6
-conda activate dev-py36
-pip install -r dev-requirements.txt
-pip wheel . -w .\wheelhouse
-conda deactivate
-conda env remove -n dev-py37
-conda create -y -n dev-py37 python=3.7
-conda activate dev-py37
-pip install -r dev-requirements.txt
-pip wheel . -w .\wheelhouse
-conda deactivate
-conda env remove -n dev-py38
-conda create -y -n dev-py38 python=3.8
-conda activate dev-py38
-pip install -r dev-requirements.txt
-pip wheel . -w .\wheelhouse
-conda deactivate
-conda env remove -n dev-py39
-conda create -y -n dev-py39 python=3.9
-conda activate dev-py39
-pip install -r dev-requirements.txt
-pip wheel . -w .\wheelhouse
-conda deactivate
+
+$pyvers="38","39","310","311"
+foreach($ver in $pyvers) {
+	if (Test-Path -LiteralPath "dev-py$ver") {
+		Remove-Item -LiteralPath "dev-py$ver" -Force -Recurse
+	}
+	Start-Process -Wait -NoNewWindow -FilePath "C:\Python$ver\python.exe" -ArgumentList '-m','venv',"dev-py$ver"
+	Start-Process -Wait -NoNewWindow -FilePath "$PSScriptRoot\dev-py$ver\Scripts\python.exe" -ArgumentList '-m','pip',"install","-U","pip"
+	. "$PSScriptRoot\dev-py$ver\Scripts\Activate.ps1"
+	pip wheel . -w .\wheelhouse
+}
+

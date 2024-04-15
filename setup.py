@@ -11,7 +11,7 @@ import os, sys, re
 if os.name == 'nt':
     # Window build is simplier but not standalone, read README.win
     params = {
-        'extra_compile_args': ['/O2', '/DSG2_WIN32', '/std:c++14'],
+        'extra_compile_args': ['/O2', '/DSG2_WIN32', '/std:c++17'],
         'include_dirs': [numpy.get_include(), "third-parties/python-bind-helper", "src"],
         'sources': [
             "python/pysg2.cxx",
