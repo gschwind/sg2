@@ -66,42 +66,7 @@ else:
         sys.argv.remove("--no-static")
 
 
-module = Extension('sg2', **params)
-
 setup(
-    name = 'sg2',
-    version = '2.3.2',
-    author = ', '.join(['Benoît Gschwind', 'Philippe Blanc', 'MINES ParisTech']),
-    author_email = ', '.join([
-        'benoit.gschwind@mines-paristech.fr',
-        'philippe.blanc@mines-paristech.fr'
-    ]),
-    maintainer = 'Benoît Gschwind',
-    maintainer_email = 'benoit.gschwind@mines-paristech.fr',
-    python_requires = ">=3.6",
-    setup_requires = ["numpy>={}".format(numpy.__version__)],
-    install_requires = ["numpy>={}".format(numpy.__version__)],
-    classifiers = [
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: C++',
-        'Topic :: Scientific/Engineering :: GIS',
-        'Topic :: Scientific/Engineering :: Information Analysis'
-    ],
-    url = "https://www.oie.minesparis.psl.eu/Valorisation/Outils/Solar-Geometry/",
-    project_urls={
-        "Bug Tracker": "https://github.com/gschwind/sg2/issues",
-        "Source Code": "https://github.com/gschwind/sg2"
-    },
-    license = 'GNU Lesser General Public License v3 (LGPLv3)',
-    description = 'Solar Geometry 2 library',
-    platforms=["Windows", "Linux"],
-    long_description="""Solar Geometry 2 (SG2) is the second generation of library for computing the relative position of the sun and the earth. Valid over the time period 1980-2100, the algorithm is 20 times faster than the well-know SPA algorithm, with an accuracy order of approx. 0.005°. Reference article: Blanc P. and L. Wald,  The SG2 algorithm for a fast and accurate computation of the position of the sun for multi-decadal time period. Solar Energy 88, 3072-3083, 2012, doi: 10.1016/j.solener.2012.07.018.""",
-    ext_modules = [module]
+    ext_modules = [Extension('sg2', **params)]
 )
 

@@ -9,6 +9,7 @@ EXTRA_DIST = \
 	resources \
 	python/pysg2.cxx \
 	third-parties/python-bind-helper/python-bind-helper.hxx \
+	pyproject.toml \
 	setup.py \
 	build-wheel.sh \
 	build-win-wheels.ps1 \

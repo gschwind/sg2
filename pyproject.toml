@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools >= 61.0", "numpy == 1.22.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sg2"
+version = "2.3.2"
+description = "Solar Geometry 2 (SG2) is the second generation of library for computing the relative position of the sun and the earth. Valid over the time period 1980-2100, the algorithm is 20 times faster than the well-know SPA algorithm, with an accuracy order of approx. 0.005°. Reference article: Blanc P. and L. Wald,  The SG2 algorithm for a fast and accurate computation of the position of the sun for multi-decadal time period. Solar Energy 88, 3072-3083, 2012, doi: 10.1016/j.solener.2012.07.018."
+requires-python = ">= 3.6"
+readme = {file = "README.md", content-type = "text/markdown"}
+keywords = ["solar", "sun", "geometry", "astronomy"]
+authors = [
+    {name = "MINES ParisTech"},
+    {name = "Benoit Gschwind", email = "benoit.gschwind@mines-paristech.fr"},
+    {name = "Philippe Blanc", email = "philippe.blanc@mines-paristech.fr"}
+]
+maintainers = [
+    {name = "Benoit Gschwind", email = "benoit.gschwind@mines-paristech.fr"}
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: C++",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Information Analysis"
+]
+dependencies = [
+    "numpy>=1.22.0",
+]
+
+[project.urls]
+Homepage = "https://www.oie.minesparis.psl.eu/Valorisation/Outils/Solar-Geometry/"
+Repository = "https://github.com/gschwind/sg2"
+Issues = "https://github.com/gschwind/sg2/issues"
+
