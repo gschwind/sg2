@@ -45,7 +45,6 @@ cd sg2-@PACKAGE_VERSION@
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" install -r /io/dev-requirements.txt
     "${PYBIN}/pip" wheel . --no-deps -w /home/user/wheelhouse/
 done
 
