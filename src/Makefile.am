@@ -1,5 +1,7 @@
 bin_PROGRAMS = sg2_query sg2_benchmark sg2_convert_date
 
+BUILT_SOURCES = sg2_geocentric_data.cxx
+
 AM_CXXFLAGS = \
 	@VDT_DEFINE@ \
 	@VDT_CFLAGS@
@@ -57,7 +59,7 @@ libsg2_la_SOURCES = \
 	sg2_data_handler.hxx \
 	sg2_utils.cxx \
 	sg2_utils.hxx \
-	sg2_geocentric_data.s
+	sg2_geocentric_data.cxx
 
 sg2_query_LDADD = @VDT_LIBS@ libsg2.la
 sg2_query_SOURCES = \
@@ -70,4 +72,7 @@ sg2_benchmark_SOURCES = \
 sg2_convert_date_LDADD = @VDT_LIBS@ libsg2.la
 sg2_convert_date_SOURCES = \
 	sg2_convert_date.cxx
+
+sg2_geocentric_data.cxx: Makefile
+	$(PYTHON) $(top_srcdir)/gen-geocentric-data-code.py $(top_srcdir)/resources/geocentric.data >$@
 

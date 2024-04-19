@@ -16,6 +16,8 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AM_PROG_AS
 
+AM_PATH_PYTHON([3.7.0])
+
 # check for c++11
 AX_CXX_COMPILE_STDCXX_11(noext, mandatory)
 

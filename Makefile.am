@@ -11,14 +11,10 @@ EXTRA_DIST = \
 	third-parties/python-bind-helper/python-bind-helper.hxx \
 	pyproject.toml \
 	setup.py \
+	gen-geocentric-data-code.py \
 	build-wheel.sh \
 	build-win-wheels.ps1 \
 	dev-requirements.txt\
 	README.linux \
-	README.win 
+	README.win
 
-
-dist-hook:
-	chmod u+w $(distdir)/resources/
-	$(CC) -c -I$(distdir)/resources/ -o $(distdir)/resources/sg2_geocentric_data.o $(distdir)/src/sg2_geocentric_data.s
-	objcopy --output-target pe-x86-64 $(distdir)/resources/sg2_geocentric_data.o $(distdir)/resources/sg2_geocentric_data.obj
