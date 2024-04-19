@@ -24,38 +24,42 @@
 
 #include <cstdint>
 
-extern "C" {
-
-extern char _sg2_geocentric_data;
-extern int _sg2_geocentric_data_sz;
-
-}
-
 namespace sg2 {
 
+struct geocentric_data_format {
+	double sinL;
+	double cosL;
+	double R;
+};
+
+extern int64_t const _geocentric_data_time_offset;
+extern int64_t const _geocentric_data_time_delta;
+extern int64_t const _geocentric_data_xcount;
+
+extern geocentric_data_format const _geocentric_data[];
 
 inline int64_t const & _geocentric_data_offset() {
-	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[0];
+	return _geocentric_data_time_offset;
 }
 
 inline int64_t const & _geocentric_data_delta() {
-	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[1];
+	return _geocentric_data_time_delta;
 }
 
 inline int64_t const & _geocentric_data_count() {
-	return reinterpret_cast<int64_t*>(&_sg2_geocentric_data)[2];
+	return _geocentric_data_xcount;
 }
 
 inline double const & _geocentric_data_sinL(int l) {
-	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+0];
+	return _geocentric_data[l].sinL;
 }
 
 inline double const & _geocentric_data_cosL(int l) {
-	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+1];
+	return _geocentric_data[l].cosL;
 }
 
 inline double const & _geocentric_data_R(int l) {
-	return reinterpret_cast<double*>(&_sg2_geocentric_data)[3+l*3+2];
+	return _geocentric_data[l].R;
 }
 
 
