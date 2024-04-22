@@ -13,7 +13,7 @@ EXTRA_DIST = \
 	setup.py \
 	gen-geocentric-data-code.py \
 	build-wheels.sh \
-	build-win-wheels.ps1 \
+	build-wheels.ps1 \
 	dev-requirements.txt\
 	README.linux \
 	README.win
