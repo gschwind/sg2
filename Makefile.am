@@ -12,7 +12,7 @@ EXTRA_DIST = \
 	pyproject.toml \
 	setup.py \
 	gen-geocentric-data-code.py \
-	build-wheel.sh \
+	build-wheels.sh \
 	build-win-wheels.ps1 \
 	dev-requirements.txt\
 	README.linux \
