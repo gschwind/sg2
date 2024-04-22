@@ -2,6 +2,8 @@ bin_PROGRAMS = sg2_query sg2_benchmark sg2_convert_date
 
 BUILT_SOURCES = sg2_geocentric_data.cxx
 
+CLEANFILES = sg2_geocentric_data.cxx
+
 AM_CXXFLAGS = \
 	@VDT_DEFINE@ \
 	@VDT_CFLAGS@
