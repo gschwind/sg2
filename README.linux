@@ -2,6 +2,6 @@
 Build python wheels:
 
 docker pull "quay.io/pypa/manylinux2014_x86_64"
-docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
+docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheels.sh
 
 
