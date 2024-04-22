@@ -11,18 +11,6 @@
 # docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
 #
 
-# Install sg2 system wide
-tar -xzf /io/sg2-@PACKAGE_VERSION@.tar.gz -C /tmp/
-cd /tmp/sg2-@PACKAGE_VERSION@
-./configure --with-pic CXXFLAGS="-O3" CFLAGS="-O3"
-make clean
-make
-make install
-cd -
-
-# Cleanup
-rm -rf /tmp/sg2-@PACKAGE_VERSION@
-
 # Create user en for pip
 useradd -m user
 cp /io/sg2-@PACKAGE_VERSION@.tar.gz /home/user/sg2-@PACKAGE_VERSION@.tar.gz
