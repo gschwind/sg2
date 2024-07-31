@@ -1,7 +1,18 @@
 
+docker images for x86:
+quay.io/pypa/manylinux2014_x86_64
+quay.io/pypa/manylinux2014_i686
+quay.io/pypa/manylinux_2_28_x86_64
+
+
+docker images for aarch64:
+quay.io/pypa/manylinux_2_28_aarch64
+quay.io/pypa/manylinux2014_aarch64
+
+
 Build python wheels:
 
-docker pull "quay.io/pypa/manylinux2014_x86_64"
-docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheels.sh
+docker pull "$img"
+docker container run -t -v "$(pwd):/io" "$img" /io/build-wheels.sh
 
 
