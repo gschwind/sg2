@@ -32,8 +32,8 @@ tar -xzf sg2-@PACKAGE_VERSION@.tar.gz
 cd sg2-@PACKAGE_VERSION@
 
 # Compile wheels
-for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" wheel . --no-deps -w /home/user/wheelhouse/
+for PYBIN in cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 pp37-pypy37_pp73 pp38-pypy38_pp73 pp39-pypy39_pp73 pp310-pypy310_pp73; do
+    "/opt/python/${PYBIN}/bin/pip" wheel . --no-deps -w /home/user/wheelhouse/
 done
 
 if [ -n "$AUDITWHEEL_PLAT" ]; then
