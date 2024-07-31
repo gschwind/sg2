@@ -11,12 +11,15 @@
 # docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
 #
 
-# Create user en for pip
-useradd -m user
-cp /io/sg2-@PACKAGE_VERSION@.tar.gz /home/user/sg2-@PACKAGE_VERSION@.tar.gz
-chown user /home/user/sg2-@PACKAGE_VERSION@.tar.gz
+# run this section only if user is root
+if [ $UID == 0 ]; then
+	useradd -m user
+	runuser -u user -- "$0" "$@"
+	cp /home/user/wheelhouse/* /io/wheelhouse/
+	exit 0
+fi
 
-tee /home/user/script.sh <<"EOF"
+# This section is run if we aren't root
 
 function repair_wheel {
     wheel="$1"
@@ -28,12 +31,12 @@ function repair_wheel {
 }
 
 export PATH=$PATH:/home/user/.local/bin
-tar -xzf sg2-@PACKAGE_VERSION@.tar.gz
-cd sg2-@PACKAGE_VERSION@
+tar -xzf /io/sg2-@PACKAGE_VERSION@.tar.gz -C /home/user/
+cd /home/user/sg2-@PACKAGE_VERSION@
 
 # Compile wheels
-for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" wheel . --no-deps -w /home/user/wheelhouse/
+for PYBIN in cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312; do
+    "/opt/python/${PYBIN}/bin/pip" wheel . --no-deps -w /home/user/wheelhouse/
 done
 
 if [ -n "$AUDITWHEEL_PLAT" ]; then
@@ -41,12 +44,4 @@ if [ -n "$AUDITWHEEL_PLAT" ]; then
         repair_wheel "$whl"
     done
 fi
-
-EOF
-
-chown user /home/user/script.sh
-
-cd /home/user/
-runuser -u user /bin/bash /home/user/script.sh
-cp /home/user/wheelhouse/* /io/wheelhouse/
 
