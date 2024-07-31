@@ -102,12 +102,18 @@ static tuple<int, int, int, double> _pysg2_jd_to_ymdh(double jd)
 	return tuple<int, int, int, double>{date.year, date.month, date.day_of_month, date.hour};
 }
 
+// Before numpy 2.0.0 this function does no exist thus define this macro.
+#if NPY_API_VERSION < 0x00000012
+/* define this macro for old numpy versions */
+#define PyDataType_C_METADATA(obj) ((obj)->c_metadata)
+#endif
+
 static PyArray_Descr * create_datetime64_ms_dtype()
 {
 	// Extrapolated from numpy sources
 	PyArray_Descr * dtype = PyArray_DescrNewFromType(NPY_DATETIME);
 	// TODO: Check for NULL ptr.
-	reinterpret_cast<PyArray_DatetimeDTypeMetaData *>(dtype->c_metadata)->meta.base = NPY_FR_ms;
+	reinterpret_cast<PyArray_DatetimeDTypeMetaData *>(PyDataType_C_METADATA(dtype))->meta.base = NPY_FR_ms;
 	return dtype;
 }
 
