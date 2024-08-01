@@ -1,5 +1,5 @@
 
-$pyvers="38","39","310","311"
+$pyvers="38","39","310","311","312"
 foreach($ver in $pyvers) {
 	if (Test-Path -LiteralPath "dev-py$ver") {
 		Remove-Item -LiteralPath "dev-py$ver" -Force -Recurse
