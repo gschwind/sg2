@@ -21,7 +21,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3.8",
@@ -38,6 +37,8 @@ classifiers = [
 dependencies = [
     "numpy>=1.22.0",
 ]
+license = "LGPL-3.0-only"
+license-files = ["COPYING"]
 
 [project.urls]
 Homepage = "https://www.oie.minesparis.psl.eu/Valorisation/Outils/Solar-Geometry/"
