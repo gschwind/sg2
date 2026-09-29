@@ -35,7 +35,8 @@ tar -xzf /io/sg2-@PACKAGE_VERSION@.tar.gz -C /home/user/
 cd /home/user/sg2-@PACKAGE_VERSION@
 
 # Compile wheels
-for PYBIN in cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312; do
+for PYBIN in cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312 cp313-cp313 cp314-cp314; do
+    echo "BUILD ${PYBIN}"
     "/opt/python/${PYBIN}/bin/pip" wheel . --no-deps -w /home/user/wheelhouse/
 done
 
