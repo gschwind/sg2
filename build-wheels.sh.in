@@ -8,7 +8,7 @@
 #
 # it is intended to be used in docker as follow:
 # docker pull "quay.io/pypa/manylinux2014_x86_64"
-# docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheel.sh
+# docker container run -t -v "$(pwd):/io" "quay.io/pypa/manylinux2014_x86_64" /io/build-wheels.sh
 #
 
 # run this section only if user is root
